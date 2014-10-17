@@ -8,6 +8,8 @@
     <string name="action_delete">Delete conversation</string>
     <string name="action_search">Search</string>
     <string name="action_addConversation">New Conversation</string>
+    <string name="default_app_settings">Set as default SMS app</string>
+
 
     <string name="title_activity_list_conversations">All messages</string>
     <string name="title_activity_conversation">New Conversation</string>

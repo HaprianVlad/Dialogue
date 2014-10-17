@@ -1,8 +1,11 @@
 package ch.epfl.sweng.bohdomp.dialogue;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -14,10 +17,19 @@ import android.content.Intent;
  */
 public class ListConversationsActivity extends Activity {
     private ActionBar actionBar;
+    private String myPackageName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_conversations);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        myPackageName = getPackageName();
 
     }
 
@@ -36,14 +48,24 @@ public class ListConversationsActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     public void newConversationButtonHasBeenClicked(MenuItem item) {
         Intent intent = new Intent(this, ConversationActivity.class);
         startActivity(intent);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void setDefaultSMSAppButtonHasBeenClicked(MenuItem item) {
+        if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
+            Intent intent =
+                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                    myPackageName);
+            startActivity(intent);
+        }
+
     }
 }

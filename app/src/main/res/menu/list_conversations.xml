@@ -9,6 +9,11 @@
     <item android:id="@+id/action_deleteAll"
         android:title="@string/action_deleteAll"
         android:showAsAction="never" />
+    <item android:id="@+id/change_default_app"
+        android:title="@string/default_app_settings"
+        android:showAsAction="never"
+        android:onClick="setDefaultSMSAppButtonHasBeenClicked"
+        />
 
     <!--  Items should appear as button  -->
     <item android:id="@+id/action_addConversation"
