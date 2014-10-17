@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+/** Main activity
+*/
 public class LaunchActivity extends Activity {
 
     @Override
