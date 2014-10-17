@@ -25,6 +25,7 @@ android {
     }
 
     lintOptions {
+        disable 'OldTargetApi'
         abortOnError true
         warningsAsErrors true
     }
