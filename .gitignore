@@ -11,3 +11,6 @@ local.properties
 .idea
 out/
 *.iml
+.gradle
+/build
+gradle-app.setting
