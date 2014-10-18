@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ch.epfl.sweng.bohdomp.dialogue.ListConversationsActivity" >
+
+    <!--  Items should appear in the dropdown menu  -->
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_deleteAll"
+        android:title="@string/action_deleteAll"
+        android:showAsAction="never" />
+
+    <!--  Items should appear as button  -->
+    <item android:id="@+id/action_addConversation"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/action_addConversation"
+        android:showAsAction="ifRoom"
+        android:onClick="newConversationButtonHasBeenClicked"/>
+    <item android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/action_search"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView"/>
+</menu>
