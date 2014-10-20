@@ -8,8 +8,12 @@ import android.view.MenuItem;
 import android.content.Intent;
 
 
+/**
+ * Activity displaying the list of conversations.
+ * This is the main activity.
+ */
 public class ListConversationsActivity extends Activity {
-    ActionBar actionBar;
+    private ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
