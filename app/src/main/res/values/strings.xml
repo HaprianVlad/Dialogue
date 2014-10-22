@@ -2,16 +2,20 @@
 <resources>
 
     <string name="app_name">Dialogue</string>
-
     <string name="action_settings">Settings</string>
     <string name="action_deleteAll">Delete All</string>
     <string name="action_delete">Delete conversation</string>
     <string name="action_search">Search</string>
     <string name="action_addConversation">New Conversation</string>
-    <string name="default_app_settings">Set as default SMS app</string>
-
-
     <string name="title_activity_list_conversations">All messages</string>
     <string name="title_activity_conversation">New Conversation</string>
+    <string name="defaultSMSAppWarning">Warning: Dialogue is not set as default SMS application</string>
+    <string name="unReadMessage">99</string>
+    <string name="contactName">Alois Bonjour</string>
+    <string name="contactChannels">SMS / Telegramme</string>
+    <string name="deleteButton">Delete</string>
+    <string name="lastMessageDate">45m</string>
+    <string name="defaultAppButton">Change</string>
+    <string name="contactPictureHint">contactPicture</string>
 
 </resources>

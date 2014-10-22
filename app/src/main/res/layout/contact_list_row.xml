@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="30dp"
+    android:orientation="horizontal"
+    android:weightSum="1"
+    >
+
+    <RelativeLayout
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/contactPicture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_person"
+            android:layout_gravity="center"
+            android:contentDescription="@string/contactPictureHint"/>
+        <TextView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="@string/unReadMessage"
+            android:textSize="12sp"
+            android:textColor="#fff"
+            android:textStyle="normal"
+            android:background="@drawable/red_circle_unread"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginLeft="15sp">
+
+        <TextView
+            android:id="@+id/contactName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contactName"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/contactChannels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contactChannels"
+            android:textSize="12sp"
+            android:textColor="#666666"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp">
+
+        <Button
+            android:id="@+id/deleteConversationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deleteButton"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:focusable="false"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/contactLastMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="right"
+        android:text="@string/lastMessageDate"
+        android:textSize="12sp"
+        android:textColor="#999999"/>
+
+</LinearLayout>

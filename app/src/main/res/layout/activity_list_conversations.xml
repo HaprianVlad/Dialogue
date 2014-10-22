@@ -2,13 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.ListConversationsActivity">
+    tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.ListConversationsActivity"
+    android:animateLayoutChanges="true">
+
+    <LinearLayout
+        android:id="@+id/notDefaultWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/red"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:visibility="gone"
+    >
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/defaultSMSAppWarning"
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/setDefaultAppButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/defaultAppButton" />
+
+    </LinearLayout>
 
     <ListView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/listConversationsView" />
-
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notDefaultWarning"
+        android:id="@+id/listConversationsView"
+        android:focusable="true"/>
 
 </RelativeLayout>
