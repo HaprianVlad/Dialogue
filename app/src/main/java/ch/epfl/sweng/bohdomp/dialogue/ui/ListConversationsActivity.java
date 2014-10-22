@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue;
+package ch.epfl.sweng.bohdomp.dialogue.ui;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -9,6 +9,8 @@ import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+
+import ch.epfl.sweng.bohdomp.dialogue.R;
 
 
 /**
