@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue;
+package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

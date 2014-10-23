@@ -1,14 +1,14 @@
-package ch.epfl.sweng.bohdomp.dialogue;
+package ch.epfl.sweng.bohdomp.dialogue.ui;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+
+import ch.epfl.sweng.bohdomp.dialogue.R;
 
 
 /**
@@ -57,7 +57,7 @@ public class ListConversationsActivity extends Activity {
         startActivity(intent);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+
     public void setDefaultSMSAppButtonHasBeenClicked(MenuItem item) {
         if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
             Intent intent =

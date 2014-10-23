@@ -1,9 +1,11 @@
-package ch.epfl.sweng.bohdomp.dialogue;
+package ch.epfl.sweng.bohdomp.dialogue.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import ch.epfl.sweng.bohdomp.dialogue.R;
 
 
 /**

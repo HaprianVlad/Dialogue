@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue;
+package ch.epfl.sweng.bohdomp.dialogue.ui;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
