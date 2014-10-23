@@ -9,7 +9,7 @@ public class Message {
 
     //FIXME: full implementation is needed
     public static Message convertFromSmsMessage(SmsMessage smsMessage) {
-        return new Message(smsMessage.getMessageBody(), null, new Conversation(), new Contact());
+        return new Message(smsMessage.getMessageBody(), null, new Contact());
     }
 
     public static SmsMessage convertToSmsMessage(Message message) {
@@ -17,17 +17,14 @@ public class Message {
     }
     private final String body;
     private final String destinationAddress;
-    private final Conversation conversation;
     private final Contact sender;
 
 
     public Message(String bodyParameter, String destinationAddressParameter,
-                   Conversation converstationParameter, Contact senderParameter
+                   Contact senderParameter
                    ) {
-        if (constructorArgumentsOk(bodyParameter, destinationAddressParameter,
-                converstationParameter, senderParameter)) {
+        if (constructorArgumentsOk(bodyParameter, destinationAddressParameter, senderParameter)) {
             this.body = bodyParameter;
-            this.conversation = converstationParameter;
             this.destinationAddress = destinationAddressParameter;
             this.sender = senderParameter;
         } else {
@@ -43,14 +40,9 @@ public class Message {
         return destinationAddress;
     }
 
-    private boolean constructorArgumentsOk(String bodyParameter, String destinationAddressParameter,
-                                           Conversation converstationParameter, Contact senderParameter
-    ) {
-        return bodyParameter != null &&  converstationParameter != null
-                && (senderParameter!=null ^ destinationAddressParameter!=null);
+    private boolean constructorArgumentsOk(String bodyParameter,
+                                           String destinationAddressParameter, Contact senderParameter) {
+        return bodyParameter != null && (senderParameter!=null ^ destinationAddressParameter!=null);
     }
-
-
-
 
 }

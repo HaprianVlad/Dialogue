@@ -22,9 +22,7 @@ public class MessageDispatcherService extends IntentService {
 
     private static final String MESSAGE_BODY = "messageBody";
     private static final String DESTINATION_ADDRESS ="destinationAddress";
-    private static final String SOURCE_ADDRESS ="sourceAddress";
-
-    private final SmsManager smsManager = SmsManager.getDefault();
+    private static final String SENDER_ADDRESS = "senderAddress";
 
 
     /**
@@ -37,6 +35,7 @@ public class MessageDispatcherService extends IntentService {
         Intent intent = new Intent(context, MessageDispatcherService.class);
         intent.setAction(RECEIVE_SMS);
         intent.putExtra(MESSAGE_BODY, smsMessage.getMessageBody());
+        intent.putExtra(SENDER_ADDRESS, smsMessage.getOriginatingAddress());
         context.startService(intent);
     }
 
@@ -55,6 +54,8 @@ public class MessageDispatcherService extends IntentService {
         context.startService(intent);
     }
 
+    private final SmsManager smsManager = SmsManager.getDefault();
+
     public MessageDispatcherService() {
 
         super("MessageDispatcherService");
@@ -69,7 +70,8 @@ public class MessageDispatcherService extends IntentService {
                 final String destinationAddress  = intent.getStringExtra(DESTINATION_ADDRESS);
                 handleSendSms(destinationAddress, messageBody);
             } else if (RECEIVE_SMS.equals(action)) {
-                handleReceiveSms(messageBody);
+                final String senderAddress = intent.getStringExtra(SENDER_ADDRESS);
+                handleReceiveSms(senderAddress, messageBody);
             }
         }
     }
@@ -78,7 +80,7 @@ public class MessageDispatcherService extends IntentService {
      * Handle action RECEIVE_SMS in the provided background thread with the provided
      * parameters.
      */
-    private void handleReceiveSms(String smsMessageBody) {
+    private void handleReceiveSms(String senderAddress, String smsMessageBody) {
 
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -88,7 +90,7 @@ public class MessageDispatcherService extends IntentService {
      * parameters.
      */
     private void handleSendSms(String destinationAddress, String messageBody) {
-        //FIXME: use the 2 parameters which are null to make reactive UI when message is well sent or not
+        //FIXME: use the last 2 parameters which are null to make reactive UI when message is well sent or not
         smsManager.sendTextMessage(destinationAddress, null, messageBody, null, null);
     }
 }
