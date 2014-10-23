@@ -37,7 +37,7 @@
 
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
         <receiver
-            android:name=".messaging.SmsBroadcastReceiver"
+            android:name=".channels.sms.SmsBroadcastReceiver"
             android:permission="android.permission.BROADCAST_SMS" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
@@ -46,7 +46,7 @@
 
         <!-- BroadcastReceiver that listens for incoming MMS messages -->
         <receiver
-            android:name=".messaging.MmsBroadcastReceiver"
+            android:name=".channels.mms.MmsBroadcastReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
@@ -57,7 +57,7 @@
 
         <!-- Service that sends messages during phone call using this app -->
         <service
-            android:name=".messaging.HeadlessSmsSendService"
+            android:name=".channels.sms.HeadlessSmsSendService"
             android:exported="true"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE" >
             <intent-filter>

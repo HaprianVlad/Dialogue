@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.dataModel;
+package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 /**
  * Class representing a Contact

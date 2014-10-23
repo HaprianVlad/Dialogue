@@ -1,6 +1,8 @@
-package ch.epfl.sweng.bohdomp.dialogue.dataModel;
+package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.telephony.SmsMessage;
+
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Contact;
 
 /**
  * Class representing a Dialogue message

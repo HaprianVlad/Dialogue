@@ -6,8 +6,6 @@ import android.content.Context;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import ch.epfl.sweng.bohdomp.dialogue.dataModel.Message;
-
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.

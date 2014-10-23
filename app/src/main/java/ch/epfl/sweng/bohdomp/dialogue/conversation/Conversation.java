@@ -1,7 +1,9 @@
-package ch.epfl.sweng.bohdomp.dialogue.dataModel;
+package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import java.util.List;
 import java.util.Set;
+
+import ch.epfl.sweng.bohdomp.dialogue.messaging.Message;
 
 /**
  * Class representing a Dialogue conversation
