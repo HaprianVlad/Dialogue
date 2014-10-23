@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.messaging;
+package ch.epfl.sweng.bohdomp.dialogue.channels.sms;
 
 import android.app.Service;
 import android.content.Intent;
