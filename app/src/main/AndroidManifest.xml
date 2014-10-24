@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sweng.bohdomp.dialogue" >
 
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -30,7 +33,8 @@
                 <data android:scheme="mmsto" />
             </intent-filter>
         </activity>
-        <!-- Activity that allows the user to send new SMS/MMS message -->
+
+        <!-- Activity that allows the user to send new SMS/MMS dialogueSmsMessage -->
         <activity
             android:name=".ui.ConversationActivity"
             android:label="@string/title_activity_conversation"
@@ -74,19 +78,42 @@
             </intent-filter>
         </service>
 
+        <!--Service that uses other services to send and receive Messages: Sms,Mms, Telegram-->
         <service
             android:name=".messaging.MessageDispatcherService"
-            android:exported="true"
-            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE" >
-            <intent-filter>
-                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="sms" />
-                <data android:scheme="smsto" />
-            </intent-filter>
+            android:exported="false">
         </service>
+
+
+        <!--Service used to receive SMS messages-->
+        <service
+            android:name=".channels.sms.SmsReceiverService"
+            android:exported="false" >
+
+        </service>
+
+        <!-- Service that sends SMS messages -->
+        <service
+            android:name=".channels.sms.SmsSenderService"
+            android:exported="false">
+        </service>
+
+        <!-- BroadcastReceiver that listens for the delivery of SMS messages -->
+        <receiver
+            android:name=".channels.sms.SmsDeliveryBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="SMS_DELIVERED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- BroadcastReceiver that listens for the sending of SMS messages -->
+        <receiver android:name=".channels.sms.SmsSentBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="SMS_SENT" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
