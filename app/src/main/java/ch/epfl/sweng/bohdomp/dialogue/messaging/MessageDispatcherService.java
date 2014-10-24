@@ -7,15 +7,15 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
 /**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
+ * FIXME : THIS CLASS HAS TO BE COMPLETLY CHANGED
  *
  */
 public class MessageDispatcherService extends IntentService {
 
     // IntentService can perform, e.g. RECEIVE_SMS
-    private static final String RECEIVE_SMS = "ReceiveSMS";
-    private static final String SEND_SMS = "SendSMS";
+    public static final String RECEIVE_SMS = "ReceiveSMS";
+    public static final String SEND_SMS = "SendSMS";
+
 
 
     private static final String MESSAGE_BODY = "messageBody";
@@ -43,11 +43,11 @@ public class MessageDispatcherService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startSendSms(Context context, Message message) {
+    public static void startSendSms(Context context, DialogueSmsMessage dialogueSmsMessage) {
         Intent intent = new Intent(context, MessageDispatcherService.class);
         intent.setAction(SEND_SMS);
-        intent.putExtra(MESSAGE_BODY, message.getBody());
-        intent.putExtra(DESTINATION_ADDRESS, message.getDestinationAddress());
+        intent.putExtra(MESSAGE_BODY, dialogueSmsMessage.getBody());
+
 
         context.startService(intent);
     }

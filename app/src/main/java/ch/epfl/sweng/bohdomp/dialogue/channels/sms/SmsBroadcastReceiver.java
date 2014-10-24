@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 
-import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
+
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
+
 
 /**
  * Defines an Sms Broadcast Receiver
@@ -16,14 +18,19 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     private SmsMessage[] smsMessages;
 
-    //@TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onReceive(Context context, Intent intent) {
+
         smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
-        for (int i=1; i<smsMessages.length; i++) {
+        for (int i=0; i<smsMessages.length; i++) {
+            //Starting the SmsReceiverService for each received message
+            DialogueSmsMessage dialogueSmsMessage = new DialogueSmsMessage(smsMessages[i]);
 
-            MessageDispatcherService.startReceiveSms(context, smsMessages[i]);
+            Intent receiveMessageIntent = new Intent(context, SmsReceiverService.class);
+            receiveMessageIntent.putExtra("message", dialogueSmsMessage);
+            intent.setAction(SmsReceiverService.RECEIVE_SMS);
 
+            context.startService(intent);
 
         }
     }
