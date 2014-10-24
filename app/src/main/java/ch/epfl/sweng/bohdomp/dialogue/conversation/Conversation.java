@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
 
 /**
