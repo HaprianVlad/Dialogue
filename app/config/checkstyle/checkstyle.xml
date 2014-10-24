@@ -87,7 +87,9 @@
     <module name="SimplifyBooleanReturn"/>
     <module name="FinalClass"/>
     <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
+    <module name="VisibilityModifier">
+        <property name="protectedAllowed" value="true"/>
+    </module>
     <module name="ArrayTypeStyle"/>
     <module name="TodoComment"/>
     <module name="UpperEll"/>

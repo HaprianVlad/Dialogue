@@ -8,4 +8,8 @@ import java.util.Set;
 */
 public class DialogueData {
 	private Set<Conversation> conversations;
+
+    public Set<Conversation> getConversations() {
+        return conversations;
+    }
 }

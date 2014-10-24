@@ -33,7 +33,9 @@ public class Message {
             throw new IllegalArgumentException("Invalid parameters for message creation");
         }
     }
+
     //FIXME: add geters
+
     public String getBody() {
         return body;
     }

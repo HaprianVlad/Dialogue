@@ -10,6 +10,22 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.Message;
  */
 public class Conversation {
 
-    private Set<Contact> contacts;
-    private List<Message> messages;
+    private long mId;
+    private Set<Contact> mContacts;
+    private List<Message> mMessages;
+
+    private int mMsgCount;
+    private long mTimeStamp;
+
+    private boolean mHasUnread;
+
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        this.mId = id;
+    }
+
 }

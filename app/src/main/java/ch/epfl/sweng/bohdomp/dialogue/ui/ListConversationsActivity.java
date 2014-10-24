@@ -1,14 +1,23 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 
 
 /**
@@ -16,29 +25,87 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
  * This is the main activity.
  */
 public class ListConversationsActivity extends Activity {
-    private ActionBar actionBar;
+    // TODELETE
+    static final int ID = 1234;
+
+    private ListView contactListView;
+    private LinearLayout defaultAppWarning;
+
     private String myPackageName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_conversations);
+
+        myPackageName = getPackageName();
+
+        setupDefaultAppWarning();
+        setupContactListView();
+    }
+
+
+    private void setupDefaultAppWarning() {
+
+        defaultAppWarning = (LinearLayout) findViewById(R.id.notDefaultWarning);
+
+        Button changeDefaultSmsAppButton = (Button) findViewById(R.id.setDefaultAppButton);
+
+        changeDefaultSmsAppButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, myPackageName);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void checkDefaultApp() {
+        if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
+            defaultAppWarning.setVisibility(View.VISIBLE);
+        }  else {
+            defaultAppWarning.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupContactListView() {
+
+        contactListView = (ListView) findViewById(R.id.listConversationsView);
+
+        //TODO MUST CHANGE THIS TO THE REAL DATA
+
+        Conversation newConv = new Conversation();
+        newConv.setId(ID);
+
+        List<Conversation> convList = new ArrayList<Conversation>();
+        convList.add(newConv);
+        convList.add(newConv);
+        convList.add(newConv);
+
+        BaseAdapter contactItemArrayAdapter = new ContactListAdapter(this, convList);
+        contactListView.setAdapter(contactItemArrayAdapter);
+
+        contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                System.out.println("Item Selected");
+
+            }
+        });
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        myPackageName = getPackageName();
-
+        checkDefaultApp();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list_conversations, menu);
-
         return true;
     }
 
@@ -55,17 +122,5 @@ public class ListConversationsActivity extends Activity {
     public void newConversationButtonHasBeenClicked(MenuItem item) {
         Intent intent = new Intent(this, ConversationActivity.class);
         startActivity(intent);
-    }
-
-
-    public void setDefaultSMSAppButtonHasBeenClicked(MenuItem item) {
-        if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
-            Intent intent =
-                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
-                    myPackageName);
-            startActivity(intent);
-        }
-
     }
 }
