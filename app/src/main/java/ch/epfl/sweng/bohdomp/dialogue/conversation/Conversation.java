@@ -9,6 +9,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
  * Class representing a Dialogue conversation
  */
 public class Conversation {
+
     private long mId;
     private Set<Contact> mContacts;
     private List<DialogueSmsMessage> mMessages;
