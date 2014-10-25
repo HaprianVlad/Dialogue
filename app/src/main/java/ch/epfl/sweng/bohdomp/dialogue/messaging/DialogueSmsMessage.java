@@ -4,42 +4,55 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.telephony.SmsMessage;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+
 /**
  * Class representing a Dialogue SMS message.
  */
 public class DialogueSmsMessage implements Parcelable {
 
+    final static long ID = 0;
+
     /**
-     * Enumeration representing the state of a message
+     * Enumeration representing the origin of a message
      */
     public static enum MessageType {
         INCOMING, OUTGOING
     }
+
+    private final long mId;
 
     private final String mBody;
     private final String mPhoneNumber;
     private MessageType mMessageType;
 
     public DialogueSmsMessage(String phoneNumber, String body) {
-        if (phoneNumber == null || body == null) {
-            throw new IllegalArgumentException("Null arguments in DialogueSmsMessage");
+        if (phoneNumber == null) {
+            throw new NullArgumentException("Phone number");
+        } else if (body == null) {
+            throw new NullArgumentException("Body");
         } else {
+            this.mId = ID;
             this.mPhoneNumber = phoneNumber;
             this.mBody = body;
             this.mMessageType = MessageType.OUTGOING;
         }
-
     }
 
     public DialogueSmsMessage(SmsMessage smsMessage) {
         if (smsMessage == null) {
             throw new IllegalArgumentException("Null arguments in DialogueSmsMessage");
         } else {
+            this.mId = ID;
             this.mPhoneNumber = smsMessage.getOriginatingAddress();
             this.mBody = smsMessage.getMessageBody();
             this.mMessageType = MessageType.INCOMING;
         }
 
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public String getBody() {
@@ -54,6 +67,10 @@ public class DialogueSmsMessage implements Parcelable {
         return mMessageType;
     }
 
+    public void setMessageType(MessageType type) {
+        mMessageType = type;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -62,12 +79,14 @@ public class DialogueSmsMessage implements Parcelable {
     /* --- Parcel --- */
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(this.mId);
         parcel.writeString(this.mBody);
         parcel.writeString(this.mPhoneNumber);
         parcel.writeInt(this.mMessageType == null ? -1 : this.mMessageType.ordinal());
     }
 
     private DialogueSmsMessage(Parcel in) {
+        this.mId = in.readLong();
         this.mBody = in.readString();
         this.mPhoneNumber = in.readString();
         int tmpMMessageType = in.readInt();

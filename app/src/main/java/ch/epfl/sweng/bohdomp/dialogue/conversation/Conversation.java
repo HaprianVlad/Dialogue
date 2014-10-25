@@ -13,17 +13,17 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 public interface Conversation {
 
     /**
-     * Getter for converstation id
-     * @return converstation id
+     * Getter for conversation id
+     * @return conversation id
      */
-    ConversationId getConversationId();
+    long getId();
 
     /**
      * Getter for the set of contacts
      * @return the set of contacts of the conversation
      */
-    Set<Contact> getConversationContacts();
 
+    Set<Contact> getConversationContacts();
 
 
     /**
@@ -90,6 +90,7 @@ public interface Conversation {
     /**
      * Represents a DialogueConversation id. This class is immutable
      */
+    //TODO Change implementation of ID #74
     public static final class ConversationId{
 
         private static long lastId = 0;
