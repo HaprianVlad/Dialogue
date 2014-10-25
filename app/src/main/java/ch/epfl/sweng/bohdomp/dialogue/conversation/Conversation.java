@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -11,22 +12,32 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
  */
 public class Conversation {
 
-    private long mId;
+    private final long mId;
     private Set<Contact> mContacts;
     private List<DialogueSmsMessage> mMessages;
 
     private int mMsgCount;
-    private long mTimeStamp;
+    private Timestamp mTimeStamp;
 
     private boolean mHasUnread;
+
+    public Conversation(long id, Set<Contact> contacts, List<DialogueSmsMessage> messages,
+                        int msgCount, Timestamp timeStamp, boolean hasUnread) {
+        this.mId = id;
+        this.mContacts = contacts;
+        this.mMessages = messages;
+        this.mMsgCount = msgCount;
+        this.mTimeStamp = timeStamp;
+        this.mHasUnread = hasUnread;
+    }
 
 
     public long getId() {
         return mId;
     }
 
-    public void setId(long id) {
-        this.mId = id;
+    public Timestamp getTimeStamp() {
+        return mTimeStamp;
     }
 
 }
