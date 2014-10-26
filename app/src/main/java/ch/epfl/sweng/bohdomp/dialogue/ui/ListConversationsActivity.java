@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,8 +76,7 @@ public class ListConversationsActivity extends Activity {
 
         //TODO MUST CHANGE THIS TO THE REAL DATA
 
-        Conversation newConv = new Conversation();
-        newConv.setId(ID);
+        Conversation newConv = new Conversation(ID, null, null, 0, new Timestamp(0), false);
 
         List<Conversation> convList = new ArrayList<Conversation>();
         convList.add(newConv);
