@@ -51,7 +51,7 @@ public class ContactListAdapter extends BaseAdapter{
 
     @Override
     public long getItemId(int position) {
-        return mConversations.get(position).getId();
+        return mConversations.get(position).getConversationId().getId();
     }
 
     @Override

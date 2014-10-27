@@ -45,6 +45,10 @@ public class Conversation {
     private int conversationMsgCount;
     private boolean conversationHasUnread;
 
+    /**
+     * Constructor of the class
+     * @param contacts - set of contacts we add to conversation
+     */
     public Conversation(Set<Contact> contacts) {
         if (contacts == null) {
             throw new IllegalArgumentException();
@@ -59,35 +63,66 @@ public class Conversation {
         }
     }
 
-
+    /**
+     * Getter for converstation id
+     * @return converstation id
+     */
     public ConversationId getConversationId() {
         return conversationId;
     }
 
+    /**
+     * Getter for the set of contacts
+     * @return the set of contacts of the conversation
+     */
     public Set<Contact> getConversationContacts() {
         return new HashSet<Contact>(conversationContacts);
     }
 
+    /**
+     * Getter for the messages list of the conversation
+     * @return list of messages
+     */
     public List<DialogueMessage> getConversationMessages() {
         return new ArrayList<DialogueMessage>(conversationMessages);
     }
 
+    /**
+     * Getter for the timeStamp of the conversation
+     * @return the current timestamp
+     */
     public Timestamp getConversationTimeStamp() {
         return conversationTimeStamp;
     }
 
+    /**
+     * Getter for the number of messages in the conversation
+     * @return number of messages in the conversation
+     */
     public int getConversationMsgCount() {
         return conversationMsgCount;
     }
 
+    /**
+     * Getter for the unread boolean
+     * @return conversationHasUnread paramater
+     */
     public boolean getConversationHasUnread() {
         return conversationHasUnread;
     }
 
+    /**
+     * Adds a contact to the conversation
+     * @param contact the contact we want to add
+     */
     public void addConverstationContact(Contact contact) {
         conversationContacts.add(contact);
     }
 
+    /**
+     * Add a message to the conversation
+     * @param message the message we want to add
+     */
     public void addMessage(DialogueMessage message) {
         conversationMessages.add(message);
     }

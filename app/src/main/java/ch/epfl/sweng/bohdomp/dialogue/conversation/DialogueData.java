@@ -13,9 +13,9 @@ import java.util.List;
  * @author BohDomp!
  *
  */
-public class DialogueData {
-	private static LongSparseArray<Conversation> mConversations = new LongSparseArray<Conversation>();
-    private static final Comparator<Conversation> TIME_STAMPS_COMPARATOR;
+public final class DialogueData {
+
+    private  final static Comparator<Conversation> TIME_STAMPS_COMPARATOR;
 
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
@@ -26,11 +26,25 @@ public class DialogueData {
         };
     }
 
+    private final static DialogueData DIALOGUE_DATA = new DialogueData();
+
+    private  LongSparseArray<Conversation> mConversations = new LongSparseArray<Conversation>();
+
+    private DialogueData() {
+        if (DIALOGUE_DATA != null) {
+            throw new IllegalStateException("Dialogue Data has been already instanciated !");
+        }
+    }
+
+    public static DialogueData getInstance() {
+        return DIALOGUE_DATA;
+    }
+
     /**
      *
      * @return List of all conversations ordered by their most recent activity
      */
-    public static List<Conversation> getConversations() {
+    public List<Conversation> getConversations() {
         if (mConversations == null) {
             return null;
         }
@@ -43,22 +57,24 @@ public class DialogueData {
     }
 
     /**
-     *
+     * Getter for a conversation
      * @param conversationId of the conversation we are looking for.
      * @return Conversation associated to the given id.
      */
-    public static Conversation getConversation(long conversationId) {
-        return mConversations.get(conversationId);
+    public Conversation getConversation(Conversation.ConversationId conversationId) {
+        return mConversations.get(conversationId.getId());
     }
 
     /**
-     *
+     * Adds a conversation to the data
      * @param conversation a new conversation
      */
-    public static void addConversation(Conversation conversation) {
+    public void addConversation(Conversation conversation) {
         long conversationId = conversation.getConversationId().getId();
         if (mConversations.indexOfKey(conversationId) >= 0) {
             mConversations.put(conversationId, conversation);
         }
     }
+
+    //FIXME: here comes message dispatching logique
 }
