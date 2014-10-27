@@ -1,43 +1,96 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 /**
- * Class representing a Dialogue conversation
+ * Class representing a Dialogue conversation. This class is mutable
  */
 public class Conversation {
 
-    private final long mId;
-    private Set<Contact> mContacts;
-    private List<DialogueSmsMessage> mMessages;
+    /**
+     * Represents a Conversation id. This class is immutable
+     */
+    public static final class ConversationId{
+        private static long topId = 0;
 
-    private int mMsgCount;
-    private Timestamp mTimeStamp;
+        public static ConversationId getNewConversationId() {
+            topId += 1;
+            return  new ConversationId(topId);
+        }
 
-    private boolean mHasUnread;
+        private final long id;
 
-    public Conversation(long id, Set<Contact> contacts, List<DialogueSmsMessage> messages,
-                        int msgCount, Timestamp timeStamp, boolean hasUnread) {
-        this.mId = id;
-        this.mContacts = contacts;
-        this.mMessages = messages;
-        this.mMsgCount = msgCount;
-        this.mTimeStamp = timeStamp;
-        this.mHasUnread = hasUnread;
+        private ConversationId(long idParameter) {
+            this.id = idParameter;
+        }
+
+        public long getId() {
+            return id;
+        }
+    }
+    private final ConversationId conversationId;
+    private final Set<Contact> conversationContacts;
+
+    private final List<DialogueMessage> conversationMessages;
+    private final Timestamp conversationTimeStamp;
+
+    private int conversationMsgCount;
+    private boolean conversationHasUnread;
+
+    public Conversation(Set<Contact> contacts) {
+        if (contacts == null) {
+            throw new IllegalArgumentException();
+        } else {
+            this.conversationId = ConversationId.getNewConversationId();
+            //Contacts has to be implemeted as imutable
+            this.conversationContacts = new HashSet<Contact>(contacts);
+            this.conversationMessages = new ArrayList<DialogueMessage>();
+            this.conversationMsgCount = 0;
+            this.conversationTimeStamp = new Timestamp((new Date()).getTime());
+            this.conversationHasUnread = false;
+        }
     }
 
 
-    public long getId() {
-        return mId;
+    public ConversationId getConversationId() {
+        return conversationId;
     }
 
-    public Timestamp getTimeStamp() {
-        return mTimeStamp;
+    public Set<Contact> getConversationContacts() {
+        return new HashSet<Contact>(conversationContacts);
     }
+
+    public List<DialogueMessage> getConversationMessages() {
+        return new ArrayList<DialogueMessage>(conversationMessages);
+    }
+
+    public Timestamp getConversationTimeStamp() {
+        return conversationTimeStamp;
+    }
+
+    public int getConversationMsgCount() {
+        return conversationMsgCount;
+    }
+
+    public boolean getConversationHasUnread() {
+        return conversationHasUnread;
+    }
+
+    public void addConverstationContact(Contact contact) {
+        conversationContacts.add(contact);
+    }
+
+    public void addMessage(DialogueMessage message) {
+        conversationMessages.add(message);
+    }
+
 
 }

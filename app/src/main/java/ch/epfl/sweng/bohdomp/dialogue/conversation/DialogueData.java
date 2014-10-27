@@ -20,7 +20,8 @@ public class DialogueData {
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
             public int compare(Conversation c1, Conversation c2) {
-                return c2.getTimeStamp().compareTo(c1.getTimeStamp()); // lowest timestamp comes before
+                return c2.getConversationTimeStamp().
+                        compareTo(c1.getConversationTimeStamp()); // lowest timestamp comes before
             }
         };
     }
@@ -55,7 +56,7 @@ public class DialogueData {
      * @param conversation a new conversation
      */
     public static void addConversation(Conversation conversation) {
-        long conversationId = conversation.getId();
+        long conversationId = conversation.getConversationId().getId();
         if (mConversations.indexOfKey(conversationId) >= 0) {
             mConversations.put(conversationId, conversation);
         }
