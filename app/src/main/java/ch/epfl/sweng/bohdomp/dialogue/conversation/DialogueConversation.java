@@ -21,6 +21,8 @@ public class DialogueConversation implements Conversation {
     private final List<DialogueMessage> conversationMessages;
     private final Timestamp conversationTimeStamp;
 
+    private final List<ConversationListener> conversationListeners;
+
     private int conversationMsgCount;
     private boolean conversationHasUnread;
 
@@ -36,93 +38,84 @@ public class DialogueConversation implements Conversation {
             //Contacts has to be implemeted as imutable
             this.conversationContacts = new HashSet<Contact>(contacts);
             this.conversationMessages = new ArrayList<DialogueMessage>();
+            this.conversationListeners = new ArrayList<ConversationListener>();
             this.conversationMsgCount = 0;
             this.conversationTimeStamp = new Timestamp((new Date()).getTime());
             this.conversationHasUnread = false;
         }
     }
 
-    /**
-     * Getter for converstation id
-     * @return converstation id
-     */
+
     @Override
     public ConversationId getConversationId() {
         return conversationId;
     }
 
-    /**
-     * Getter for the set of contacts
-     * @return the set of contacts of the conversation
-     */
+
     @Override
     public Set<Contact> getConversationContacts() {
         return new HashSet<Contact>(conversationContacts);
     }
 
-    /**
-     * Getter for the messages list of the conversation
-     * @return list of messages
-     */
     @Override
     public List<DialogueMessage> getConversationMessages() {
         return new ArrayList<DialogueMessage>(conversationMessages);
     }
 
-    /**
-     * Getter for the timeStamp of the conversation
-     * @return the current timestamp
-     */
+
     @Override
     public Timestamp getConversationTimeStamp() {
         return conversationTimeStamp;
     }
 
-    /**
-     * Getter for the number of messages in the conversation
-     * @return number of messages in the conversation
-     */
+
     @Override
     public int getConversationMsgCount() {
         return conversationMsgCount;
     }
 
-    /**
-     * Getter for the unread boolean
-     * @return conversationHasUnread paramater
-     */
+
     @Override
     public boolean getConversationHasUnread() {
         return conversationHasUnread;
     }
 
-    /**
-     * Adds a contact to the conversation
-     * @param contact the contact we want to add
-     */
+
     @Override
     public void addConversationContact(Contact contact) {
         conversationContacts.add(contact);
+        notifyListeners();
     }
 
-    /**
-     * Add a message to the conversation
-     * @param message the message we want to add
-     */
     @Override
     public void addMessage(DialogueMessage message) {
+        conversationHasUnread = true;
         conversationMessages.add(message);
+        notifyListeners();
     }
 
     @Override
     public void addListener(ConversationListener listener) {
-
+        conversationListeners.add(listener);
     }
 
     @Override
-    public void removeListener() {
-
+    public void removeListener(ConversationListener listener) {
+        if (conversationListeners.contains(listener)) {
+            conversationListeners.remove(listener);
+        }
     }
 
+    @Override
+    public void setAllMessagesAsRead() {
+        conversationHasUnread = false;
+        notifyListeners();
+    }
 
+    //Method that notifies listeners when a change in conversation occurs
+    private void notifyListeners() {
+        for (ConversationListener listener : conversationListeners) {
+            listener.onConversationChanged(this);
+        }
+    }
 }
