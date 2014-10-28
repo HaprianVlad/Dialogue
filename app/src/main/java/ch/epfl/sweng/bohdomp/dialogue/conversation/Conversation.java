@@ -5,39 +5,54 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 /**
- * Class representing a Dialogue conversation
+ *
  */
-public class Conversation {
+public interface Conversation {
 
-    private final long mId;
-    private Set<Contact> mContacts;
-    private List<DialogueSmsMessage> mMessages;
+    ConversationId getConversationId();
 
-    private int mMsgCount;
-    private Timestamp mTimeStamp;
+    Set<Contact> getConversationContacts();
 
-    private boolean mHasUnread;
+    List<DialogueMessage> getConversationMessages();
 
-    public Conversation(long id, Set<Contact> contacts, List<DialogueSmsMessage> messages,
-                        int msgCount, Timestamp timeStamp, boolean hasUnread) {
-        this.mId = id;
-        this.mContacts = contacts;
-        this.mMessages = messages;
-        this.mMsgCount = msgCount;
-        this.mTimeStamp = timeStamp;
-        this.mHasUnread = hasUnread;
+    Timestamp getConversationTimeStamp();
+
+    int getConversationMsgCount();
+
+    boolean getConversationHasUnread();
+
+    void addConversationContact(Contact contact);
+
+    void addMessage(DialogueMessage message);
+
+    void addListener(ConversationListener listener);
+
+    void removeListener();
+
+
+    /**
+     * Represents a DialogueConversation id. This class is immutable
+     */
+    public static final class ConversationId{
+
+        private static long lastId = 0;
+
+        public static ConversationId getNewConversationId() {
+            lastId += 1;
+            return  new ConversationId(lastId);
+        }
+
+        private final long id;
+
+        private ConversationId(long idParameter) {
+            this.id = idParameter;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
-
-
-    public long getId() {
-        return mId;
-    }
-
-    public Timestamp getTimeStamp() {
-        return mTimeStamp;
-    }
-
 }

@@ -4,7 +4,7 @@
     <string name="app_name">Dialogue</string>
     <string name="action_settings">Settings</string>
     <string name="action_deleteAll">Delete All</string>
-    <string name="action_delete">Delete conversation</string>
+    <string name="action_delete">Delete dialogueConversation</string>
     <string name="action_search">Search</string>
     <string name="action_addConversation">New Conversation</string>
     <string name="title_activity_list_conversations">All messages</string>

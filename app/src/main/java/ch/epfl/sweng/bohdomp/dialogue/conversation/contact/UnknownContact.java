@@ -8,11 +8,11 @@ import java.util.Set;
 /**
  * class representing a contact for which no entry was found in the contact database
  */
-class UnknownContact implements Contact {
+public class UnknownContact implements Contact {
 
     private final String mPhoneNumber;
 
-    UnknownContact(final String phoneNumber) {
+    public UnknownContact(final String phoneNumber) {
         this.mPhoneNumber = phoneNumber;
     }
 

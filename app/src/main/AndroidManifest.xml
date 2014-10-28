@@ -44,7 +44,7 @@
 
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
         <receiver
-            android:name=".channels.sms.SmsBroadcastReceiver"
+            android:name=".channels.sms.SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
@@ -85,13 +85,6 @@
             android:exported="false">
         </service>
 
-
-        <!--Service used to receive SMS messages-->
-        <service
-            android:name=".channels.sms.SmsReceiverService"
-            android:exported="false" >
-
-        </service>
 
         <!-- Service that sends SMS messages -->
         <service

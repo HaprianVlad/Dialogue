@@ -13,13 +13,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 
 /**
  * Activity displaying the list of conversations.
@@ -75,10 +77,12 @@ public class ListConversationsActivity extends Activity {
         contactListView = (ListView) findViewById(R.id.listConversationsView);
 
         //TODO MUST CHANGE THIS TO THE REAL DATA
+        Contact c = new UnknownContact("0040749475877");
+        Set<Contact> contactSet = new HashSet<Contact>();
+        contactSet.add(c);
+        DialogueConversation newConv = new DialogueConversation(contactSet);
 
-        Conversation newConv = new Conversation(ID, null, null, 0, new Timestamp(0), false);
-
-        List<Conversation> convList = new ArrayList<Conversation>();
+        List<DialogueConversation> convList = new ArrayList<DialogueConversation>();
         convList.add(newConv);
         convList.add(newConv);
         convList.add(newConv);

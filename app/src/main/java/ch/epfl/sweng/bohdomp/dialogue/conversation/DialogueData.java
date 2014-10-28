@@ -13,51 +13,68 @@ import java.util.List;
  * @author BohDomp!
  *
  */
-public class DialogueData {
-	private static LongSparseArray<Conversation> mConversations = new LongSparseArray<Conversation>();
-    private static final Comparator<Conversation> TIME_STAMPS_COMPARATOR;
+public final class DialogueData {
+
+    private  final static Comparator<DialogueConversation> TIME_STAMPS_COMPARATOR;
 
     static {
-        TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
-            public int compare(Conversation c1, Conversation c2) {
-                return c2.getTimeStamp().compareTo(c1.getTimeStamp()); // lowest timestamp comes before
+        TIME_STAMPS_COMPARATOR = new Comparator<DialogueConversation>() {
+            public int compare(DialogueConversation c1, DialogueConversation c2) {
+                return c2.getConversationTimeStamp().
+                        compareTo(c1.getConversationTimeStamp()); // lowest timestamp comes before
             }
         };
+    }
+
+    private final static DialogueData DIALOGUE_DATA = new DialogueData();
+
+    private  LongSparseArray<DialogueConversation> mConversations = new LongSparseArray<DialogueConversation>();
+
+    private DialogueData() {
+        if (DIALOGUE_DATA != null) {
+            throw new IllegalStateException("Dialogue Data has been already instanciated !");
+        }
+    }
+
+    public static DialogueData getInstance() {
+        return DIALOGUE_DATA;
     }
 
     /**
      *
      * @return List of all conversations ordered by their most recent activity
      */
-    public static List<Conversation> getConversations() {
+    public List<DialogueConversation> getConversations() {
         if (mConversations == null) {
             return null;
         }
-        List<Conversation> conversations = new ArrayList<Conversation>(mConversations.size());
+        List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>(mConversations.size());
         for (int i = 0; i < mConversations.size(); i++) {
-            conversations.add(mConversations.valueAt(i));
+            dialogueConversations.add(mConversations.valueAt(i));
         }
-        Collections.sort(conversations, TIME_STAMPS_COMPARATOR);
-        return conversations;
+        Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
+        return dialogueConversations;
     }
 
     /**
-     *
+     * Getter for a conversation
      * @param conversationId of the conversation we are looking for.
-     * @return Conversation associated to the given id.
+     * @return DialogueConversation associated to the given id.
      */
-    public static Conversation getConversation(long conversationId) {
-        return mConversations.get(conversationId);
+    public DialogueConversation getConversation(DialogueConversation.ConversationId conversationId) {
+        return mConversations.get(conversationId.getId());
     }
 
     /**
-     *
-     * @param conversation a new conversation
+     * Adds a dialogueConversation to the data
+     * @param dialogueConversation a new dialogueConversation
      */
-    public static void addConversation(Conversation conversation) {
-        long conversationId = conversation.getId();
+    public void addConversation(DialogueConversation dialogueConversation) {
+        long conversationId = dialogueConversation.getConversationId().getId();
         if (mConversations.indexOfKey(conversationId) >= 0) {
-            mConversations.put(conversationId, conversation);
+            mConversations.put(conversationId, dialogueConversation);
         }
     }
+
+    //FIXME: here comes message dispatching logique
 }
