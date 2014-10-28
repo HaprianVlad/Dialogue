@@ -88,6 +88,14 @@ public class DialogueConversation implements Conversation {
     }
 
     @Override
+    public void removeConversationContact(Contact contact) {
+        if (conversationContacts.contains(contact)) {
+            conversationContacts.remove(contact);
+            notifyListeners();
+        }
+    }
+
+    @Override
     public void addMessage(DialogueMessage message) {
         conversationHasUnread = true;
         conversationMessages.add(message);

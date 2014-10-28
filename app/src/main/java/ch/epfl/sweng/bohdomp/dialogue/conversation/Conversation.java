@@ -56,6 +56,12 @@ public interface Conversation {
      */
     void addConversationContact(Contact contact);
 
+    /**
+     * Removes a contact from the conversation
+     * @param contact the contact we want to remove
+     */
+    void removeConversationContact(Contact contact);
+
 
     /**
      * Adds a message to the conversation
