@@ -10,12 +10,13 @@ import android.widget.Toast;
 
 
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
 
 
 /**
  * Defines an Sms Broadcast Receiver
  */
-public class SmsBroadcastReceiver extends BroadcastReceiver {
+public class SmsReceiver extends BroadcastReceiver {
 
     private SmsMessage[] smsMessages;
 
@@ -28,11 +29,11 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             //Testing
             Toast.makeText(context, "SMS RECEIVED from"+ smsMessages[i].getDisplayOriginatingAddress(),
                     Toast.LENGTH_SHORT).show();
-            //Starting the SmsReceiverService for each received message
+            //Starting the MessageDispatcherService for each received message
             DialogueSmsMessage dialogueSmsMessage = new DialogueSmsMessage(smsMessages[i]);
-            Intent receiveMessageIntent = new Intent(context, SmsReceiverService.class);
+            Intent receiveMessageIntent = new Intent(context, MessageDispatcherService.class);
             receiveMessageIntent.putExtra("message", dialogueSmsMessage);
-            intent.setAction(SmsReceiverService.RECEIVE_SMS);
+            intent.setAction(MessageDispatcherService.RECEIVE_SMS);
 
             context.startService(intent);
 

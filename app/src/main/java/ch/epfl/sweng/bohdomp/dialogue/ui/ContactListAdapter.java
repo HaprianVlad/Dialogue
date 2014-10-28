@@ -14,7 +14,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 
 /**
  * @author swengTeam BohDomp
@@ -25,33 +25,33 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 public class ContactListAdapter extends BaseAdapter{
     private LayoutInflater layoutInflater;
 
-    private List<Conversation> mConversations;
+    private List<DialogueConversation> mDialogueConversations;
 
     /**
      * Constructor
      * @param activity Parent activity
      * @param items List of the element to be displayed
      */
-    public ContactListAdapter(Activity activity, List<Conversation> items) {
+    public ContactListAdapter(Activity activity, List<DialogueConversation> items) {
         super();
         layoutInflater = activity.getWindow().getLayoutInflater();
-        mConversations = items;
+        mDialogueConversations = items;
     }
 
 
     @Override
     public int getCount() {
-        return mConversations.size();
+        return mDialogueConversations.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mConversations.get(position);
+        return mDialogueConversations.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mConversations.get(position).getConversationId().getId();
+        return mDialogueConversations.get(position).getConversationId().getId();
     }
 
     @Override

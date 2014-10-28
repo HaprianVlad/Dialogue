@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 
@@ -80,9 +80,9 @@ public class ListConversationsActivity extends Activity {
         Contact c = new UnknownContact("0040749475877");
         Set<Contact> contactSet = new HashSet<Contact>();
         contactSet.add(c);
-        Conversation newConv = new Conversation(contactSet);
+        DialogueConversation newConv = new DialogueConversation(contactSet);
 
-        List<Conversation> convList = new ArrayList<Conversation>();
+        List<DialogueConversation> convList = new ArrayList<DialogueConversation>();
         convList.add(newConv);
         convList.add(newConv);
         convList.add(newConv);
