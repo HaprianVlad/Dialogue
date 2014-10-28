@@ -12,7 +12,7 @@ public class NullArgumentException extends IllegalArgumentException {
     public NullArgumentException(String message) {
         super("Argument can not be null: " + message);
 
-        if(message == null) {
+        if (message == null) {
             throw new NullArgumentException("message");
         }
     }
