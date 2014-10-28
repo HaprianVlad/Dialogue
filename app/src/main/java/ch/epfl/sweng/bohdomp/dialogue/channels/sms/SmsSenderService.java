@@ -34,6 +34,8 @@ public class SmsSenderService extends SenderService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+        assert intent != null;
+
         // setIntentRedelivery(true);
 
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
@@ -46,6 +48,9 @@ public class SmsSenderService extends SenderService {
 
     @Override
     public void onDestroy() {
+        assert mSentBroadcastReceiver != null;
+        assert  mDeliveryBroadcastReceiver != null;
+
         unregisterReceiver(mSentBroadcastReceiver);
         unregisterReceiver(mDeliveryBroadcastReceiver);
 
@@ -60,9 +65,7 @@ public class SmsSenderService extends SenderService {
      * @return the message to be sent.
      */
     private DialogueSmsMessage getMessage(Intent intent) {
-        if (intent == null) {
-            throw new IllegalArgumentException("Intent is null");
-        }
+        assert intent != null;
 
         return (DialogueSmsMessage) intent.getExtras().getParcelable(MESSAGE_BODY);
     }
@@ -73,6 +76,7 @@ public class SmsSenderService extends SenderService {
      * @return "sent" pending intent.
      */
     private PendingIntent getSentPendingIntent() {
+        assert mSentBroadcastReceiver != null;
 
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_SENT),
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -88,6 +92,7 @@ public class SmsSenderService extends SenderService {
      * @return "delivery" pending intent.
      */
     private PendingIntent getDeliveryPendingIntent() {
+        assert mDeliveryBroadcastReceiver != null;
 
         PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_DELIVERED),
                 PendingIntent.FLAG_UPDATE_CURRENT);

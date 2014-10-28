@@ -9,6 +9,7 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
 
@@ -18,25 +19,34 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
  */
 public class SmsReceiver extends BroadcastReceiver {
 
-    private SmsMessage[] smsMessages;
-
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (context == null) {
+            throw new NullArgumentException("context");
+        }
 
-        smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
-        for (int i=0; i<smsMessages.length; i++) {
+        if (intent == null) {
+            throw new NullArgumentException("intent");
+        }
 
-            //Testing
+
+        SmsMessage[] smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+        for (int i=0; i< smsMessages.length; i++) {
+
+            assert smsMessages[i] != null;
+
+            //FIXME: remove me when we actually display it to the user.
             Toast.makeText(context, "SMS RECEIVED from"+ smsMessages[i].getDisplayOriginatingAddress(),
                     Toast.LENGTH_SHORT).show();
+
             //Starting the MessageDispatcherService for each received message
             DialogueSmsMessage dialogueSmsMessage = new DialogueSmsMessage(smsMessages[i]);
             Intent receiveMessageIntent = new Intent(context, MessageDispatcherService.class);
+
             receiveMessageIntent.putExtra("message", dialogueSmsMessage);
             intent.setAction(MessageDispatcherService.RECEIVE_SMS);
 
             context.startService(intent);
-
         }
     }
 }
