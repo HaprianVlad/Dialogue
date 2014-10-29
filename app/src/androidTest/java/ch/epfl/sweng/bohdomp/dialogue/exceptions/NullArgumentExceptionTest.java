@@ -11,7 +11,7 @@ import junit.framework.Assert;
  */
 public class NullArgumentExceptionTest extends AndroidTestCase {
 
-    public void nullContructorTest() {
+    public void testNullConstr() {
         try {
             new NullArgumentException(null);
             Assert.fail();
@@ -20,7 +20,7 @@ public class NullArgumentExceptionTest extends AndroidTestCase {
         }
     }
 
-    public void validTest() {
+    public void testValidConstr() {
         new NullArgumentException("name");
     }
 }
