@@ -21,7 +21,7 @@ public class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
             throw new NullArgumentException("context");
         }
 
-        if (context == null) {
+        if (intent == null) {
             throw new NullArgumentException("intent");
         }
 

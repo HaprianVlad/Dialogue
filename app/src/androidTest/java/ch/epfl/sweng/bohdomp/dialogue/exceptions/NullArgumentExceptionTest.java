@@ -11,7 +11,7 @@ import junit.framework.Assert;
  */
 public class NullArgumentExceptionTest extends AndroidTestCase {
 
-    public void testNullContr() {
+    public void testNullConstr() {
         try {
             new NullArgumentException(null);
             Assert.fail();
