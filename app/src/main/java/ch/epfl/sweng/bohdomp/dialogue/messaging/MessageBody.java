@@ -11,9 +11,4 @@ public interface MessageBody{
      */
     String getMessageBody();
 
-    /**
-     * Methods that computes the size of a body message
-     * @return number of bytes of the message body
-     */
-    int getPayloadSize();
 }

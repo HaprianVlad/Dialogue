@@ -1,10 +1,13 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
  * Abstract class representing an message. This class is mutable.
@@ -40,29 +43,29 @@ public abstract class DialogueMessage {
         INCOMING, OUTGOING
     }
 
-    private final static int MAX_PAYLOAD_SIZE = 50;
-
     private final Contact contact;
     private final MessageBody messageBody;
     private final Timestamp timestamp;
-    private final DialogueMessageId dialogueMessageId;
+    private final DialogueMessageId messageId;
     private final MessageStatus messageStatus;
+    private final List<Contact.ChannelType> allowedChannels = new ArrayList<Contact.ChannelType>();
 
     private boolean isReadStatus;
 
 
     public DialogueMessage(Contact contactParameter, String messageBodyParameter,
-                           MessageStatus messageStatusParameter) {
-        if (contactParameter != null && messageBodyParameter != null) {
+                           MessageStatus messageStatusParameter, Contact.ChannelType channelTypeParameter) {
+        if (contactParameter != null && messageBodyParameter != null && channelTypeParameter != null) {
             this.contact = contactParameter;
             this.messageBody = newMessageBody(messageBodyParameter);
             this.timestamp = new Timestamp((new Date()).getTime());
-            this.dialogueMessageId = DialogueMessageId.getNewDialogueMessageId();
+            this.messageId = DialogueMessageId.getNewDialogueMessageId();
             this.isReadStatus = false;
             this.messageStatus = messageStatusParameter;
+            this.allowedChannels.add(channelTypeParameter);
 
         } else {
-            throw new IllegalArgumentException("Null arguments in DialogueMessage constructor");
+            throw new NullArgumentException("Null arguments in DialogueMessage constructor");
         }
 
     }
@@ -110,6 +113,14 @@ public abstract class DialogueMessage {
     }
 
     /**
+     * Getter for the message id
+     * @return the message id
+     */
+    public DialogueMessageId getMessageId() {
+        return messageId;
+    }
+
+    /**
      * Sets a message as read
      */
     public void setMessageAsRead() {
@@ -117,11 +128,15 @@ public abstract class DialogueMessage {
         isReadStatus = false;
     }
 
+
+
    /**
     * Method that returns the allowed channels where we can send the message
     * @return the list of allowed channels
     */
-    public abstract List<Contact.ChannelType> getAllowedChannels();
+    public  List<Contact.ChannelType> getAllowedChannels() {
+        return new ArrayList<Contact.ChannelType>(allowedChannels);
+    }
 
    /**
     * Factory method for constructing the corespondent type of message body

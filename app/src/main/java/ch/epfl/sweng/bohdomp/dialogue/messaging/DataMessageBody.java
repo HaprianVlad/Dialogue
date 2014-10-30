@@ -24,8 +24,4 @@ public class DataMessageBody implements MessageBody {
         return body.getFragment();
     }
 
-    @Override
-    public int getPayloadSize() {
-        return 0;
-    }
 }
