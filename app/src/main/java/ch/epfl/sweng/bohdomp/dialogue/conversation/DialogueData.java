@@ -31,9 +31,7 @@ public final class DialogueData {
     private  LongSparseArray<DialogueConversation> mConversations = new LongSparseArray<DialogueConversation>();
 
     private DialogueData() {
-        if (DIALOGUE_DATA != null) {
-            throw new IllegalStateException("Dialogue Data has been already instanciated !");
-        }
+        assert DIALOGUE_DATA != null: "Dialog data has already been instanciated";
     }
 
     public static DialogueData getInstance() {
@@ -48,10 +46,13 @@ public final class DialogueData {
         if (mConversations == null) {
             return null;
         }
+
         List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>(mConversations.size());
+
         for (int i = 0; i < mConversations.size(); i++) {
             dialogueConversations.add(mConversations.valueAt(i));
         }
+
         Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
         return dialogueConversations;
     }
@@ -71,6 +72,7 @@ public final class DialogueData {
      */
     public void addConversation(DialogueConversation dialogueConversation) {
         long conversationId = dialogueConversation.getConversationId().getId();
+        
         if (mConversations.indexOfKey(conversationId) >= 0) {
             mConversations.put(conversationId, dialogueConversation);
         }
