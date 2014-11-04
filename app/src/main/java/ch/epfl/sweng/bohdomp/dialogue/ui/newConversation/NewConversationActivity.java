@@ -53,8 +53,7 @@ public class NewConversationActivity extends Activity {
             public void onClick(View v) {
                 Log.i(LOG_TAG, "New conversation");
 
-                final int convId = 123;
-                long conversationID = convId;
+                long conversationID = 123L;
 
                 Intent intent = new Intent(v.getContext(), MessagesActivity.class);
                 intent.putExtra(DialogueConversation.CONVERSATION_ID, conversationID);

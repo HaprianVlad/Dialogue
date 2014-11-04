@@ -41,7 +41,7 @@ public class DialogueSmsMessage implements Parcelable {
 
     public DialogueSmsMessage(SmsMessage smsMessage) {
         if (smsMessage == null) {
-            throw new IllegalArgumentException("Null arguments in DialogueSmsMessage");
+            throw new NullArgumentException("smsMessage");
         } else {
             this.mId = ID;
             this.mPhoneNumber = smsMessage.getOriginatingAddress();
