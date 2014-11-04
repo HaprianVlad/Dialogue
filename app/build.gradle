@@ -26,6 +26,8 @@ android {
 
     lintOptions {
         disable 'OldTargetApi'
+	disable 'GradleDependency'
+	disable 'UnusedResources'
         abortOnError true
         warningsAsErrors true
     }

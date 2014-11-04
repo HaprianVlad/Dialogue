@@ -19,6 +19,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
  */
 public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
+    private static final long CONVERSATION_ID = 123L;
 
     private EditText mToEditText;
     private Button mSendButton;
@@ -53,10 +54,8 @@ public class NewConversationActivity extends Activity {
             public void onClick(View v) {
                 Log.i(LOG_TAG, "New conversation");
 
-                long conversationID = 123L;
-
                 Intent intent = new Intent(v.getContext(), MessagesActivity.class);
-                intent.putExtra(DialogueConversation.CONVERSATION_ID, conversationID);
+                intent.putExtra(DialogueConversation.CONVERSATION_ID, CONVERSATION_ID);
                 startActivity(intent);
             }
         });
