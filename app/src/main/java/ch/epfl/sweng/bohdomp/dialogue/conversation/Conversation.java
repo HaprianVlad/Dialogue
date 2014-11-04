@@ -1,9 +1,11 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -17,7 +19,7 @@ public interface Conversation {
      * Getter for conversation id
      * @return conversation id
      */
-    long getId();
+    ConversationId getId();
 
     /**
      * Getter for the set of contacts
@@ -91,20 +93,27 @@ public interface Conversation {
     /**
      * Represents a DialogueConversation id. This class is immutable
      */
-    public static final class ConversationId implements Comparable<ConversationId> {
-        private final UUID mId;
+    public static final class ConversationId implements Parcelable, Comparable<ConversationId> {
+        private final long mId;
 
-        private ConversationId(UUID id) {
+        private ConversationId(long id) {
             this.mId = id;
         }
 
-        public long getId() {
-            //HACK: for now until we get to change the reset
-            return mId.getLeastSignificantBits();
+        public long getLong() {
+            return mId;
+        }
+
+        public static ConversationId fromLong(long id) throws IllegalArgumentException {
+            if (id < 0) {
+                throw new IllegalArgumentException("Given long to construct ConversationId is smaller than 0!");
+            }
+            return new ConversationId(id);
         }
 
         public static ConversationId getNewConversationId() {
-            return  new ConversationId(UUID.randomUUID());
+            // TODO generate IDs in a better way?
+            return  new ConversationId(System.currentTimeMillis());
         }
 
         /**
@@ -121,7 +130,7 @@ public interface Conversation {
          */
         @Override
         public int compareTo(ConversationId another) {
-            return this.mId.compareTo(another.mId);
+            return Long.compare(this.mId, another.mId);
         }
 
         @Override
@@ -135,13 +144,35 @@ public interface Conversation {
             }
 
             ConversationId that = (ConversationId) o;
-            return mId.equals(that.mId);
+            return mId == that.mId;
 
         }
 
         @Override
         public int hashCode() {
-            return mId.hashCode();
+            return Long.valueOf(mId).hashCode();
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeLong(mId);
+        }
+
+        public static final Parcelable.Creator<ConversationId> CREATOR
+            = new Parcelable.Creator<ConversationId>() {
+                public ConversationId createFromParcel(Parcel in) {
+                    return new ConversationId(in.readLong());
+                }
+
+                public ConversationId[] newArray(int size) {
+                    return new ConversationId[size];
+                }
+            };
+
     }
 }

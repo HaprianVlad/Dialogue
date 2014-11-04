@@ -48,8 +48,8 @@ public class DialogueConversation implements Conversation {
 
 
     @Override
-    public long getId() {
-        return conversationId.getId();
+    public ConversationId getId() {
+        return conversationId;
     }
 
 

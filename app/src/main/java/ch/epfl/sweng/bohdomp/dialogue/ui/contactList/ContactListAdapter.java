@@ -13,6 +13,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 
 import java.util.List;
+
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
@@ -56,9 +57,8 @@ public class ContactListAdapter extends BaseAdapter{
 
         if (items == null) {
             throw new NullArgumentException("items");
-        } else {
-            this.mDialogueConversations = items;
         }
+        this.mDialogueConversations = items;
     }
 
 
@@ -76,7 +76,7 @@ public class ContactListAdapter extends BaseAdapter{
 
     @Override
     public long getItemId(int position) {
-        return mDialogueConversations.get(position).getId();
+        return mDialogueConversations.get(position).getId().getLong();
     }
 
 
