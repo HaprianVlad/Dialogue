@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -90,24 +91,57 @@ public interface Conversation {
     /**
      * Represents a DialogueConversation id. This class is immutable
      */
-    //TODO Change implementation of ID #74
-    public static final class ConversationId{
+    public static final class ConversationId implements Comparable<ConversationId> {
+        private final UUID mId;
 
-        private static long lastId = 0;
-
-        public static ConversationId getNewConversationId() {
-            lastId += 1;
-            return  new ConversationId(lastId);
-        }
-
-        private final long id;
-
-        private ConversationId(long idParameter) {
-            this.id = idParameter;
+        private ConversationId(UUID id) {
+            this.mId = id;
         }
 
         public long getId() {
-            return id;
+            //HACK: for now until we get to change the reset
+            return mId.getLeastSignificantBits();
+        }
+
+        public static ConversationId getNewConversationId() {
+            return  new ConversationId(UUID.randomUUID());
+        }
+
+        /**
+         * Compares this object to the specified object to determine their relative
+         * order.
+         *
+         * @param another the object to compare to this instance.
+         * @return a negative integer if this instance is less than {@code another};
+         * a positive integer if this instance is greater than
+         * {@code another}; 0 if this instance has the same order as
+         * {@code another}.
+         * @throws ClassCastException if {@code another} cannot be converted into something
+         *                            comparable to {@code this} instance.
+         */
+        @Override
+        public int compareTo(ConversationId another) {
+            return this.mId.compareTo(another.mId);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (o == null || this.getClass() != o.getClass()) {
+                return false;
+            }
+
+            ConversationId that = (ConversationId) o;
+            return mId.equals(that.mId);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return mId.hashCode();
         }
     }
 }

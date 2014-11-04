@@ -59,7 +59,6 @@ public class MessageDispatcherService extends IntentService {
     private final SmsManager smsManager = SmsManager.getDefault();
 
     public MessageDispatcherService() {
-
         super("MessageDispatcherService");
     }
 
@@ -69,6 +68,7 @@ public class MessageDispatcherService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             final String messageBody = intent.getStringExtra(MESSAGE_BODY);
+
             if (SEND_SMS.equals(action)) {
                 final String destinationAddress  = intent.getStringExtra(DESTINATION_ADDRESS);
                 handleSendSms(destinationAddress, messageBody);
@@ -84,7 +84,6 @@ public class MessageDispatcherService extends IntentService {
      * parameters.
      */
     private void handleReceiveSms(String senderAddress, String smsMessageBody) {
-
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

@@ -63,6 +63,7 @@ public class MessagesActivity extends Activity {
 
         DialogueData data = DialogueData.getInstance();
         mConversation = data.getConversation(mConversationID);
+
         if (mConversation != null) {
             mMessages = mConversation.getConversationMessages();
             mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
@@ -118,13 +119,9 @@ public class MessagesActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Boolean settingsSelected = item.getItemId() == R.id.action_settings;
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return settingsSelected || super.onOptionsItemSelected(item);
 
     }
 }
