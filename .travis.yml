@@ -18,6 +18,7 @@ before_script:
     - adb devices
 
 script:
+    - ./gradlew build
     - ./gradlew connectedCheck
     - ./gradlew connectedAndroidTest
   
