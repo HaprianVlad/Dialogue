@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.ConversationActivity" >
+    tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity" >
 
     <!--  Items should appear in the dropdown menu  -->
     <item android:id="@+id/action_settings"
@@ -11,12 +11,5 @@
         android:title="@string/action_delete"
         android:orderInCategory="100"
         android:showAsAction="never" />
-
-    <!--  Items should appear as button  -->
-    <item android:id="@+id/action_search"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/action_search"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:actionViewClass="android.widget.SearchView"/>
 
 </menu>

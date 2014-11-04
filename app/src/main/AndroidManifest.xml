@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.epfl.sweng.bohdomp.dialogue" >
 
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -12,15 +12,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ui.ListConversationsActivity"
+            android:name=".ui.contactList.ContactListActivity"
             android:label="@string/title_activity_list_conversations" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
@@ -37,9 +35,9 @@
 
         <!-- Activity that allows the user to send new SMS/MMS dialogueSmsMessage -->
         <activity
-            android:name=".ui.ConversationActivity"
+            android:name=".ui.messages.MessagesActivity"
             android:label="@string/title_activity_conversation"
-            android:parentActivityName=".ui.ListConversationsActivity" >
+            android:parentActivityName=".ui.contactList.ContactListActivity" >
         </activity>
 
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
@@ -79,17 +77,16 @@
             </intent-filter>
         </service>
 
-        <!--Service that uses other services to send and receive Messages: Sms,Mms, Telegram-->
+        <!-- Service that uses other services to send and receive Messages: Sms,Mms, Telegram -->
         <service
             android:name=".messaging.MessageDispatcherService"
-            android:exported="false">
+            android:exported="false" >
         </service>
-
 
         <!-- Service that sends SMS messages -->
         <service
             android:name=".channels.sms.SmsSenderService"
-            android:exported="false">
+            android:exported="false" >
         </service>
 
         <!-- BroadcastReceiver that listens for the delivery of SMS messages -->
@@ -102,13 +99,18 @@
         </receiver>
 
         <!-- BroadcastReceiver that listens for the sending of SMS messages -->
-        <receiver android:name=".channels.sms.SmsSentBroadcastReceiver"
-            android:exported="false">
+        <receiver
+            android:name=".channels.sms.SmsSentBroadcastReceiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="SMS_SENT" />
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".ui.newConversation.NewConversationActivity"
+            android:label="@string/title_activity_new_conversation" >
+        </activity>
     </application>
 
 </manifest>

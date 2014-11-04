@@ -14,6 +14,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
  * Class representing a Dialogue conversation. This class is mutable
  */
 public class DialogueConversation implements Conversation {
+    public static final String CONVERSATION_ID = "conversationID";
 
     private final ConversationId conversationId;
     private final Set<Contact> conversationContacts;
@@ -35,7 +36,7 @@ public class DialogueConversation implements Conversation {
             throw new IllegalArgumentException();
         } else {
             this.conversationId = ConversationId.getNewConversationId();
-            //Contacts has to be implemeted as imutable
+            //Contacts has to be implemented as immutable
             this.conversationContacts = new HashSet<Contact>(contacts);
             this.conversationMessages = new ArrayList<DialogueMessage>();
             this.conversationListeners = new ArrayList<ConversationListener>();
@@ -47,8 +48,8 @@ public class DialogueConversation implements Conversation {
 
 
     @Override
-    public ConversationId getConversationId() {
-        return conversationId;
+    public long getId() {
+        return conversationId.getId();
     }
 
 

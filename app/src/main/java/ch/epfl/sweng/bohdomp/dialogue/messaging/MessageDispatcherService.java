@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.Context;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 /**
  * FIXME : THIS CLASS HAS TO BE COMPLETLY CHANGED
  *
  */
 public class MessageDispatcherService extends IntentService {
+    private static final String TAG = "MessageDispatcherService";
 
     // IntentService can perform, e.g. RECEIVE_SMS
     public static final String RECEIVE_SMS = "ReceiveSMS";
@@ -30,6 +32,8 @@ public class MessageDispatcherService extends IntentService {
      * @see IntentService
      */
     public static void startReceiveSms(Context context, SmsMessage smsMessage) {
+        Log.e(TAG, "Start Intent To Message DispatcherService");
+
         Intent intent = new Intent(context, MessageDispatcherService.class);
         intent.setAction(RECEIVE_SMS);
         intent.putExtra(MESSAGE_BODY, smsMessage.getMessageBody());
@@ -46,8 +50,8 @@ public class MessageDispatcherService extends IntentService {
     public static void startSendSms(Context context, DialogueSmsMessage dialogueSmsMessage) {
         Intent intent = new Intent(context, MessageDispatcherService.class);
         intent.setAction(SEND_SMS);
+        intent.putExtra(DESTINATION_ADDRESS, dialogueSmsMessage.getPhoneNumber());
         intent.putExtra(MESSAGE_BODY, dialogueSmsMessage.getBody());
-
 
         context.startService(intent);
     }
@@ -61,6 +65,7 @@ public class MessageDispatcherService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         if (intent != null) {
             final String action = intent.getAction();
             final String messageBody = intent.getStringExtra(MESSAGE_BODY);
@@ -88,6 +93,8 @@ public class MessageDispatcherService extends IntentService {
      * parameters.
      */
     private void handleSendSms(String destinationAddress, String messageBody) {
+        Log.e(TAG, destinationAddress + " : " + messageBody);
+
         //FIXME: use the last 2 parameters which are null to make reactive UI when message is well sent or not
         smsManager.sendTextMessage(destinationAddress, null, messageBody, null, null);
     }

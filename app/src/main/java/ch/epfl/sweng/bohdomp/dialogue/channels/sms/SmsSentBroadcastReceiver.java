@@ -14,6 +14,8 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  * by the sms manager when sending a sms message.
  */
 public class SmsSentBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = "SmsSentBroadcastReceiver";
+
     private static final String ACTION_SMS_SENT = "SMS_SENT";
 
     @Override

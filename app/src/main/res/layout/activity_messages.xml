@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity" >
+
+    <RelativeLayout
+        android:id="@+id/new_message_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false" >
+
+        <EditText
+            android:id="@+id/new_message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/send_message_button"
+            android:ems="10"
+            android:hint="@string/type_message"
+            android:maxLines="4"/>
+
+        <Button
+            android:id="@+id/send_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="@string/send_message_button"/>
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/message_List"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/new_message_bar"
+        android:clickable="false">
+    </ListView>
+
+</RelativeLayout>

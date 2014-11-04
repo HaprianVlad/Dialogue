@@ -62,8 +62,8 @@ public final class DialogueData {
      * @param conversationId of the conversation we are looking for.
      * @return DialogueConversation associated to the given id.
      */
-    public DialogueConversation getConversation(DialogueConversation.ConversationId conversationId) {
-        return mConversations.get(conversationId.getId());
+    public DialogueConversation getConversation(long conversationId) {
+        return mConversations.get(conversationId);
     }
 
     /**
@@ -71,8 +71,8 @@ public final class DialogueData {
      * @param dialogueConversation a new dialogueConversation
      */
     public void addConversation(DialogueConversation dialogueConversation) {
-        long conversationId = dialogueConversation.getConversationId().getId();
-        
+        long conversationId = dialogueConversation.getId();
+
         if (mConversations.indexOfKey(conversationId) >= 0) {
             mConversations.put(conversationId, dialogueConversation);
         }
