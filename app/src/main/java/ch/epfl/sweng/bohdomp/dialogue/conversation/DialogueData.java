@@ -1,11 +1,12 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
-import android.util.LongSparseArray;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+
+import static ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation.ConversationId;
 
 /**
  * Represents all conversation in the application
@@ -28,11 +29,8 @@ public final class DialogueData {
 
     private final static DialogueData DIALOGUE_DATA = new DialogueData();
 
-    private  LongSparseArray<DialogueConversation> mConversations = new LongSparseArray<DialogueConversation>();
-
-    private DialogueData() {
-        assert DIALOGUE_DATA != null: "Dialog data has already been instanciated";
-    }
+    private HashMap<ConversationId, DialogueConversation> mConversations =
+            new HashMap<ConversationId, DialogueConversation>();
 
     public static DialogueData getInstance() {
         return DIALOGUE_DATA;
@@ -47,11 +45,7 @@ public final class DialogueData {
             return null;
         }
 
-        List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>(mConversations.size());
-
-        for (int i = 0; i < mConversations.size(); i++) {
-            dialogueConversations.add(mConversations.valueAt(i));
-        }
+        List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>(mConversations.values());
 
         Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
         return dialogueConversations;
@@ -62,7 +56,7 @@ public final class DialogueData {
      * @param conversationId of the conversation we are looking for.
      * @return DialogueConversation associated to the given id.
      */
-    public DialogueConversation getConversation(long conversationId) {
+    public DialogueConversation getConversation(ConversationId conversationId) {
         return mConversations.get(conversationId);
     }
 
@@ -71,12 +65,12 @@ public final class DialogueData {
      * @param dialogueConversation a new dialogueConversation
      */
     public void addConversation(DialogueConversation dialogueConversation) {
-        long conversationId = dialogueConversation.getId();
+        ConversationId conversationId = dialogueConversation.getId();
 
-        if (mConversations.indexOfKey(conversationId) >= 0) {
+        if (!mConversations.containsKey(conversationId)) {
             mConversations.put(conversationId, dialogueConversation);
         }
     }
 
-    //FIXME: here comes message dispatching logique
+    //FIXME: here comes message dispatching logic
 }

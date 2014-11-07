@@ -19,6 +19,8 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
+import static ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation.ConversationId;
+
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -33,7 +35,6 @@ public class MessagesActivity extends Activity {
 
     private BaseAdapter mMessageItemListAdapter;
 
-    private long mConversationID;
     private DialogueConversation mConversation;
     private List<DialogueMessage> mMessages;
 
@@ -45,13 +46,14 @@ public class MessagesActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        mConversationID = intent.getLongExtra(DialogueConversation.CONVERSATION_ID, -1L);
 
-        if (mConversationID < 0) {
-            throw new IllegalArgumentException("Conversation ID is malformed");
-        } else {
-            initData();
+        try {
+            ConversationId conversationID;
+            conversationID = ConversationId.fromLong(intent.getLongExtra(DialogueConversation.CONVERSATION_ID, -1L));
+            initData(conversationID);
             setViewElement();
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, e.getMessage());
         }
     }
 
@@ -59,10 +61,10 @@ public class MessagesActivity extends Activity {
     /*
      * Initialize the data used by the activity
      */
-    public void initData() {
+    public void initData(ConversationId conversationId) {
 
         DialogueData data = DialogueData.getInstance();
-        mConversation = data.getConversation(mConversationID);
+        mConversation = data.getConversation(conversationId);
 
         if (mConversation != null) {
             mMessages = mConversation.getConversationMessages();
