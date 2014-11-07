@@ -104,7 +104,7 @@ public interface Conversation {
             return mId;
         }
 
-        public static ConversationId fromLong(long id) throws IllegalArgumentException {
+        public static ConversationId fromLong(long id) {
             if (id < 0) {
                 throw new IllegalArgumentException("Given long to construct ConversationId is smaller than 0!");
             }
