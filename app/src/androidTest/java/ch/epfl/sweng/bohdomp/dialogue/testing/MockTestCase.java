@@ -3,7 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.testing;
 
 import android.test.InstrumentationTestCase;
 
-/** A TestCase with support for Mockito */
+/** A TestCase with support for Mockito. This class is copied from SwEng midterm exam testing suite. */
 public class MockTestCase extends InstrumentationTestCase {
 
     @Override

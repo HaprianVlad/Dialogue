@@ -21,43 +21,38 @@ public class DialogueMessageTest extends MockTestCase {
 
     }
 
+/*
 
+    //FIXME: Test will be implemented in next pull request
     public void  testGetContact() {
-
-    }
-    public void testGetBody() {
-
+        assertTrue(contact!=null);
     }
 
-    public void testGetIsReadStatus() {
-
-
-    }
 
     public void testGetMessageTimeStamp() {
-
+        assertTrue(true);
     }
 
     public void testGetMessageStatus() {
-
+        assertTrue(true);
 
     }
 
 
     public void testGetMessageId() {
-
+       assertTrue(true);
     }
 
     public void testSetMessageAsRead() {
-
+        assertTrue(true);
     }
 
 
 
 
     public void testGetAllowedChannels() {
-
+        assertTrue(true);
     }
-
+*/
 
 }

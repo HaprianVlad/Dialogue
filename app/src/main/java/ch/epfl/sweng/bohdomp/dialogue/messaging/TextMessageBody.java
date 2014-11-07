@@ -2,6 +2,8 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.telephony.SmsMessage;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+
 
 /**
  *  Class representing the body of a text message
@@ -12,11 +14,14 @@ public class TextMessageBody implements MessageBody {
     private final String body;
 
     public TextMessageBody(String bodyParameter) {
-        if (bodyParameter != null && bodyParameter.getBytes().length < MAX_MESSAGE_SIZE) {
-            this.body = bodyParameter;
-        } else {
-            throw new IllegalArgumentException("Null argument in TextMessageBody constructor or too long message");
+        if (bodyParameter == null) {
+            throw new NullArgumentException(bodyParameter);
         }
+        if (bodyParameter.getBytes().length < MAX_MESSAGE_SIZE) {
+            throw new IllegalArgumentException("Too big message body!");
+        }
+
+        this.body = bodyParameter;
 
     }
 

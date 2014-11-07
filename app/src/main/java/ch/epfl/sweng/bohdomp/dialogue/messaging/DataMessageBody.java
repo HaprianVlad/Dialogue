@@ -2,6 +2,8 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.net.Uri;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+
 /**
  * Class representing the body of a data message
  */
@@ -15,7 +17,7 @@ public class DataMessageBody implements MessageBody {
         if (bodyParameter != null) {
             this.body = Uri.parse(bodyParameter);
         } else {
-            throw new IllegalArgumentException("Null argument in DataMessageBody constructor");
+            throw new NullArgumentException(bodyParameter);
         }
     }
 
