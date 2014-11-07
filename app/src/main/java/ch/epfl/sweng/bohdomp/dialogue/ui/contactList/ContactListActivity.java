@@ -47,7 +47,6 @@ public class ContactListActivity extends Activity {
         setupListener();
     }
 
-
     /*
      * Initialize the data used by the activity
      */
@@ -57,7 +56,6 @@ public class ContactListActivity extends Activity {
         mConversationList = data.getConversations();
         mContactItemListAdapter = new ContactListAdapter(this, mConversationList);
     }
-
 
     /*
      * Set all view elements
@@ -71,7 +69,6 @@ public class ContactListActivity extends Activity {
         mContactListView.setAdapter(mContactItemListAdapter);
     }
 
-
     /**
      * Check if Dialogue is the default sms app, given the result it display or not a warning
      */
@@ -82,7 +79,6 @@ public class ContactListActivity extends Activity {
             mDefaultAppWarningLayout.setVisibility(View.GONE);
         }
     }
-
 
     /**
      * Setup all listener related to the view displayed by the activity
@@ -112,13 +108,11 @@ public class ContactListActivity extends Activity {
         });
     }
 
-
     @Override
     protected void onResume() {
         checkDefaultApp();
         super.onResume();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,7 +120,6 @@ public class ContactListActivity extends Activity {
         getMenuInflater().inflate(R.menu.list_conversations, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -137,7 +130,6 @@ public class ContactListActivity extends Activity {
 
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
-
 
     /**
      * Method called when the new conversation is clicked
