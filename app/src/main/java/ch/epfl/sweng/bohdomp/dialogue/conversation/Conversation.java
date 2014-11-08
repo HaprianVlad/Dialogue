@@ -95,6 +95,7 @@ public interface Conversation {
      */
     public static final class ConversationId implements Parcelable, Comparable<ConversationId> {
         private final long mId;
+        private static long mPreviousId;
 
         private ConversationId(long id) {
             this.mId = id;
@@ -111,9 +112,17 @@ public interface Conversation {
             return new ConversationId(id);
         }
 
-        public static ConversationId getNewConversationId() {
-            // TODO generate IDs in a better way?
-            return  new ConversationId(System.currentTimeMillis());
+        public static synchronized ConversationId getNewConversationId() {
+
+            long newId;
+
+            /* we make sure to have different ids, in case our CPU is too fast */
+            do {
+                newId = System.currentTimeMillis();
+            } while  (mPreviousId == newId);
+
+            mPreviousId = newId;
+            return  new ConversationId(newId);
         }
 
         /**
