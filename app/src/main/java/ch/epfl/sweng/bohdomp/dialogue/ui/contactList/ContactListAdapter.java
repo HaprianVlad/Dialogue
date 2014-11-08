@@ -13,6 +13,8 @@ import android.widget.TextView;
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
@@ -43,6 +45,7 @@ public class ContactListAdapter extends BaseAdapter{
         protected TextView contactName;
         protected TextView contactChannels;
         protected TextView lastMessage;
+        protected TextView unRead;
         protected Button deleteConversation;
     }
 
@@ -133,6 +136,7 @@ public class ContactListAdapter extends BaseAdapter{
         viewHolder.contactName = (TextView) convertView.findViewById(R.id.contactName);
         viewHolder.contactChannels = (TextView) convertView.findViewById(R.id.contactChannels);
         viewHolder.lastMessage = (TextView) convertView.findViewById(R.id.contactLastMessage);
+        viewHolder.unRead = (TextView) convertView.findViewById(R.id.unReadDot);
 
         //FIXME SHOULD BE REPLACED BY A SWIPE TO DELETE
         viewHolder.deleteConversation = (Button) convertView.findViewById(R.id.deleteConversationButton);
@@ -154,8 +158,26 @@ public class ContactListAdapter extends BaseAdapter{
     private void setupView(Conversation c, ContactListViewHolder viewHolder) {
 
         String name = c.getConversationName();
+        Timestamp time = c.getConversationTimeStamp();
+        Boolean unread = c.getConversationHasUnread();
 
         viewHolder.contactName.setText(name);
 
+        if (unread) {
+            viewHolder.unRead.setVisibility(View.VISIBLE);
+        }
+
+        viewHolder.lastMessage.setText(getLastSeenString(time));
+    }
+
+    private String getLastSeenString(Timestamp last) {
+        final int minute = 1000*60;
+
+        Timestamp current = new Timestamp((new Date()).getTime());
+        long timeSinceMilli = current.getTime() - last.getTime();
+        int minuteSince = (int) timeSinceMilli / minute;
+
+        //TODO SOULD CHECK IF IT IS THE SAME DAY
+        return Long.toString(minuteSince) + " min";
     }
 }

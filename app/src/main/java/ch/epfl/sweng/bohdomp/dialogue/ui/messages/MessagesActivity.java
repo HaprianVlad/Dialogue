@@ -103,6 +103,10 @@ public class MessagesActivity extends Activity {
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
                 Log.i(LOG_TAG, "New msg to be sent :" + draftText);
+
+
+
+
             }
 
         });
