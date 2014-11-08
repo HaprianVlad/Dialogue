@@ -15,9 +15,10 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
  * that can occur when sending a sms.
  */
 public class SmsSenderService extends SenderService {
+    public static final String ACTION_SEND_SMS = "SEND_SMS";
+
     private static final String ACTION_SMS_SENT = "SMS_SENT";
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
-    private static final String ACTION_SEND_SMS = "SEND_SMS";
 
     private static final String MESSAGE_BODY = "message";
 

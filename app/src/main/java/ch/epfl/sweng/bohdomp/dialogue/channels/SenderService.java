@@ -4,7 +4,6 @@ import android.app.IntentService;
 
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
-
 /**
  *  Abstract class representing a sender service
  */

@@ -14,7 +14,6 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
 
-
 /**
  * Defines an Sms Broadcast Receiver
  */
