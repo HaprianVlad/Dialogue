@@ -17,6 +17,10 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     public static final String MESSAGE = "MESSAGE";
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
+
+
+//FIXME:Adds logic to dispatch in Dialogue Data
+
     public DialogueOutgoingDispatcher() {
         super("DialogueOutgoingDispatcher");
     }

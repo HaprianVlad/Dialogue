@@ -4,9 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.test.AndroidTestCase;
 
-import junit.framework.Assert;
-
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
  * Test for ch.epfl.sweng.bohdomp.dialogue.channels.SenderService
