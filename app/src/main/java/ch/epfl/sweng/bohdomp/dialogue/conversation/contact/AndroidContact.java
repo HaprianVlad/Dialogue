@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
+
 /**
  * dialogue representation of an android contact
  */
@@ -20,15 +23,17 @@ public class AndroidContact implements Contact, android.os.Parcelable {
     private final Set<String> mPhoneNumbers;
     private final Set<ChannelType> mAvailableChannels;
 
-    private static final String[] PROJECTION = new String[]{
+    private static final String[] NAME_PROJECTION = new String[]{
         ContactsContract.Contacts.DISPLAY_NAME};
+
+    private static final String[] ID_PROJECTION = new String[]{
+        ContactsContract.Contacts._ID};
 
     AndroidContact(final String lookupKey, final Context context) {
         this.mLookupKey = lookupKey;
         this.mDisplayName = displayNameFromLookupKey(lookupKey, context);
 
-        //TODO lookup phone numbers associated with contact
-        this.mPhoneNumbers = new HashSet<String>();
+        this.mPhoneNumbers = phoneNumbersFromLookupKey(lookupKey, context);
 
         //TODO determine what which channels this contact can use
         this.mAvailableChannels = new HashSet<ChannelType>();
@@ -86,9 +91,24 @@ public class AndroidContact implements Contact, android.os.Parcelable {
      */
     private static String displayNameFromLookupKey(final String lookupKey, final Context context) {
 
+        if (BuildConfig.DEBUG && lookupKey == null) {
+            throw new AssertionError("lookupKey is null");
+        }
+        if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
+            throw new AssertionError("lookupKey should never be empty");
+        }
+        if (BuildConfig.DEBUG && context == null) {
+            throw new AssertionError("context is null");
+        }
+
         Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
 
-        Cursor cursor = context.getContentResolver().query(lookupUri, PROJECTION, null, null, null);
+        Cursor cursor = context.getContentResolver().query(
+                lookupUri,
+                NAME_PROJECTION,
+                null,
+                null,
+                null);
 
         final String result;
         if (cursor.moveToFirst()) {
@@ -98,6 +118,59 @@ public class AndroidContact implements Contact, android.os.Parcelable {
         }
 
         cursor.close();
+
+        return result;
+    }
+
+    /**
+     * inspired by
+     * http://stackoverflow.com/questions/2356084/read-all-contacts-phone-numbers-in-android
+     *
+     * @param lookupKey android specific lookupKey for this contact
+     * @param context application context, will use its ContentResolver to lookup displayName
+     * @return all phone numbers associated to contact with specific lookupKey
+     */
+    private static Set<String> phoneNumbersFromLookupKey(final String lookupKey, final Context context) {
+
+        if (BuildConfig.DEBUG && lookupKey == null) {
+            throw new AssertionError("lookupKey is null");
+        }
+        if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
+            throw new AssertionError("lookupKey should never be empty");
+        }
+        if (BuildConfig.DEBUG && context == null) {
+            throw new AssertionError("context is null");
+        }
+
+        final HashSet<String> result = new HashSet<String>();
+
+        final ContentResolver contentResolver = context.getContentResolver();
+
+        final Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+
+        Cursor idCursor = contentResolver.query(lookupUri, ID_PROJECTION, null, null, null);
+
+        if (idCursor.moveToFirst()) {
+            // lookup contact id associated with lookupKey
+            final String id = idCursor.getString(idCursor.getColumnIndex(ContactsContract.Contacts._ID));
+            Cursor phoneCursor = context.getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                    new String[]{id},
+                    null);
+
+            // lookup all phoneNumbers associated with contact id
+            for (phoneCursor.moveToFirst(); !phoneCursor.isAfterLast(); phoneCursor.moveToNext()) {
+                final String phoneNumber = phoneCursor.getString(
+                        phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                result.add(phoneNumber);
+            }
+
+            phoneCursor.close();
+        }
+
+        idCursor.close();
 
         return result;
     }
