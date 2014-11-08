@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -29,7 +30,6 @@ public class MessagesAdapter extends BaseAdapter {
     private final Context mContext;
     private List<DialogueMessage> mMessagesList;
 
-
     /**
      * Class containing all view inside a row of the message list.
      * It is used to implement the view holder pattern
@@ -37,7 +37,6 @@ public class MessagesAdapter extends BaseAdapter {
     private static class MessageViewHolder {
         protected TextView messageContent;
     }
-
 
     /**
      * Constructor
@@ -47,27 +46,33 @@ public class MessagesAdapter extends BaseAdapter {
     public MessagesAdapter(Context context, List<DialogueMessage> items) {
 
         super();
-        mContext = context;
-        if (items == null) {
-            throw new NullArgumentException("List of messages is null");
-        } else {
-            this.mMessagesList = items;
+
+        if (context == null) {
+            throw new NullArgumentException("context");
         }
 
-    }
+        if (items == null) {
+            throw new NullArgumentException("items");
+        }
 
+        if (items.contains(null)) {
+            throw new IllegalArgumentException("items contains null");
+        }
+
+        this.mContext = context;
+        this.mMessagesList = items;
+
+    }
 
     @Override
     public int getCount() {
         return mMessagesList.size();
     }
 
-
     @Override
     public Object getItem(int position) {
         return mMessagesList.get(position);
     }
-
 
     @Override
     public long getItemId(int position) {
@@ -75,9 +80,12 @@ public class MessagesAdapter extends BaseAdapter {
         return 0;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        if (parent == null) {
+            throw new NullArgumentException("parent");
+        }
 
         MessageViewHolder viewHolder;
 
@@ -99,7 +107,6 @@ public class MessagesAdapter extends BaseAdapter {
         return convertView;
     }
 
-
     /**
      * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter}
      * @param convertView Old view to reuse if possible
@@ -107,13 +114,16 @@ public class MessagesAdapter extends BaseAdapter {
      * A new MessageViewHolder
      */
     private MessageViewHolder createViewHolder(View convertView) {
+        if (BuildConfig.DEBUG && convertView == null) {
+            throw new AssertionError("null convertView");
+        }
+
         MessageViewHolder viewHolder = new MessageViewHolder();
 
         viewHolder.messageContent = (TextView) convertView.findViewById(R.id.text_content);
 
         return viewHolder;
     }
-
 
     /**
      * Setup the view using the message data

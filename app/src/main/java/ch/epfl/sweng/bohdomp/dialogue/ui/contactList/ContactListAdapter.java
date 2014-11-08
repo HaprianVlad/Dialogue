@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 
 import java.util.List;
@@ -45,7 +46,6 @@ public class ContactListAdapter extends BaseAdapter{
         protected Button deleteConversation;
     }
 
-
     /**
      * Constructor
      * @param context The current context
@@ -53,35 +53,44 @@ public class ContactListAdapter extends BaseAdapter{
      */
     public ContactListAdapter(Context context, List<DialogueConversation> items) {
         super();
-        this.mContext = context;
+
+        if (context == null) {
+            throw new NullArgumentException("context");
+        }
 
         if (items == null) {
             throw new NullArgumentException("items");
         }
+
+        if (items.contains(null)) {
+            throw new IllegalArgumentException("items contains null");
+        }
+
+        this.mContext = context;
         this.mDialogueConversations = items;
     }
-
 
     @Override
     public int getCount() {
         return mDialogueConversations.size();
     }
 
-
     @Override
     public Object getItem(int position) {
         return mDialogueConversations.get(position);
     }
-
 
     @Override
     public long getItemId(int position) {
         return mDialogueConversations.get(position).getId().getLong();
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        if (parent == null) {
+            throw new NullArgumentException("parent");
+        }
 
         ContactListViewHolder viewHolder;
 
@@ -107,7 +116,6 @@ public class ContactListAdapter extends BaseAdapter{
         return convertView;
     }
 
-
     /**
      * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ContactListAdapter.ContactListViewHolder}
      * @param convertView Old view to reuse if possible
@@ -115,6 +123,9 @@ public class ContactListAdapter extends BaseAdapter{
      * A new ContactListViewHolder
      */
     private ContactListViewHolder createViewHolder(View convertView) {
+        if (BuildConfig.DEBUG && convertView == null) {
+            throw new AssertionError("null convertView");
+        }
 
         ContactListViewHolder viewHolder = new ContactListViewHolder();
 
@@ -134,7 +145,6 @@ public class ContactListAdapter extends BaseAdapter{
 
         return viewHolder;
     }
-
 
     /**
      * Setup the view using the conversation data
