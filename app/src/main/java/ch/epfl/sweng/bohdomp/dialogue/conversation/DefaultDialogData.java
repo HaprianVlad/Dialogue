@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
@@ -79,7 +77,8 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         // Default case, conversation not found.
-        Set<Contact> contacts = new HashSet<Contact>();
+        List<Contact> contacts = new ArrayList<Contact>();
+        contacts.add(contact);
         Conversation converstation = new DialogueConversation(contacts);
 
         mConversations.put(converstation.getId(), converstation);

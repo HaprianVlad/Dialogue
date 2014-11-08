@@ -3,9 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -17,7 +15,7 @@ public class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
 
     private final ConversationId conversationId;
-    private final Set<Contact> conversationContacts;
+    private final List<Contact> conversationContacts;
 
     private final List<DialogueMessage> conversationMessages;
     private final Timestamp conversationTimeStamp;
@@ -31,13 +29,13 @@ public class DialogueConversation implements Conversation {
      * Constructor of the class
      * @param contacts - set of contacts we add to conversation
      */
-    public DialogueConversation(Set<Contact> contacts) {
+    public DialogueConversation(List<Contact> contacts) {
         if (contacts == null) {
             throw new IllegalArgumentException();
         } else {
             this.conversationId = ConversationId.getNewConversationId();
             //Contacts has to be implemented as immutable
-            this.conversationContacts = new HashSet<Contact>(contacts);
+            this.conversationContacts = new ArrayList<Contact>(contacts);
             this.conversationMessages = new ArrayList<DialogueMessage>();
             this.conversationListeners = new ArrayList<ConversationListener>();
             this.conversationMsgCount = 0;
@@ -52,10 +50,15 @@ public class DialogueConversation implements Conversation {
         return conversationId;
     }
 
+    @Override
+    public String getConversationName() {
+        return conversationContacts.get(0).getDisplayName();
+    }
+
 
     @Override
-    public Set<Contact> getConversationContacts() {
-        return new HashSet<Contact>(conversationContacts);
+    public List<Contact> getConversationContacts() {
+        return new ArrayList<Contact>(conversationContacts);
     }
 
     @Override
