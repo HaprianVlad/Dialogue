@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels;
 
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,12 +13,16 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 /**
  * Dispatches the outgoing message to the channels.
  */
-public final class DialogueOutgoingDispatcher extends SenderService {
+public final class DialogueOutgoingDispatcher extends IntentService {
     public static final String MESSAGE = "MESSAGE";
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
-    public DialogueOutgoingDispatcher(String name) {
-        super(name);
+
+
+//FIXME:Adds logic to dispatch in Dialogue Data
+
+    public DialogueOutgoingDispatcher() {
+        super("DialogueOutgoingDispatcher");
     }
 
     public static void sendMessage(Context context, DialogueMessage message) {

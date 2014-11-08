@@ -10,9 +10,10 @@ import android.widget.Toast;
 
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
+import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.MessageDispatcherService;
+
 
 /**
  * Defines an Sms Broadcast Receiver
@@ -43,10 +44,10 @@ public class SmsReceiver extends BroadcastReceiver {
 
             //Starting the MessageDispatcherService for each received message
             DialogueSmsMessage dialogueSmsMessage = new DialogueSmsMessage(smsMessage);
-            Intent receiveMessageIntent = new Intent(context, MessageDispatcherService.class);
+            Intent receiveMessageIntent = new Intent(context, DialogueIncomingDispatcher.class);
 
             receiveMessageIntent.putExtra("message", dialogueSmsMessage);
-            intent.setAction(MessageDispatcherService.RECEIVE_SMS);
+            //intent.setAction(DialogueIncomingDispatcher.RECEIVE_SMS);
 
             context.startService(intent);
         }
