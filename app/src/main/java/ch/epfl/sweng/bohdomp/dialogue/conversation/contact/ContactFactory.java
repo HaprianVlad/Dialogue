@@ -2,6 +2,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -18,7 +19,7 @@ public class ContactFactory {
 
     private final Context mContext;
 
-    private static final String[] CONTACT_LIST_PROJECTION =
+    private static final String[] LOOKUPKEY_PROJECTION =
             new String[] {ContactsContract.Contacts.LOOKUP_KEY };
 
     /**
@@ -42,15 +43,21 @@ public class ContactFactory {
      * @return a Contact for this number
      */
     public Contact contactFromNumber(final String phoneNumber) {
-        //TODO lookup in database if there's a contact matching this phone number
-        // and create AndroidContact if possible
+
         if (phoneNumber == null) {
             throw new NullArgumentException("phoneNumber");
         }
         if (!verifyPhoneNumber(phoneNumber)) {
             throw new IllegalArgumentException(phoneNumber + " is not a valid phone number");
         }
-        return new UnknownContact(phoneNumber);
+
+        final String lookupKey = lookupKeyFromPhoneNumber(phoneNumber);
+
+        if (lookupKey == null) {
+            return new UnknownContact(phoneNumber);
+        } else {
+            return new AndroidContact(lookupKey, mContext);
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ public class ContactFactory {
     private Cursor contactListCursor() {
         return mContext.getContentResolver().query(
                 ContactsContract.Contacts.CONTENT_URI,
-                CONTACT_LIST_PROJECTION,
+                LOOKUPKEY_PROJECTION,
                 null,
                 null,
                 null);
@@ -78,6 +85,34 @@ public class ContactFactory {
                     mContext));
         }
         cursor.close();
+        return result;
+    }
+
+    /**
+     * inspired by
+     * http://stackoverflow.com/questions/5553867/get-contact-by-phone-number-on-android
+     */
+    private String lookupKeyFromPhoneNumber(final String phoneNumber) {
+        Uri uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(phoneNumber));
+        Cursor lookupKeyCursor = mContext.getContentResolver().query(
+                uri,
+                LOOKUPKEY_PROJECTION,
+                null,
+                null,
+                null);
+
+        final String result;
+        if (lookupKeyCursor.moveToFirst()) {
+            result = lookupKeyCursor.getString(
+                    lookupKeyCursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+        } else {
+            result = null;
+        }
+
+        lookupKeyCursor.close();
+
         return result;
     }
 

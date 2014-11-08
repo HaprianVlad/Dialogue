@@ -1,6 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 /**
  * dialogue representation of an android contact
  */
-public class AndroidContact implements Contact, android.os.Parcelable {
+class AndroidContact implements Contact {
     private final String mLookupKey;
     private final String mDisplayName;
     private final Set<String> mPhoneNumbers;
@@ -35,7 +34,7 @@ public class AndroidContact implements Contact, android.os.Parcelable {
 
         this.mPhoneNumbers = phoneNumbersFromLookupKey(lookupKey, context);
 
-        //TODO determine what which channels this contact can use
+        //TODO determine which channels this contact can use
         this.mAvailableChannels = new HashSet<ChannelType>();
     }
 
@@ -122,6 +121,42 @@ public class AndroidContact implements Contact, android.os.Parcelable {
         return result;
     }
 
+    private static String contactIdFromLookupKey(final String lookupKey, final Context context) {
+
+        if (BuildConfig.DEBUG && lookupKey == null) {
+            throw new AssertionError("lookupKey is null");
+        }
+        if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
+            throw new AssertionError("lookupKey should never be empty");
+        }
+        if (BuildConfig.DEBUG && context == null) {
+            throw new AssertionError("context is null");
+        }
+
+        Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+
+        Cursor cursor = context.getContentResolver().query(
+                lookupUri,
+                ID_PROJECTION,
+                null,
+                null,
+                null);
+
+        final String result;
+
+        if (cursor.moveToFirst()) {
+            result = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+        } else {
+            //this should only happen if a user deletes a contact while the app is in use
+            //TODO find a way to recover from that condition!
+            result = null;
+        }
+
+        cursor.close();
+
+        return result;
+    }
+
     /**
      * inspired by
      * http://stackoverflow.com/questions/2356084/read-all-contacts-phone-numbers-in-android
@@ -144,33 +179,32 @@ public class AndroidContact implements Contact, android.os.Parcelable {
 
         final HashSet<String> result = new HashSet<String>();
 
-        final ContentResolver contentResolver = context.getContentResolver();
+        // lookup contact id associated with lookupKey
+        final String id = contactIdFromLookupKey(lookupKey, context);
 
-        final Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
-
-        Cursor idCursor = contentResolver.query(lookupUri, ID_PROJECTION, null, null, null);
-
-        if (idCursor.moveToFirst()) {
-            // lookup contact id associated with lookupKey
-            final String id = idCursor.getString(idCursor.getColumnIndex(ContactsContract.Contacts._ID));
-            Cursor phoneCursor = context.getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                    new String[]{id},
-                    null);
-
-            // lookup all phoneNumbers associated with contact id
-            for (phoneCursor.moveToFirst(); !phoneCursor.isAfterLast(); phoneCursor.moveToNext()) {
-                final String phoneNumber = phoneCursor.getString(
-                        phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                result.add(phoneNumber);
-            }
-
-            phoneCursor.close();
+        if (id == null) {
+            //TODO recover or crash instead of silently returning empty set
+            return result;
         }
 
-        idCursor.close();
+        Cursor phoneCursor = context.getContentResolver().query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            null,
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+            new String[]{id},
+            null);
+
+        // lookup all phoneNumbers associated with contact id
+        for (phoneCursor.moveToFirst(); !phoneCursor.isAfterLast(); phoneCursor.moveToNext()) {
+            final String phoneNumber = phoneCursor.getString(
+                phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            //TODO use and store phone type to know if we can send sms/mms
+            //final int androidPhoneType = phoneCursor.getInt(
+            //    phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+            result.add(phoneNumber);
+        }
+
+        phoneCursor.close();
 
         return result;
     }

@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * class representing a contact for which no entry was found in the contact database
  */
-public class UnknownContact implements Contact, android.os.Parcelable {
+class UnknownContact implements Contact {
 
     private final String mPhoneNumber;
 
