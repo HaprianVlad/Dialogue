@@ -33,7 +33,8 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         }
 
         /* Create intent and send to myself */
-        Intent intent = new Intent(ACTION_SEND_MESSAGE);
+        Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
+        intent.setAction(ACTION_SEND_MESSAGE);
         intent.putExtra(MESSAGE, message);
         context.startService(intent);
     }
@@ -58,8 +59,9 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new AssertionError("message == null");
         }
 
-        Intent intent = new Intent(SmsSenderService.ACTION_SEND_SMS);
-        intent.putExtra(SmsSenderService.ACTION_SEND_SMS, message);
+        Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
+        intent.setAction(SmsSenderService.ACTION_SEND_SMS);
+        intent.putExtra(SmsSenderService.MESSAGE, message);
         getApplicationContext().startService(intent);
 
     }
