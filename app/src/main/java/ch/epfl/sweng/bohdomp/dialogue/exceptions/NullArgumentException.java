@@ -9,7 +9,7 @@ package ch.epfl.sweng.bohdomp.dialogue.exceptions;
  * Avoid the pain of complicated IllegalArgumentExceptions
  */
 public class NullArgumentException extends IllegalArgumentException {
-    public NullArgumentException(Object message) {
+    public NullArgumentException(String message) {
         super("Argument can not be null: " + message);
 
         if (message == null) {

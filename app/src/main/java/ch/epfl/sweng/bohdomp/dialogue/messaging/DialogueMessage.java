@@ -122,13 +122,13 @@ public abstract class DialogueMessage {
     public DialogueMessage(Contact contactParameter, String messageBodyParameter,
                            MessageStatus messageStatusParameter, Contact.ChannelType channelTypeParameter) {
         if (contactParameter == null) {
-            throw new NullArgumentException(contactParameter);
+            throw new NullArgumentException("contactParameter");
         }
         if (messageBodyParameter == null) {
-            throw new NullArgumentException(messageBodyParameter);
+            throw new NullArgumentException("messageBodyParameter");
         }
         if (channelTypeParameter == null) {
-            throw new NullArgumentException(channelTypeParameter);
+            throw new NullArgumentException("channelTypeParameter");
         }
 
         this.contact = contactParameter;

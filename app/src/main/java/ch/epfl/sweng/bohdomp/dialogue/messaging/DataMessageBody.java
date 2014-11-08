@@ -17,7 +17,7 @@ public class DataMessageBody implements MessageBody {
         if (bodyParameter != null) {
             this.body = Uri.parse(bodyParameter);
         } else {
-            throw new NullArgumentException(bodyParameter);
+            throw new NullArgumentException("bodyParameter");
         }
     }
 

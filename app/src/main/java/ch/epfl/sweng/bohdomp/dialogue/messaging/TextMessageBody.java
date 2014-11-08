@@ -15,7 +15,7 @@ public class TextMessageBody implements MessageBody {
 
     public TextMessageBody(String bodyParameter) {
         if (bodyParameter == null) {
-            throw new NullArgumentException(bodyParameter);
+            throw new NullArgumentException("bodyParameter");
         }
         if (bodyParameter.getBytes().length < MAX_MESSAGE_SIZE) {
             throw new IllegalArgumentException("Too big message body!");

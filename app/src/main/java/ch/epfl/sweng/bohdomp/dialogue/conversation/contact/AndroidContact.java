@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * dialogue representation of an android contact
  */
-class AndroidContact implements Contact {
+public class AndroidContact implements Contact {
     private final String mLookupKey;
     private final String mDisplayName;
     private final Set<String> mPhoneNumbers;
