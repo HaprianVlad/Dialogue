@@ -78,9 +78,8 @@ public class DialogueTextMessageTest extends MockTestCase {
     }
 
     public void testGetAllowedChannels() {
-        assertTrue(message.getAllowedChannels() != null);
-        assertTrue(message.getAllowedChannels().size() == 1);
-        assertTrue(message.getAllowedChannels().contains(Contact.ChannelType.SMS));
+
+        assertFalse(message.getIsDataMessage());
     }
 
 

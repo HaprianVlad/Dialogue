@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
 import android.content.Context;
+import android.os.Parcel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +9,7 @@ import java.util.Set;
 /**
  * class representing a contact for which no entry was found in the contact database
  */
-public class UnknownContact implements Contact {
+public class UnknownContact implements Contact, android.os.Parcelable {
 
     private final String mPhoneNumber;
 
@@ -39,4 +40,28 @@ public class UnknownContact implements Contact {
     public Contact updateInfo(final Context context) {
         return new ContactFactory(context).contactFromNumber(mPhoneNumber);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mPhoneNumber);
+    }
+
+    private UnknownContact(Parcel in) {
+        this.mPhoneNumber = in.readString();
+    }
+
+    public static final Creator<UnknownContact> CREATOR = new Creator<UnknownContact>() {
+        public UnknownContact createFromParcel(Parcel source) {
+            return new UnknownContact(source);
+        }
+
+        public UnknownContact[] newArray(int size) {
+            return new UnknownContact[size];
+        }
+    };
 }

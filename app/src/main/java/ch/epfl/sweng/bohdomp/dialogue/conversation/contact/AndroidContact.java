@@ -3,15 +3,18 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
 import android.provider.ContactsContract;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * dialogue representation of an android contact
  */
-public class AndroidContact implements Contact {
+public class AndroidContact implements Contact, android.os.Parcelable {
     private final String mLookupKey;
     private final String mDisplayName;
     private final Set<String> mPhoneNumbers;
@@ -98,4 +101,38 @@ public class AndroidContact implements Contact {
 
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mLookupKey);
+        dest.writeString(this.mDisplayName);
+
+        List<String> phoneNumbers = new ArrayList<String>(this.mPhoneNumbers);
+        dest.writeList(phoneNumbers);
+
+        List<ChannelType> availableChannels = new ArrayList<ChannelType>(this.mAvailableChannels);
+        dest.writeList(availableChannels);
+    }
+
+    private AndroidContact(Parcel in) {
+        this.mLookupKey = in.readString();
+        this.mDisplayName = in.readString();
+        this.mPhoneNumbers = new HashSet<String>(in.readArrayList(getClass().getClassLoader()));
+        this.mAvailableChannels = new HashSet<ChannelType>(in.readArrayList(getClass().getClassLoader()));
+    }
+
+    public static final Creator<AndroidContact> CREATOR = new Creator<AndroidContact>() {
+        public AndroidContact createFromParcel(Parcel source) {
+            return new AndroidContact(source);
+        }
+
+        public AndroidContact[] newArray(int size) {
+            return new AndroidContact[size];
+        }
+    };
 }

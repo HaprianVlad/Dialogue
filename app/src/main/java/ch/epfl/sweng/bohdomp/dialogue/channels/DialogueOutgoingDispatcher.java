@@ -74,7 +74,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new AssertionError("message == null");
         }
 
-        return message.getAllowedChannels().contains(Contact.ChannelType.SMS);
+        return message.getContact().availableChannels().contains(Contact.ChannelType.SMS);
     }
 
     private boolean canSendMms(DialogueMessage message) {
@@ -82,7 +82,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new AssertionError("message == null");
         }
 
-        return message.getAllowedChannels().contains(Contact.ChannelType.MMS);
+        return message.getContact().availableChannels().contains(Contact.ChannelType.MMS);
     }
 
     private DialogueMessage extractMessage(Intent intent) {

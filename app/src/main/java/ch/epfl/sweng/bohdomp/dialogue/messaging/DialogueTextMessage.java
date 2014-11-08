@@ -6,12 +6,9 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
  * Class representing a dialogue text message
  */
 public class DialogueTextMessage extends DialogueMessage {
-
-
-
     public DialogueTextMessage(Contact contactParameter, String textBodyParameter,
                                MessageStatus messageStatusParameter) {
-        super(contactParameter, textBodyParameter, messageStatusParameter, Contact.ChannelType.SMS);
+        super(contactParameter, textBodyParameter, messageStatusParameter, false);
     }
 
     @Override
@@ -19,6 +16,4 @@ public class DialogueTextMessage extends DialogueMessage {
         return new TextMessageBody(body);
 
     }
-
-
 }
