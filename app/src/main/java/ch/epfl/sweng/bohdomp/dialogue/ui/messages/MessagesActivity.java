@@ -18,8 +18,10 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 
 
 /**
@@ -103,6 +105,12 @@ public class MessagesActivity extends Activity {
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
                 Log.i(LOG_TAG, "New msg to be sent :" + draftText);
+
+                for(Contact contact : mConversation.getConversationContacts()){
+                    DialogueMessage message = new DialogueTextMessage(contact,draftText,
+                            DialogueMessage.MessageStatus.OUTGOING);
+
+                }
             }
 
         });
