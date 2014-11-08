@@ -34,8 +34,9 @@ public class SmsReceiver extends BroadcastReceiver {
         SmsMessage[] smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
         for (SmsMessage smsMessage : smsMessages) {
 
-            if (BuildConfig.DEBUG && (smsMessage == null))
+            if (BuildConfig.DEBUG && (smsMessage == null)) {
                 throw new AssertionError("smsMessages == null");
+            }
 
             //FIXME: remove me when we actually display it to the user.
             Toast.makeText(context, "SMS RECEIVED from" + smsMessage.getDisplayOriginatingAddress(),
