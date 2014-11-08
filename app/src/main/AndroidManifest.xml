@@ -135,6 +135,7 @@
             android:parentActivityName=".ui.conversation.ConversationActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>
+
     </application>
 
 </manifest>

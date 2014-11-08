@@ -34,6 +34,10 @@ android {
         disable 'OldTargetApi'
 	    disable 'GradleDependency'
 	    disable 'UnusedResources'
+
+        //bouncy castle pgp depends on a package that itself depends on some X509 algorithms
+        //unavailable in android but never used by bouncycastle pgp
+        disable 'InvalidPackage'
         abortOnError true
         warningsAsErrors true
     }
@@ -67,4 +71,5 @@ dependencies {
 
     //androidTestCompile('org.powermock:powermock-mockito-release-full:1.4.9')
 
+    compile 'org.bouncycastle:bcpg-jdk15on:1.51'
 }
