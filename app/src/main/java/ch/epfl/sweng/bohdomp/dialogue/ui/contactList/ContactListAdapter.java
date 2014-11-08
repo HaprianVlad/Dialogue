@@ -15,6 +15,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
@@ -32,7 +33,7 @@ public class ContactListAdapter extends BaseAdapter{
     private static final String LOG_TAG = "ContactListAdapter";
 
     private final Context mContext;
-    private List<DialogueConversation> mDialogueConversations;
+    private List<Conversation> mDialogueConversations;
 
     /**
      * Class containing all view inside a row of the contact list.
@@ -51,7 +52,7 @@ public class ContactListAdapter extends BaseAdapter{
      * @param context The current context
      * @param items The array of conversation used to populate the list
      */
-    public ContactListAdapter(Context context, List<DialogueConversation> items) {
+    public ContactListAdapter(Context context, List<Conversation> items) {
         super();
 
         if (context == null) {

@@ -15,8 +15,9 @@ import android.widget.ListView;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 import static ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation.ConversationId;
@@ -35,7 +36,7 @@ public class MessagesActivity extends Activity {
 
     private BaseAdapter mMessageItemListAdapter;
 
-    private DialogueConversation mConversation;
+    private Conversation mConversation;
     private List<DialogueMessage> mMessages;
 
 
@@ -49,7 +50,8 @@ public class MessagesActivity extends Activity {
 
         try {
             ConversationId conversationID;
-            conversationID = ConversationId.fromLong(intent.getLongExtra(DialogueConversation.CONVERSATION_ID, -1L));
+            conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
+
             initData(conversationID);
             setViewElement();
         } catch (IllegalArgumentException e) {
@@ -62,9 +64,7 @@ public class MessagesActivity extends Activity {
      * Initialize the data used by the activity
      */
     public void initData(ConversationId conversationId) {
-
-        DialogueData data = DialogueData.getInstance();
-        mConversation = data.getConversation(conversationId);
+        mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
         if (mConversation != null) {
             mMessages = mConversation.getConversationMessages();
@@ -124,6 +124,5 @@ public class MessagesActivity extends Activity {
         Boolean settingsSelected = item.getItemId() == R.id.action_settings;
 
         return settingsSelected || super.onOptionsItemSelected(item);
-
     }
 }
