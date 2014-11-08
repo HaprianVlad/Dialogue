@@ -1,8 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels;
 
-import android.app.IntentService;
-import android.content.Intent;
-
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 /**

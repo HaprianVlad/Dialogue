@@ -9,7 +9,6 @@ import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
 
 /**
  * Dispatches the outgoing message to the channels.
@@ -44,18 +43,10 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         DialogueMessage message = extractMessage(intent);
 
-        /*
-        1. Find out where to send to (contact numbers + connection status)
-        2. Create intent
-        3. Send intent to correct service
-         */
-
         if (canSendSms(message)) {
             sendSms(message);
         } else if (canSendMms(message)) {
             sendMms(message);
-        } else {
-            /* BLALALALALAALALAL */
         }
     }
 
@@ -65,6 +56,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         }
 
         Intent intent = new Intent(SmsSenderService.ACTION_SEND_SMS);
+        /* Need message to be parcelable */
         // intent.putExtra(SmsSenderService.MESSAGE_BODY, message.getBody());
     }
 
