@@ -9,6 +9,7 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 
 /**
  * Default implementation of DialogData
@@ -27,8 +28,8 @@ public final class DefaultDialogData implements DialogueData {
 
     private final static DialogueData OBJECT = new DefaultDialogData();
 
-    private HashMap<Conversation.ConversationId, Conversation> mConversations =
-            new HashMap<Conversation.ConversationId, Conversation>();
+    private HashMap<ConversationId, Conversation> mConversations =
+            new HashMap<ConversationId, Conversation>();
 
     /**
      * Gets the singleton instance
@@ -55,7 +56,7 @@ public final class DefaultDialogData implements DialogueData {
     /*
     See DialogData.getConversation
     */
-    public Conversation getConversation(Conversation.ConversationId conversationId) {
+    public Conversation getConversation(ConversationId conversationId) {
         if (conversationId == null) {
             throw new NullArgumentException("conversationId");
         }
