@@ -8,7 +8,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 /**
  * Class representing the body of a data message
  */
-public class DataMessageBody implements MessageBody, android.os.Parcelable {
+public class DataMessageBody implements MessageBody{
 
     //FIXME: Find exactly how uri works
 
