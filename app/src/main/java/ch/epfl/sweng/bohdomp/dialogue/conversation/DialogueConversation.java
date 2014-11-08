@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 /**
@@ -33,7 +35,7 @@ public class DialogueConversation implements Conversation {
         if (contacts == null) {
             throw new IllegalArgumentException();
         } else {
-            this.conversationId = ConversationId.getNewConversationId();
+            this.conversationId = IdManager.getInstance().getNewConversationId();
             //Contacts has to be implemented as immutable
             this.conversationContacts = new ArrayList<Contact>(contacts);
             this.conversationMessages = new ArrayList<DialogueMessage>();

@@ -19,8 +19,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-
-import static ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 
 
 /**

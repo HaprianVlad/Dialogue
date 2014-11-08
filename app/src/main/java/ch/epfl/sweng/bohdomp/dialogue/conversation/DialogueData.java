@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 /**
  * Represents all conversation in the application
  * This class should be directly connected to the GUI
@@ -21,7 +22,7 @@ public interface DialogueData {
      * @param id of the conversation we are looking for.
      * @return DialogueConversation associated to the given id.
      */
-    Conversation getConversation(Conversation.ConversationId id);
+    Conversation getConversation(ConversationId id);
 
     /**
      * Adds a dialogueConversation to the data

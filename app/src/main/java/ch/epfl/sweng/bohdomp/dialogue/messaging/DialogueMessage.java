@@ -1,9 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,97 +7,14 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
+import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 
 /**
  * Abstract class representing an message. This class is mutable.
  */
 public abstract class DialogueMessage {
 
-
-    /**
-     * Represents a DialogueConversation id. This class is immutable
-     */
-    public static final class DialogueMessageId implements Parcelable, Comparable<DialogueMessageId> {
-        private final long mId;
-
-        private DialogueMessageId(long id) {
-            this.mId = id;
-        }
-
-        public long getLong() {
-            return mId;
-        }
-
-        public static DialogueMessageId fromLong(long id) {
-            if (id < 0) {
-                throw new IllegalArgumentException("Given long to construct ConversationId is smaller than 0!");
-            }
-            return new DialogueMessageId(id);
-        }
-
-        public static DialogueMessageId getNewDialogueMessageId() {
-            // TODO generate IDs in a better way?
-            return  new DialogueMessageId(System.currentTimeMillis());
-        }
-
-        /**
-         * Compares this object to the specified object to determine their relative
-         * order.
-         *
-         * @param another the object to compare to this instance.
-         * @return a negative integer if this instance is less than {@code another};
-         * a positive integer if this instance is greater than
-         * {@code another}; 0 if this instance has the same order as
-         * {@code another}.
-         * @throws ClassCastException if {@code another} cannot be converted into something
-         *                            comparable to {@code this} instance.
-         */
-        @Override
-        public int compareTo(DialogueMessageId another) {
-            return Long.compare(this.mId, another.mId);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-
-            if (o == null || this.getClass() != o.getClass()) {
-                return false;
-            }
-
-            DialogueMessageId that = (DialogueMessageId) o;
-            return mId == that.mId;
-
-        }
-
-        @Override
-        public int hashCode() {
-            return Long.valueOf(mId).hashCode();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            out.writeLong(mId);
-        }
-
-        public static final Parcelable.Creator<DialogueMessageId> CREATOR =new Parcelable.Creator<DialogueMessageId>() {
-            public DialogueMessageId createFromParcel(Parcel in) {
-                return new DialogueMessageId(in.readLong());
-            }
-
-            public DialogueMessageId[] newArray(int size) {
-                return new DialogueMessageId[size];
-            }
-        };
-
-    }
     /**
      * Enumeration representing the state of a message
      */
@@ -137,7 +50,7 @@ public abstract class DialogueMessage {
         this.contact = contactParameter;
         this.messageBody = newMessageBody(messageBodyParameter);
         this.timestamp = new Timestamp((new Date()).getTime());
-        this.messageId = DialogueMessageId.getNewDialogueMessageId();
+        this.messageId = IdManager.getInstance().getNewDialogueMessageId();
         this.isReadStatus = false;
         this.messageStatus = messageStatusParameter;
         this.allowedChannels.add(channelTypeParameter);
