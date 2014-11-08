@@ -3,7 +3,6 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.SystemClock;
 
 import java.sql.Timestamp;
 
