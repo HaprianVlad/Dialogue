@@ -16,8 +16,9 @@ import android.widget.ListView;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 
@@ -34,7 +35,7 @@ public class ContactListActivity extends Activity {
 
     private String myPackageName;
 
-    private List<DialogueConversation> mConversationList;
+    private List<Conversation> mConversationList;
     private BaseAdapter mContactItemListAdapter;
 
     @Override
@@ -52,8 +53,7 @@ public class ContactListActivity extends Activity {
      */
     private void initData() {
         myPackageName = getPackageName();
-        DialogueData data = DialogueData.getInstance();
-        mConversationList = data.getConversations();
+        mConversationList = DefaultDialogData.getInstance().getConversations();
         mContactItemListAdapter = new ContactListAdapter(this, mConversationList);
     }
 

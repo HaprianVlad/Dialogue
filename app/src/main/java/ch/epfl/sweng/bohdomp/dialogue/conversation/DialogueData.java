@@ -14,20 +14,20 @@ public interface DialogueData {
      *
      * @return List of all conversations ordered by their most recent activity
      */
-    public List<Conversation> getConversations();
+    List<Conversation> getConversations();
 
     /**
      * Getter for a conversation
      * @param id of the conversation we are looking for.
      * @return DialogueConversation associated to the given id.
      */
-    public Conversation getConversation(Conversation.ConversationId id);
+    Conversation getConversation(Conversation.ConversationId id);
 
     /**
      * Adds a dialogueConversation to the data
      * @param contact a new dialogueConversation
      * @return the new or found conversation
      */
-    public Conversation createOrGetConversation(Contact contact);
+    Conversation createOrGetConversation(Contact contact);
 
 }

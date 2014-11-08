@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ContactListAdapter;
 
@@ -26,7 +26,7 @@ public class ContactListAdapterTest  extends AndroidTestCase {
     }
 
     public void testNullContext() {
-        List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>();
+        List<Conversation> dialogueConversations = new ArrayList<Conversation>();
 
         try {
             ContactListAdapter adapter = new ContactListAdapter(null, dialogueConversations);
@@ -47,7 +47,7 @@ public class ContactListAdapterTest  extends AndroidTestCase {
 
     public void testItemsContainNull() {
         try {
-            List<DialogueConversation> dialogueConversations = new ArrayList<DialogueConversation>();
+            List<Conversation> dialogueConversations = new ArrayList<Conversation>();
             dialogueConversations.add(null);
 
             ContactListAdapter adapter = new ContactListAdapter(getContext(), dialogueConversations);
