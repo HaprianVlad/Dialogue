@@ -15,18 +15,21 @@ import android.widget.ListView;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
-
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 
 /**
  * @author swengTeam 2013 BohDomp
  * Activity displaying a set of messages
  */
-public class MessagesActivity extends Activity {
+public class MessagesActivity extends Activity implements ConversationListener {
     private static final String LOG_TAG = "MessagesActivity";
 
     private ListView mMessageList;
@@ -53,10 +56,11 @@ public class MessagesActivity extends Activity {
 
             initData(conversationID);
             setViewElement();
+            setupListener();
+
         } catch (IllegalArgumentException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
-
 
     }
 
@@ -66,6 +70,7 @@ public class MessagesActivity extends Activity {
      */
     public void initData(ConversationId conversationId) {
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
+        mConversation.addListener(this);
 
         if (mConversation != null) {
             mMessages = mConversation.getConversationMessages();
@@ -73,6 +78,11 @@ public class MessagesActivity extends Activity {
         } else {
             throw new NullPointerException("Conversation is Null");
         }
+    }
+
+    @Override
+    public void onConversationChanged(Conversation conversation) {
+        mMessageItemListAdapter.notifyDataSetChanged();
     }
 
 
@@ -102,7 +112,15 @@ public class MessagesActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
-                Log.i(LOG_TAG, "New msg to be sent :" + draftText);
+
+                for (Contact contact : mConversation.getConversationContacts()) {
+                    DialogueMessage message = new DialogueTextMessage(contact, draftText,
+                            DialogueMessage.MessageStatus.OUTGOING);
+
+                    DialogueOutgoingDispatcher.sendMessage(v.getContext(), message);
+                }
+
+                mNewMessageText.setText("");
             }
 
         });

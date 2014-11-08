@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
@@ -108,13 +109,21 @@ public class ContactListAdapter extends BaseAdapter{
             viewHolder = (ContactListViewHolder) convertView.getTag();
         }
 
-        Conversation c = (Conversation) getItem(position);
+        final Conversation c = (Conversation) getItem(position);
 
         if (c != null) {
             setupView(c, viewHolder);
         } else {
             throw new NullPointerException("Conversation");
         }
+
+        viewHolder.deleteConversation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DefaultDialogData.getInstance().removeConversation(c.getId());
+                Log.i(LOG_TAG, "Delete Conversation with ID");
+            }
+        });
 
         return convertView;
     }
@@ -140,12 +149,6 @@ public class ContactListAdapter extends BaseAdapter{
 
         //FIXME SHOULD BE REPLACED BY A SWIPE TO DELETE
         viewHolder.deleteConversation = (Button) convertView.findViewById(R.id.deleteConversationButton);
-        viewHolder.deleteConversation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(LOG_TAG, "Delete Conversation with ID");
-            }
-        });
 
         return viewHolder;
     }
