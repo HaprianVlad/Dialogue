@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
@@ -95,7 +96,7 @@ public interface Conversation {
      */
     public static final class ConversationId implements Parcelable, Comparable<ConversationId> {
         private final long mId;
-        private static long mPreviousId;
+        private static long mPreviousId = System.currentTimeMillis();
 
         private ConversationId(long id) {
             this.mId = id;
@@ -113,16 +114,11 @@ public interface Conversation {
         }
 
         public static synchronized ConversationId getNewConversationId() {
-
-            long newId;
-
-            /* we make sure to have different ids, in case our CPU is too fast */
-            do {
-                newId = System.currentTimeMillis();
-            } while  (mPreviousId == newId);
-
-            mPreviousId = newId;
-            return  new ConversationId(newId);
+            if (BuildConfig.DEBUG && mPreviousId > 0) {
+                throw new AssertionError();
+            }
+            mPreviousId += 1;
+            return  new ConversationId(mPreviousId);
         }
 
         /**
