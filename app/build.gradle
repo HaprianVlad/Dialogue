@@ -45,8 +45,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     
+    androidTestCompile('org.mockito:mockito-core:1.+')
     androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
   		exclude group: 'org.hamcrest'
 	}
+   
 
 }

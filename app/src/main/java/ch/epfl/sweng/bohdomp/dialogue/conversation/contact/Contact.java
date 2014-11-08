@@ -17,6 +17,6 @@ public interface Contact {
      * enumeration for channel types
      */
     public static enum ChannelType {
-        SMS
+        SMS, MMS, TELEGRAM;
     }
 }
