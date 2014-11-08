@@ -77,9 +77,15 @@
             </intent-filter>
         </service>
 
-        <!-- Service that uses other services to send and receive Messages: Sms,Mms, Telegram -->
+        <!-- Service that dispatches a send message : Sms,Mms, Telegram -->
         <service
-            android:name=".messaging.MessageDispatcherService"
+            android:name=".channels.DialogueOutgoingDispatcher"
+            android:exported="false" >
+        </service>
+
+        <!-- Service that dispatches a receiving message : Sms,Mms, Telegram -->
+        <service
+            android:name=".channels.DialogueIncomingDispatcher"
             android:exported="false" >
         </service>
 
@@ -88,6 +94,7 @@
             android:name=".channels.sms.SmsSenderService"
             android:exported="false" >
         </service>
+
 
         <!-- BroadcastReceiver that listens for the delivery of SMS messages -->
         <receiver
