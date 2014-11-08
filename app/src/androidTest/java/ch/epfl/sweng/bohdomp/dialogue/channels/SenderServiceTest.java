@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.test.AndroidTestCase;
 
@@ -15,7 +16,7 @@ public class SenderServiceTest extends AndroidTestCase {
     /**
      * Mock implementation of ch.epfl.sweng.bohdomp.dialogue.channels.SenderService
      */
-    private class TestImplSenderService extends SenderService {
+    private class TestImplSenderService extends IntentService {
         public TestImplSenderService(String name) {
             super(name);
         }
