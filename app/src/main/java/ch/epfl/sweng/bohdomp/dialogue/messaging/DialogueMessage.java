@@ -50,7 +50,7 @@ public abstract class DialogueMessage {
         this.contact = contactParameter;
         this.messageBody = newMessageBody(messageBodyParameter);
         this.timestamp = new Timestamp((new Date()).getTime());
-        this.messageId = IdManager.getInstance().getNewDialogueMessageId();
+        this.messageId = IdManager.getInstance().newDialogueMessageId();
         this.isReadStatus = false;
         this.messageStatus = messageStatusParameter;
         this.allowedChannels.add(channelTypeParameter);

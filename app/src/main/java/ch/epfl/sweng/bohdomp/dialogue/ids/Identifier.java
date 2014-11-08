@@ -1,6 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.ids;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
@@ -9,17 +8,5 @@ import android.os.Parcelable;
 public interface Identifier extends Parcelable {
 
     long getLong();
-
-    @Override
-    boolean equals(Object o);
-
-    @Override
-    int hashCode();
-
-    @Override
-    int describeContents();
-
-    @Override
-    void writeToParcel(Parcel out, int flags);
 
 }

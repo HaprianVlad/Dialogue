@@ -35,7 +35,7 @@ public class DialogueConversation implements Conversation {
         if (contacts == null) {
             throw new IllegalArgumentException();
         } else {
-            this.conversationId = IdManager.getInstance().getNewConversationId();
+            this.conversationId = IdManager.getInstance().newConversationId();
             //Contacts has to be implemented as immutable
             this.conversationContacts = new ArrayList<Contact>(contacts);
             this.conversationMessages = new ArrayList<DialogueMessage>();

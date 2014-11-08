@@ -24,7 +24,7 @@ public final class IdManager {
 
     }
 
-    public synchronized ConversationId getNewConversationId() {
+    public synchronized ConversationId newConversationId() {
         if (BuildConfig.DEBUG && mPreviousConversationId < 0) {
             throw new AssertionError("negative mPreviousConversationId");
         }
@@ -32,12 +32,13 @@ public final class IdManager {
         return  ConversationId.fromLong(mPreviousConversationId);
     }
 
-    public synchronized DialogueMessageId getNewDialogueMessageId() {
+    public synchronized DialogueMessageId newDialogueMessageId() {
         if (BuildConfig.DEBUG && mPreviousDialogueMessageId < 0) {
             throw new AssertionError("negative mPreviousDialogueMessageId");
         }
 
         mPreviousDialogueMessageId += 1;
+
         return DialogueMessageId.fromLong(mPreviousDialogueMessageId);
     }
 }

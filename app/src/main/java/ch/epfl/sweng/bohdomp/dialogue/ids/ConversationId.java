@@ -16,6 +16,7 @@ public final class ConversationId extends Id {
         if (id < 0) {
             throw new IllegalArgumentException("Given long to construct ConversationId is smaller than 0!");
         }
+
         return new ConversationId(id);
     }
 

@@ -14,13 +14,13 @@ public class DialogueMessageIdTest extends AndroidTestCase {
     private final long id = 5;
 
     public void testGetNewDialogueMessageId() {
-        messageId = IdManager.getInstance().getNewDialogueMessageId();
+        messageId = IdManager.getInstance().newDialogueMessageId();
 
         assertTrue(messageId != null);
     }
 
     public void testGetLong() {
-        messageId = IdManager.getInstance().getNewDialogueMessageId();
+        messageId = IdManager.getInstance().newDialogueMessageId();
 
         assertTrue(messageId != null);
         assertTrue(messageId.getLong() > 0);
@@ -35,13 +35,9 @@ public class DialogueMessageIdTest extends AndroidTestCase {
 
     public void testCompare() {
 
-        DialogueMessageId messageId1;
-        DialogueMessageId messageId2;
-        DialogueMessageId messageId3;
-
-        messageId1 = DialogueMessageId.fromLong(id);
-        messageId2 = DialogueMessageId.fromLong(id);
-        messageId3 = DialogueMessageId.fromLong(id+1);
+        DialogueMessageId messageId1 = DialogueMessageId.fromLong(id);
+        DialogueMessageId messageId2 = DialogueMessageId.fromLong(id);
+        DialogueMessageId messageId3 = DialogueMessageId.fromLong(id+1);
 
         assertTrue(messageId3.compareTo(messageId1) > 0);
         assertTrue(messageId2.compareTo(messageId1) == 0);
@@ -49,13 +45,9 @@ public class DialogueMessageIdTest extends AndroidTestCase {
 
     public void testEquals() {
 
-        DialogueMessageId messageId1;
-        DialogueMessageId messageId2;
-        DialogueMessageId messageId3;
-
-        messageId1 = DialogueMessageId.fromLong(id);
-        messageId2 = DialogueMessageId.fromLong(id);
-        messageId3 = DialogueMessageId.fromLong(id+1);
+        DialogueMessageId messageId1 = DialogueMessageId.fromLong(id);
+        DialogueMessageId messageId2 = DialogueMessageId.fromLong(id);
+        DialogueMessageId messageId3 = DialogueMessageId.fromLong(id+1);
 
         assertTrue(messageId1.equals(messageId2));
         assertFalse(messageId1.equals(messageId3));
