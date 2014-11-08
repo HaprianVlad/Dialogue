@@ -127,6 +127,9 @@ public abstract class DialogueMessage {
         if (messageBodyParameter == null) {
             throw new NullArgumentException("messageBodyParameter");
         }
+        if (messageStatusParameter == null) {
+            throw new NullArgumentException("messageStatusParameter");
+        }
         if (channelTypeParameter == null) {
             throw new NullArgumentException("channelTypeParameter");
         }
