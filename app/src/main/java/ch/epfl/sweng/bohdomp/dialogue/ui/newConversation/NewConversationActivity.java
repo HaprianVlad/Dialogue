@@ -11,7 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
 /**
  * @author swengTeam 2013 BohDomp
@@ -19,7 +23,6 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
  */
 public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
-    private static final long CONVERSATION_ID = 123L;
 
     private EditText mToEditText;
     private Button mSendButton;
@@ -55,7 +58,14 @@ public class NewConversationActivity extends Activity {
                 Log.i(LOG_TAG, "New conversation");
 
                 Intent intent = new Intent(v.getContext(), MessagesActivity.class);
-                intent.putExtra(DialogueConversation.CONVERSATION_ID, CONVERSATION_ID);
+
+                Contact contact = new ContactFactory(getApplicationContext()).contactFromNumber(mToEditText.getText().toString());
+                Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
+
+
+                Log.i("OSWALD", "Added id: " + conversation.getId().getLong());
+
+                intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
                 startActivity(intent);
             }
         });

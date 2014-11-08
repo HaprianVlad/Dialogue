@@ -114,9 +114,10 @@ public interface Conversation {
         }
 
         public static synchronized ConversationId getNewConversationId() {
-            if (BuildConfig.DEBUG && mPreviousId > 0) {
+            if (BuildConfig.DEBUG && mPreviousId < 0) {
                 throw new AssertionError();
             }
+
             mPreviousId += 1;
             return  new ConversationId(mPreviousId);
         }

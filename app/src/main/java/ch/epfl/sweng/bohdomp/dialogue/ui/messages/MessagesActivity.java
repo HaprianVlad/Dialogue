@@ -50,7 +50,10 @@ public class MessagesActivity extends Activity {
 
         try {
             ConversationId conversationID;
-            conversationID = ConversationId.fromLong(intent.getLongExtra(DialogueConversation.CONVERSATION_ID, -1L));
+            conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
+            Log.i("OSWALD", "Id transmitted: " + conversationID.getLong());
+
+
             initData(conversationID);
             setViewElement();
         } catch (IllegalArgumentException e) {
