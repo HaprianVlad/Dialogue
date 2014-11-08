@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,5 +86,14 @@ public final class DefaultDialogData implements DialogueData {
 
         mConversations.put(converstation.getId(), converstation);
         return converstation;
+    }
+
+    /*
+    See DialogData.getConversation
+    */
+    public void removeConversation(ConversationId id) {
+        if (mConversations.containsKey(id)) {
+            mConversations.remove(id);
+        }
     }
 }

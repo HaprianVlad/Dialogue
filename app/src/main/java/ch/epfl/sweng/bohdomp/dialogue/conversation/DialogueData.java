@@ -31,4 +31,9 @@ public interface DialogueData {
      */
     Conversation createOrGetConversation(Contact contact);
 
+
+    /**
+     * Delete the conversation with the given ID
+     */
+     void removeConversation(ConversationId id);
 }
