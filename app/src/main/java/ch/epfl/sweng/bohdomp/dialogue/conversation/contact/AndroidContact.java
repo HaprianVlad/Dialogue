@@ -91,11 +91,15 @@ public class AndroidContact implements Contact, android.os.Parcelable {
      */
     private static String displayNameFromLookupKey(final String lookupKey, final Context context) {
 
-        assert lookupKey != null;
+        if (BuildConfig.DEBUG && lookupKey == null) {
+            throw new AssertionError("lookupKey is null");
+        }
         if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
             throw new AssertionError("lookupKey should never be empty");
         }
-        assert context != null;
+        if (BuildConfig.DEBUG && context == null) {
+            throw new AssertionError("context is null");
+        }
 
         Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
 
@@ -128,11 +132,15 @@ public class AndroidContact implements Contact, android.os.Parcelable {
      */
     private static Set<String> phoneNumbersFromLookupKey(final String lookupKey, final Context context) {
 
-        assert lookupKey != null;
+        if (BuildConfig.DEBUG && lookupKey == null) {
+            throw new AssertionError("lookupKey is null");
+        }
         if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
             throw new AssertionError("lookupKey should never be empty");
         }
-        assert context != null;
+        if (BuildConfig.DEBUG && context == null) {
+            throw new AssertionError("context is null");
+        }
 
         final HashSet<String> result = new HashSet<String>();
 
