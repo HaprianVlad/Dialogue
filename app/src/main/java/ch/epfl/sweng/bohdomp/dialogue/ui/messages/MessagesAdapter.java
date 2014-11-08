@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -113,7 +114,9 @@ public class MessagesAdapter extends BaseAdapter {
      * A new MessageViewHolder
      */
     private MessageViewHolder createViewHolder(View convertView) {
-        assert convertView != null;
+        if (BuildConfig.DEBUG && convertView == null) {
+            throw new AssertionError("null convertView");
+        }
 
         MessageViewHolder viewHolder = new MessageViewHolder();
 

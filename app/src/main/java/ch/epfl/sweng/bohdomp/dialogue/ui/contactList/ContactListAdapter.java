@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 
 import java.util.List;
@@ -122,7 +123,9 @@ public class ContactListAdapter extends BaseAdapter{
      * A new ContactListViewHolder
      */
     private ContactListViewHolder createViewHolder(View convertView) {
-        assert convertView != null;
+        if (BuildConfig.DEBUG && convertView == null) {
+            throw new AssertionError("null convertView");
+        }
 
         ContactListViewHolder viewHolder = new ContactListViewHolder();
 
