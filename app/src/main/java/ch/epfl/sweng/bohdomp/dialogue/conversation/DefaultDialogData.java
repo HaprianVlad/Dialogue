@@ -1,7 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

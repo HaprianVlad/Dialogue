@@ -113,8 +113,8 @@ public class MessagesActivity extends Activity implements ConversationListener {
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
 
-                for(Contact contact : mConversation.getConversationContacts()){
-                    DialogueMessage message = new DialogueTextMessage(contact,draftText,
+                for (Contact contact : mConversation.getConversationContacts()) {
+                    DialogueMessage message = new DialogueTextMessage(contact, draftText,
                             DialogueMessage.MessageStatus.OUTGOING);
 
                     DialogueOutgoingDispatcher.sendMessage(v.getContext(), message);

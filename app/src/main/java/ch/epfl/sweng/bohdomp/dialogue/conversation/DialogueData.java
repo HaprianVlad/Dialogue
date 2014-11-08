@@ -35,5 +35,5 @@ public interface DialogueData {
     /**
      * Delete the conversation with the given ID
      */
-     void removeConversation(ConversationId id);
+    void removeConversation(ConversationId id);
 }
