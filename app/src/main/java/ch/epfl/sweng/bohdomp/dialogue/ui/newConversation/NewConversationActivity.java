@@ -3,7 +3,6 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.newConversation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,15 +54,11 @@ public class NewConversationActivity extends Activity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(LOG_TAG, "New conversation");
-
                 Intent intent = new Intent(v.getContext(), MessagesActivity.class);
 
-                Contact contact = new ContactFactory(getApplicationContext()).contactFromNumber(mToEditText.getText().toString());
+                ContactFactory factory = new ContactFactory(getApplicationContext());
+                Contact contact = factory.contactFromNumber(mToEditText.getText().toString());
                 Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
-
-
-                Log.i("OSWALD", "Added id: " + conversation.getId().getLong());
 
                 intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
                 startActivity(intent);
