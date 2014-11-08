@@ -16,7 +16,6 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
@@ -33,7 +32,7 @@ public class ContactListAdapter extends BaseAdapter{
     private static final String LOG_TAG = "ContactListAdapter";
 
     private final Context mContext;
-    private List<Conversation> mDialogueConversations;
+    private List<Conversation> mConversations;
 
     /**
      * Class containing all view inside a row of the contact list.
@@ -68,22 +67,22 @@ public class ContactListAdapter extends BaseAdapter{
         }
 
         this.mContext = context;
-        this.mDialogueConversations = items;
+        this.mConversations = items;
     }
 
     @Override
     public int getCount() {
-        return mDialogueConversations.size();
+        return mConversations.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mDialogueConversations.get(position);
+        return mConversations.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mDialogueConversations.get(position).getId().getLong();
+        return mConversations.get(position).getId().getLong();
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ContactListAdapter extends BaseAdapter{
             viewHolder = (ContactListViewHolder) convertView.getTag();
         }
 
-        DialogueConversation c = (DialogueConversation) getItem(position);
+        Conversation c = (Conversation) getItem(position);
 
         if (c != null) {
             setupView(c, viewHolder);
@@ -152,7 +151,11 @@ public class ContactListAdapter extends BaseAdapter{
      * @param c The conversation used to change view to the correct values
      * @param viewHolder The View Holder containing all view to update
      */
-    private void setupView(DialogueConversation c, ContactListViewHolder viewHolder) {
-        //TODO
+    private void setupView(Conversation c, ContactListViewHolder viewHolder) {
+
+        String name = c.getConversationName();
+
+        viewHolder.contactName.setText(name);
+
     }
 }

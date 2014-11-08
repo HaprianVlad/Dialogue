@@ -57,6 +57,8 @@ public class MessagesActivity extends Activity {
         } catch (IllegalArgumentException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
+
+
     }
 
 
@@ -79,6 +81,8 @@ public class MessagesActivity extends Activity {
      * Set all view elements
      */
     private void setViewElement() {
+
+        setTitle(mConversation.getConversationName());
 
         mMessageList = (ListView) findViewById(R.id.message_List);
         mMessageList.setAdapter(mMessageItemListAdapter);

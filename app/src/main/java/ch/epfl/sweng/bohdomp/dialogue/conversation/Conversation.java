@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -23,11 +22,17 @@ public interface Conversation {
     ConversationId getId();
 
     /**
+     * Returns the name of the conversation
+     * @return the name of the conversation
+     */
+    String getConversationName();
+
+    /**
      * Getter for the set of contacts
      * @return the set of contacts of the conversation
      */
 
-    Set<Contact> getConversationContacts();
+    List<Contact> getConversationContacts();
 
 
     /**
