@@ -35,7 +35,7 @@ public class SmsReceiver extends BroadcastReceiver {
         for (SmsMessage smsMessage : smsMessages) {
 
             if (BuildConfig.DEBUG && (smsMessage == null))
-                throw new AssertionError("smsMessages[i] == null");
+                throw new AssertionError("smsMessages == null");
 
             //FIXME: remove me when we actually display it to the user.
             Toast.makeText(context, "SMS RECEIVED from" + smsMessage.getDisplayOriginatingAddress(),
