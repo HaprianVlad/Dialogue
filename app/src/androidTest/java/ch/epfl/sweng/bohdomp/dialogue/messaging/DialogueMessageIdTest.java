@@ -27,7 +27,7 @@ public class DialogueMessageIdTest extends AndroidTestCase {
     }
 
     public void testFromLong() {
-        messageId=DialogueMessageId.fromLong(id);
+        messageId = DialogueMessageId.fromLong(id);
 
         assertTrue(messageId != null);
         assertTrue(messageId.getLong() == id);
