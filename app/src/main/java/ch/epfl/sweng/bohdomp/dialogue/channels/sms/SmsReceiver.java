@@ -35,7 +35,7 @@ public class SmsReceiver extends BroadcastReceiver {
         for (SmsMessage smsMessage : smsMessages) {
 
             if (BuildConfig.DEBUG && (smsMessage == null)) {
-                throw new AssertionError("smsMessages == null");
+                throw new AssertionError("smsMessage == null");
             }
 
             //FIXME: remove me when we actually display it to the user.
