@@ -131,7 +131,7 @@ public class DialogueMessage implements Parcelable {
 
         this.contact = contactParameter;
         this.messageBody = newMessageBody(messageBodyParameter);
-        this.timestamp = SystemClock.currentThreadTimeMillis();
+        this.timestamp = System.currentTimeMillis();
         this.messageId = DialogueMessageId.getNewDialogueMessageId();
         this.isReadStatus = false;
         this.messageStatus = messageStatusParameter;
