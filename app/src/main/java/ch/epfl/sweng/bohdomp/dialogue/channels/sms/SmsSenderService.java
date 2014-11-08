@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.SenderService;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
 
@@ -34,7 +35,9 @@ public class SmsSenderService extends SenderService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        assert intent != null;
+        if (BuildConfig.DEBUG && (intent == null)) {
+            throw new AssertionError("intent == null");
+        }
 
         // setIntentRedelivery(true);
 
@@ -48,8 +51,13 @@ public class SmsSenderService extends SenderService {
 
     @Override
     public void onDestroy() {
-        assert mSentBroadcastReceiver != null;
-        assert  mDeliveryBroadcastReceiver != null;
+        if (BuildConfig.DEBUG && (mSentBroadcastReceiver == null)) {
+            throw new AssertionError("mSentBroadcastReceiver == null");
+        }
+
+        if (BuildConfig.DEBUG && (mDeliveryBroadcastReceiver == null)) {
+            throw new AssertionError("mDeliveryBroadcastReceiver == null");
+        }
 
         unregisterReceiver(mSentBroadcastReceiver);
         unregisterReceiver(mDeliveryBroadcastReceiver);
@@ -65,7 +73,9 @@ public class SmsSenderService extends SenderService {
      * @return the message to be sent.
      */
     private DialogueSmsMessage getMessage(Intent intent) {
-        assert intent != null;
+        if (BuildConfig.DEBUG && (intent == null)) {
+            throw new AssertionError("intent == null");
+        }
 
         return (DialogueSmsMessage) intent.getExtras().getParcelable(MESSAGE_BODY);
     }
@@ -76,7 +86,9 @@ public class SmsSenderService extends SenderService {
      * @return "sent" pending intent.
      */
     private PendingIntent getSentPendingIntent() {
-        assert mSentBroadcastReceiver != null;
+        if (BuildConfig.DEBUG && (mSentBroadcastReceiver == null)) {
+            throw new AssertionError("mSentBroadcastReceiver == null");
+        }
 
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_SENT),
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -92,7 +104,9 @@ public class SmsSenderService extends SenderService {
      * @return "delivery" pending intent.
      */
     private PendingIntent getDeliveryPendingIntent() {
-        assert mDeliveryBroadcastReceiver != null;
+        if (BuildConfig.DEBUG && (mDeliveryBroadcastReceiver == null)) {
+            throw new AssertionError("mDeliveryBroadcastReceiver == null");
+        }
 
         PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_DELIVERED),
                 PendingIntent.FLAG_UPDATE_CURRENT);
