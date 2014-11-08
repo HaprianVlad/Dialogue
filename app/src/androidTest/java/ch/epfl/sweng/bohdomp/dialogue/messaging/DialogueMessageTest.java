@@ -23,11 +23,11 @@ public class DialogueMessageTest extends MockTestCase {
     }
 
 
-    /*
+
     public void  testGetContact() {
         assertTrue(contact!=null);
     }
-
+/*
     public void testGetMessageTimeStamp() {
         assertTrue(true);
     }

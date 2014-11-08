@@ -44,11 +44,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    
-    androidTestCompile('org.mockito:mockito-core:1.+')
+
+    // The tests-libs folder is included only for tests
+    androidTestCompile fileTree(dir: 'libs-tests', include: '*.jar')
     androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
   		exclude group: 'org.hamcrest'
-	}
+    }
    
 
 }
