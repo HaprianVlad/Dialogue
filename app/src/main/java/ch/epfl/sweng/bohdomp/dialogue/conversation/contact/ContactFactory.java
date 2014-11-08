@@ -9,6 +9,8 @@ import android.util.Patterns;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+
 /**
  * factory creating different contacts
  */
@@ -39,9 +41,12 @@ public class ContactFactory {
      * @param phoneNumber
      * @return a Contact for this number
      */
-    public Contact contactFromNumber(final String phoneNumber) throws IllegalArgumentException {
+    public Contact contactFromNumber(final String phoneNumber) {
         //TODO lookup in database if there's a contact matching this phone number
         // and create AndroidContact if possible
+        if (phoneNumber == null) {
+            throw new NullArgumentException("phoneNumber");
+        }
         if (!verifyPhoneNumber(phoneNumber)) {
             throw new IllegalArgumentException(phoneNumber + " is not a valid phone number");
         }
