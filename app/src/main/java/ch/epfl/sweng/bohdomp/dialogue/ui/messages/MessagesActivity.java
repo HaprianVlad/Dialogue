@@ -51,8 +51,6 @@ public class MessagesActivity extends Activity {
         try {
             ConversationId conversationID;
             conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
-            Log.i("OSWALD", "Id transmitted: " + conversationID.getLong());
-
 
             initData(conversationID);
             setViewElement();
