@@ -23,15 +23,16 @@
             android:layout_gravity="center"
             android:contentDescription="@string/contactPictureHint"/>
         <TextView
+            android:id="@+id/unReadDot"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:text="@string/unReadMessage"
             android:textSize="12sp"
             android:textColor="#fff"
             android:textStyle="normal"
+            android:visibility="invisible"
             android:background="@drawable/red_circle_unread"/>
 
     </RelativeLayout>
