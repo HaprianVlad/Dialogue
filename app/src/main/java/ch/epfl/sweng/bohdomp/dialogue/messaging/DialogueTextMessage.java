@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 
 /**
@@ -16,4 +17,5 @@ public class DialogueTextMessage extends DialogueMessage {
         return new TextMessageBody(body);
 
     }
+
 }

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
@@ -13,7 +12,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 /**
  * Dispatches the outgoing message to the channels.
  */
-public final class DialogueOutgoingDispatcher extends IntentService {
+public final class DialogueOutgoingDispatcher extends SenderService {
     public static final String MESSAGE = "MESSAGE";
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
@@ -30,8 +29,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         /* Create intent and send to myself */
         Intent intent = new Intent(ACTION_SEND_MESSAGE);
-        // put message in intent
-
+        intent.putExtra(MESSAGE, message);
         context.startService(intent);
     }
 
@@ -56,8 +54,9 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         }
 
         Intent intent = new Intent(SmsSenderService.ACTION_SEND_SMS);
-        /* Need message to be parcelable */
-        // intent.putExtra(SmsSenderService.MESSAGE_BODY, message.getBody());
+        intent.putExtra(SmsSenderService.ACTION_SEND_SMS, message);
+        getApplicationContext().startService(intent);
+
     }
 
     private void sendMms(DialogueMessage message) {
@@ -92,6 +91,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
+
 }
 
 

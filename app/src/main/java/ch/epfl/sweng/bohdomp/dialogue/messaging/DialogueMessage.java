@@ -12,6 +12,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 /**
  * Abstract class representing an message. This class is mutable.
  */
+
 public class DialogueMessage implements Parcelable {
 
 
