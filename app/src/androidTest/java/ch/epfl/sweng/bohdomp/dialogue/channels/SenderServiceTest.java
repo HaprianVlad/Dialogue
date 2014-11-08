@@ -27,15 +27,6 @@ public class SenderServiceTest extends AndroidTestCase {
         }
     }
 
-    public void testNullNameConstr() {
-        try {
-            new TestImplSenderService(null);
-            Assert.fail();
-        } catch (NullArgumentException e) {
-
-        }
-    }
-
     public void testValidNameConstr() {
         new TestImplSenderService("SmsSenderService");
     }
