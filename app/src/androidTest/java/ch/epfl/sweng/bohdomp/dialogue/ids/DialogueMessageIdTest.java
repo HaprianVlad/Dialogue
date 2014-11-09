@@ -1,9 +1,6 @@
-package ch.epfl.sweng.bohdomp.dialogue.messaging;
+package ch.epfl.sweng.bohdomp.dialogue.ids;
 
 import android.test.AndroidTestCase;
-
-import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
-import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 
 /**
  * Class testing the Dialogue message id

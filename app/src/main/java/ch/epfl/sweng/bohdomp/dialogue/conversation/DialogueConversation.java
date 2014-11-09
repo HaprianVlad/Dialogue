@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -33,17 +34,16 @@ public class DialogueConversation implements Conversation {
      */
     public DialogueConversation(List<Contact> contacts) {
         if (contacts == null) {
-            throw new IllegalArgumentException();
-        } else {
-            this.conversationId = IdManager.getInstance().newConversationId();
-            //Contacts has to be implemented as immutable
-            this.conversationContacts = new ArrayList<Contact>(contacts);
-            this.conversationMessages = new ArrayList<DialogueMessage>();
-            this.conversationListeners = new ArrayList<ConversationListener>();
-            this.conversationMsgCount = 0;
-            this.conversationTimeStamp = new Timestamp((new Date()).getTime());
-            this.conversationHasUnread = false;
+            throw new NullArgumentException("contacts == null!");
         }
+
+        this.conversationId = IdManager.getInstance().newConversationId();
+        this.conversationContacts = new ArrayList<Contact>(contacts);
+        this.conversationMessages = new ArrayList<DialogueMessage>();
+        this.conversationListeners = new ArrayList<ConversationListener>();
+        this.conversationMsgCount = 0;
+        this.conversationTimeStamp = new Timestamp((new Date()).getTime());
+        this.conversationHasUnread = false;
     }
 
 
@@ -89,12 +89,20 @@ public class DialogueConversation implements Conversation {
 
     @Override
     public void addConversationContact(Contact contact) {
+        if (contact == null) {
+            throw new NullArgumentException("contact == null !");
+        }
+
         conversationContacts.add(contact);
         notifyListeners();
     }
 
     @Override
     public void removeConversationContact(Contact contact) {
+        if (contact == null) {
+            throw new NullArgumentException("contact == null !");
+        }
+
         if (conversationContacts.contains(contact)) {
             conversationContacts.remove(contact);
             notifyListeners();
@@ -103,6 +111,10 @@ public class DialogueConversation implements Conversation {
 
     @Override
     public void addMessage(DialogueMessage message) {
+        if (message == null) {
+            throw new NullArgumentException("message == null !");
+        }
+
         conversationHasUnread = true;
         conversationMessages.add(message);
         notifyListeners();
@@ -110,11 +122,19 @@ public class DialogueConversation implements Conversation {
 
     @Override
     public void addListener(ConversationListener listener) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+
         conversationListeners.add(listener);
     }
 
     @Override
     public void removeListener(ConversationListener listener) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+
         if (conversationListeners.contains(listener)) {
             conversationListeners.remove(listener);
         }
