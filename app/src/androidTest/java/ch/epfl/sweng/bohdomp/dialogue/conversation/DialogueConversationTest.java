@@ -54,39 +54,39 @@ public class DialogueConversationTest extends AndroidTestCase {
 
     public void testGetConversationName() {
 
-        assertEquals(mContact.getDisplayName(), mConversation.getConversationName());
+        assertEquals(mContact.getDisplayName(), mConversation.getName());
     }
 
     public void testGetConversationContacts() {
 
-        assertEquals(mContacts, mConversation.getConversationContacts());
+        assertEquals(mContacts, mConversation.getContacts());
     }
 
     public void testGetConversationMessagesNonInit() {
 
-        assertEquals(new ArrayList<DialogueMessage>(), mConversation.getConversationMessages());
+        assertEquals(new ArrayList<DialogueMessage>(), mConversation.getMessages());
     }
 
     public void testGetConversationTimeStamp() {
         long afterConversationLastActivity = System.currentTimeMillis();
 
-        assertTrue(afterConversationLastActivity >= mConversation.getConversationTimeStamp().getTime());
+        assertTrue(afterConversationLastActivity >= mConversation.getLastActivityTime().getTime());
     }
 
     public void testGetConversationMsgCountNonInit() {
 
-        assertEquals(0, mConversation.getConversationMsgCount());
+        assertEquals(0, mConversation.getMessageCount());
     }
 
     public void testGetConversationHasUnreadNonInit() {
 
-        assertEquals(false, mConversation.getConversationHasUnread());
+        assertEquals(false, mConversation.hasUnread());
     }
 
     public void testAddNullContact() {
 
         try {
-            mConversation.addConversationContact(null);
+            mConversation.addContact(null);
             fail("No NullArgumentException thrown");
         } catch (NullArgumentException e) {
             // all good :)
@@ -95,16 +95,16 @@ public class DialogueConversationTest extends AndroidTestCase {
 
     public void testAddContact() {
         Contact contact = new UnknownContact("0888431243");
-        mConversation.addConversationContact(contact);
+        mConversation.addContact(contact);
         mContacts.add(contact);
 
-        assertEquals(mContacts, mConversation.getConversationContacts());
+        assertEquals(mContacts, mConversation.getContacts());
     }
 
     public void testRemoveNullContact() {
 
         try {
-            mConversation.removeConversationContact(null);
+            mConversation.removeContact(null);
             fail("No NullArgumentException thrown");
         } catch (NullArgumentException e) {
             // all good :)
@@ -113,17 +113,17 @@ public class DialogueConversationTest extends AndroidTestCase {
 
     public void testAddAndRemoveContact() {
         Contact contact = new UnknownContact("0888431243");
-        mConversation.addConversationContact(contact);
-        mConversation.removeConversationContact(contact);
+        mConversation.addContact(contact);
+        mConversation.removeContact(contact);
 
-        assertEquals(mContacts, mConversation.getConversationContacts());
+        assertEquals(mContacts, mConversation.getContacts());
     }
 
     public void testRemoveNonExistentContact() {
         Contact contact = new UnknownContact("0887341234");
 
         // this should do nothing and throw no runtime exception!
-        mConversation.removeConversationContact(contact);
+        mConversation.removeContact(contact);
     }
 
     public void testAddNullMessage() {
@@ -141,19 +141,19 @@ public class DialogueConversationTest extends AndroidTestCase {
         mConversation.addMessage(message);
         mMessages.add(message);
 
-        assertTrue(mConversation.getConversationHasUnread());
-        assertEquals(mMessages, mConversation.getConversationMessages());
+        assertTrue(mConversation.hasUnread());
+        assertEquals(mMessages, mConversation.getMessages());
     }
 
     public void testSetAllMessagesAsRead() {
         DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
         mConversation.addMessage(message);
 
-        assertTrue(mConversation.getConversationHasUnread());
+        assertTrue(mConversation.hasUnread());
 
         mConversation.setAllMessagesAsRead();
 
-        assertFalse(mConversation.getConversationHasUnread());
+        assertFalse(mConversation.hasUnread());
     }
 
     public void testAddNullListener() {

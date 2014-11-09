@@ -20,8 +20,8 @@ public final class DefaultDialogData implements DialogueData {
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
             public int compare(Conversation c1, Conversation c2) {
-                return c2.getConversationTimeStamp().
-                        compareTo(c1.getConversationTimeStamp()); // lowest timestamp comes before
+                return c2.getLastActivityTime().
+                        compareTo(c1.getLastActivityTime()); // lowest timestamp comes before
             }
         };
     }
@@ -72,7 +72,7 @@ public final class DefaultDialogData implements DialogueData {
 
         // Try finding it first.
         for (Conversation conversation : conversations) {
-            if (conversation.getConversationContacts().contains(contact)) {
+            if (conversation.getContacts().contains(contact)) {
                 return conversation;
             }
         }

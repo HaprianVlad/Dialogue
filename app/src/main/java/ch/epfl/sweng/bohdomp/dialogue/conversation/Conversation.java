@@ -22,51 +22,51 @@ public interface Conversation {
      * Returns the name of the conversation
      * @return the name of the conversation
      */
-    String getConversationName();
+    String getName();
 
     /**
      * Getter for the set of contacts
      * @return the set of contacts of the conversation
      */
 
-    List<Contact> getConversationContacts();
+    List<Contact> getContacts();
 
 
     /**
      * Getter for the messages list of the conversation
      * @return list of messages
      */
-    List<DialogueMessage> getConversationMessages();
+    List<DialogueMessage> getMessages();
 
     /**
      * Getter for the timeStamp of the conversation
      * @return the current timestamp
      */
-    Timestamp getConversationTimeStamp();
+    Timestamp getLastActivityTime();
 
     /**
      * Getter for the number of messages in the conversation
      * @return number of messages in the conversation
      */
-    int getConversationMsgCount();
+    int getMessageCount();
 
     /**
      * Getter for the unread boolean
-     * @return conversationHasUnread paramater
+     * @return conversationHasUnread parameter
      */
-    boolean getConversationHasUnread();
+    boolean hasUnread();
 
     /**
      * Adds a contact to the conversation
      * @param contact the contact we want to add
      */
-    void addConversationContact(Contact contact);
+    void addContact(Contact contact);
 
     /**
      * Removes a contact from the conversation
      * @param contact the contact we want to remove
      */
-    void removeConversationContact(Contact contact);
+    void removeContact(Contact contact);
 
 
     /**
