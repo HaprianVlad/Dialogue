@@ -31,6 +31,7 @@ public class DialogueConversationTest extends AndroidTestCase {
         mContact = new UnknownContact("0773207769");
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
+        
         mConversation = new DialogueConversation(mContacts);
         mMessages = new ArrayList<DialogueMessage>();
         mHasBeenCalled = false;
