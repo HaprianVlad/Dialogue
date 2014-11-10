@@ -1,12 +1,27 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 
 /**
  * Class representing a dialogue text message
  */
 public class DialogueTextMessage extends DialogueMessage {
+
+
+    public static final Parcelable.Creator<DialogueTextMessage> CREATOR=new Parcelable.Creator<DialogueTextMessage>() {
+        public DialogueTextMessage createFromParcel(Parcel source) {
+            return new DialogueTextMessage(source);
+        }
+
+        public DialogueTextMessage[] newArray(int size) {
+            return new DialogueTextMessage[size];
+        }
+    };
+
     public DialogueTextMessage(Contact contactParameter, String textBodyParameter,
                                MessageStatus messageStatusParameter) {
         super(contactParameter, textBodyParameter, messageStatusParameter, false);
@@ -17,5 +32,10 @@ public class DialogueTextMessage extends DialogueMessage {
         return new TextMessageBody(body);
 
     }
+
+    private DialogueTextMessage(Parcel source) {
+        super(source);
+    }
+
 
 }

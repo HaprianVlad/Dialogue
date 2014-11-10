@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.telephony.SmsManager;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+
+
 
 /**
  * The sms sender service sends the message passed to it via the intent and handles the different errors
@@ -20,7 +22,7 @@ public class SmsSenderService extends IntentService {
     private static final String ACTION_SMS_SENT = "SMS_SENT";
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
-    private static final String MESSAGE_BODY = "message";
+    public static final String MESSAGE = "message";
 
     private BroadcastReceiver mSentBroadcastReceiver = new SmsSentBroadcastReceiver();
     private BroadcastReceiver mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
@@ -43,10 +45,9 @@ public class SmsSenderService extends IntentService {
         // setIntentRedelivery(true);
 
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
-            DialogueSmsMessage smsDialogueSmsMessage = getMessage(intent);
-
-            SmsManager.getDefault().sendTextMessage(smsDialogueSmsMessage.getPhoneNumber(), null,
-                    smsDialogueSmsMessage.getBody(), getSentPendingIntent(), getDeliveryPendingIntent());
+            DialogueMessage message = getMessage(intent);
+            SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
+                    message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());
         }
     }
 
@@ -73,12 +74,19 @@ public class SmsSenderService extends IntentService {
      * @param intent containing the message to be sent.
      * @return the message to be sent.
      */
-    private DialogueSmsMessage getMessage(Intent intent) {
+    private DialogueMessage getMessage(Intent intent) {
         if (BuildConfig.DEBUG && (intent == null)) {
             throw new AssertionError("intent == null");
         }
-
-        return (DialogueSmsMessage) intent.getExtras().getParcelable(MESSAGE_BODY);
+        /*
+        FIXME:Think about this solution
+        Parcel parcel = Parcel.obtain();
+        int flag = 1;
+        intent.getExtras().getParcelable(MESSAGE).writeToParcel(parcel, flag);
+        DialogueMessage message = DialogueTextMessage.CREATOR.createFromParcel(parcel);
+        parcel.recycle();
+        */
+        return  (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
     /**
