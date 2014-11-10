@@ -56,7 +56,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
-        removeContacts(getContext());
+        for (final String name : ALL_NAMES) {
+            removeContactByDisplayName(getContext(), name);
+        }
     }
 
     public void testContactFromPhoneNumberWhenNumberIsNotKnownButValid() {
@@ -100,11 +102,15 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         assertTrue(contact.getDisplayName().equals(DISPLAY_NAME_1));
     }
 
-    public void testKnownContacts() throws Exception {
+    public void testKnownContactsContainsAddedContacts() throws Exception {
         List<Contact> contacts = mContactFactory.knownContacts();
-        assertTrue(contacts.size() == NAME_SET.size());
-        for (Contact c : contacts) {
-            assertTrue(NAME_SET.contains(c.getDisplayName()));
+        Set<String> displayNames = new HashSet<String>();
+        for (final Contact c : contacts) {
+            displayNames.add(c.getDisplayName());
+        }
+
+        for (final String name : ALL_NAMES) {
+            assertTrue(displayNames.contains(name));
         }
     }
 
@@ -137,26 +143,26 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
     }
 
-    /**
-     * code taken from
-     * http://stackoverflow.com/
-     *  questions/6966523/how-to-delete-all-contacts-in-contact-list-on-android-mobile-programatically
-     * @param context
+    /* inspired by
+     * http://stackoverflow.com/questions/9625308/android-find-a-contact-by-display-name
      */
-    private static void removeContacts(Context context) {
+    private static void removeContactByDisplayName(Context context, final String displayName) {
         ContentResolver resolver = context.getContentResolver();
 
-        Cursor cursor = resolver.query(
-                ContactsContract.Contacts.CONTENT_URI,
-                null,
-                null,
-                null,
+        Cursor lookUpKeyCursor = resolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                new String[] {ContactsContract.PhoneLookup.LOOKUP_KEY},
+                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME + " = ?",
+                new String[] {displayName},
                 null);
 
-        while (cursor.moveToNext()) {
-            String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
-            Uri deletionUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+        if (lookUpKeyCursor.moveToFirst()) {
+            String lookUpKey = lookUpKeyCursor.getString(
+                    lookUpKeyCursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+
+            Uri deletionUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookUpKey);
             resolver.delete(deletionUri, null, null);
         }
     }
+
 }
