@@ -208,9 +208,9 @@ public class ConversationListAdapter extends BaseAdapter{
             return onlyMonthYear.format(last);
         }
 
-        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.ENGLISH);
+        SimpleDateFormat week = new SimpleDateFormat("ww", Locale.ENGLISH);
 
-        if (month.format(currentDate).equals(year.format(last))) {
+        if (!week.format(currentDate).equals(week.format(last))) {
             SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
 
             return onlyDayMonth.format(last);
