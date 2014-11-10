@@ -1,11 +1,13 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
-import android.test.AndroidTestCase;
+import android.app.Application;
+import android.test.ApplicationTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -18,20 +20,28 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageSt
 /**
  * Created by BohDomp! on 08.11.14.
  */
-public class DialogueConversationTest extends AndroidTestCase {
+public class DialogueConversationTest extends ApplicationTestCase<Application> {
+    private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
     private DialogueConversation mConversation;
     private List<DialogueMessage> mMessages;
     private boolean mHasBeenCalled;
 
+    public DialogueConversationTest() {
+        super(Application.class);
+    }
+
     public void setUp() throws Exception {
         super.setUp();
+        createApplication();
 
-        mContact = new UnknownContact("0773207769");
+        mContactFactory = new ContactFactory(getContext());
+
+        mContact = mContactFactory.contactFromNumber("0773207769");
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
-        
+
         mConversation = new DialogueConversation(mContacts);
         mMessages = new ArrayList<DialogueMessage>();
         mHasBeenCalled = false;
@@ -95,9 +105,9 @@ public class DialogueConversationTest extends AndroidTestCase {
     }
 
     public void testAddContact() {
-        Contact contact = new UnknownContact("0888431243");
-        mConversation.addContact(contact);
-        mContacts.add(contact);
+        mContact = mContactFactory.contactFromNumber("0888431243");
+        mConversation.addContact(mContact);
+        mContacts.add(mContact);
 
         assertEquals(mContacts, mConversation.getContacts());
     }
@@ -112,19 +122,18 @@ public class DialogueConversationTest extends AndroidTestCase {
         }
     }
 
-    public void testAddAndRemoveContact() {
-        Contact contact = new UnknownContact("0888431243");
-        mConversation.addContact(contact);
-        mConversation.removeContact(contact);
+    public void testRemoveContact() {
+        mConversation.removeContact(mContact);
+        mContacts.remove(mContact);
 
         assertEquals(mContacts, mConversation.getContacts());
     }
 
-    public void testRemoveNonExistentContact() {
-        Contact contact = new UnknownContact("0887341234");
+    public void testRemoveNonAddedContact() {
+        mContact = new UnknownContact("0887341234");
 
         // this should do nothing and throw no runtime exception!
-        mConversation.removeContact(contact);
+        mConversation.removeContact(mContact);
     }
 
     public void testAddNullMessage() {
