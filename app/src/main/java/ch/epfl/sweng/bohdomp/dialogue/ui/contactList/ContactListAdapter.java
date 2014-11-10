@@ -163,9 +163,9 @@ public class ContactListAdapter extends BaseAdapter{
      */
     private void setupView(Conversation c, ContactListViewHolder viewHolder) {
 
-        String name = c.getConversationName();
-        Timestamp time = c.getConversationTimeStamp();
-        Boolean unread = c.getConversationHasUnread();
+        String name = c.getName();
+        Timestamp time = c.getLastActivityTime();
+        Boolean unread = c.hasUnread();
 
         viewHolder.contactName.setText(name);
 

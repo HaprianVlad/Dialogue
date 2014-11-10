@@ -73,7 +73,7 @@ public class MessagesActivity extends Activity implements ConversationListener {
         mConversation.addListener(this);
 
         if (mConversation != null) {
-            mMessages = mConversation.getConversationMessages();
+            mMessages = mConversation.getMessages();
             mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
         } else {
             throw new NullPointerException("Conversation is Null");
@@ -91,7 +91,7 @@ public class MessagesActivity extends Activity implements ConversationListener {
      */
     private void setViewElement() {
 
-        setTitle(mConversation.getConversationName());
+        setTitle(mConversation.getName());
 
         mMessageList = (ListView) findViewById(R.id.message_List);
         mMessageList.setAdapter(mMessageItemListAdapter);
@@ -113,7 +113,7 @@ public class MessagesActivity extends Activity implements ConversationListener {
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
 
-                for (Contact contact : mConversation.getConversationContacts()) {
+                for (Contact contact : mConversation.getContacts()) {
                     DialogueMessage message = new DialogueTextMessage(contact, draftText,
                             DialogueMessage.MessageStatus.OUTGOING);
 
