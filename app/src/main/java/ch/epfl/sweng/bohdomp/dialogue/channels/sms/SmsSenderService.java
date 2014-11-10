@@ -83,8 +83,10 @@ public class SmsSenderService extends IntentService {
         Parcel parcel = Parcel.obtain();
         int flag = 1;
         intent.getExtras().getParcelable(MESSAGE).writeToParcel(parcel, flag);
+        DialogueMessage message = DialogueTextMessage.CREATOR.createFromParcel(parcel);
+        parcel.recycle();
 
-        return  DialogueTextMessage.CREATOR.createFromParcel(parcel);
+        return  message;
     }
 
     /**
