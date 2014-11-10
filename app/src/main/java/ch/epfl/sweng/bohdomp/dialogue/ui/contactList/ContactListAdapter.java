@@ -125,6 +125,7 @@ public class ContactListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 DefaultDialogData.getInstance().removeConversation(c.getId());
                 Log.i(LOG_TAG, "Delete Conversation with ID");
+                notifyDataSetChanged();
             }
         });
 

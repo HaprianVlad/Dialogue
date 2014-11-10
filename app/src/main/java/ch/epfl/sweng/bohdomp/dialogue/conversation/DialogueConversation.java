@@ -117,6 +117,8 @@ public class DialogueConversation implements Conversation {
 
         mHasUnread = true;
         mMessages.add(message);
+        mMessageCount = mMessageCount + 1;
+
         notifyListeners();
     }
 
@@ -149,7 +151,7 @@ public class DialogueConversation implements Conversation {
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {
         for (ConversationListener listener : mListeners) {
-            listener.onConversationChanged(this);
+            listener.onConversationChanged(this.getId());
         }
     }
 }

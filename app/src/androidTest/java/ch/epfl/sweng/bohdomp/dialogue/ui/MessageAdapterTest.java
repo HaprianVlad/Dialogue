@@ -15,6 +15,10 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter;
  * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter}
  */
 public class MessageAdapterTest extends AndroidTestCase {
+    private MessagesAdapter mAdapter;
+
+    private String mBodyText;
+    private final long mID = 123L;
 
     public MessageAdapterTest() {
         super();
@@ -22,13 +26,19 @@ public class MessageAdapterTest extends AndroidTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+
+        mBodyText = "Hello";
+
+        List<DialogueMessage> list = new ArrayList<DialogueMessage>();
+
+        mAdapter = new MessagesAdapter(getContext(), list);
     }
 
     public void testNullContext() {
         List<DialogueMessage> msgSet = new ArrayList<DialogueMessage>();
 
         try {
-            MessagesAdapter adapter = new MessagesAdapter(null, msgSet);
+            new MessagesAdapter(null, msgSet);
             Assert.fail("Null context argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
@@ -37,7 +47,7 @@ public class MessageAdapterTest extends AndroidTestCase {
 
     public void testNullItems() {
         try {
-            MessagesAdapter adapter = new MessagesAdapter(getContext(), null);
+            new MessagesAdapter(getContext(), null);
             Assert.fail("Null list argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
@@ -49,10 +59,31 @@ public class MessageAdapterTest extends AndroidTestCase {
             List<DialogueMessage> msgSet = new ArrayList<DialogueMessage>();
             msgSet.add(null);
 
-            MessagesAdapter adapter = new MessagesAdapter(getContext(), msgSet);
+            new MessagesAdapter(getContext(), msgSet);
             Assert.fail("Null list argument not throwing");
         } catch (IllegalArgumentException e) {
             // Everything works fine
         }
     }
+
+    public void testParentNull() {
+        try {
+            mAdapter.getView(0, null, null);
+        } catch (NullArgumentException e) {
+            // Everything works fine
+        }
+    }
+
+    /*
+    public void testGetView() {
+        ViewGroup parent = new LinearLayout(getContext());
+        View view = mAdapter.getView(0, null, parent);
+
+        TextView body = (TextView) view.findViewById(R.id.text_content);
+
+        assertNotNull("Body", body);
+
+        assertEquals("Body not equals", body.getText().toString(), mBodyText);
+    }
+    */
 }

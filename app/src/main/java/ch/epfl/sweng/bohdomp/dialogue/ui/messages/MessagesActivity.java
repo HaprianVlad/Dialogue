@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,7 +35,7 @@ public class MessagesActivity extends Activity implements ConversationListener {
     private EditText mNewMessageText;
     private Button mSendButton;
 
-    private BaseAdapter mMessageItemListAdapter;
+    private MessagesAdapter mMessageItemListAdapter;
 
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
@@ -81,8 +80,14 @@ public class MessagesActivity extends Activity implements ConversationListener {
     }
 
     @Override
-    public void onConversationChanged(Conversation conversation) {
-        mMessageItemListAdapter.notifyDataSetChanged();
+    public void onConversationChanged(ConversationId id) {
+        Log.i("hello", "notify");
+
+        if (mConversation.getId() == id) {
+            mMessageItemListAdapter.updateData(mConversation.getMessages());
+        } else {
+            throw new IllegalStateException("Wrong listener");
+        }
     }
 
 
@@ -145,5 +150,11 @@ public class MessagesActivity extends Activity implements ConversationListener {
         Boolean settingsSelected = item.getItemId() == R.id.action_settings;
 
         return settingsSelected || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        mConversation.removeListener(this);
+        super.onStop();
     }
 }
