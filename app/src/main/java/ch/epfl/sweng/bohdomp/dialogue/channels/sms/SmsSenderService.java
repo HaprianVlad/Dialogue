@@ -5,12 +5,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Parcel;
 import android.telephony.SmsManager;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
+
 
 
 /**
@@ -79,14 +78,15 @@ public class SmsSenderService extends IntentService {
         if (BuildConfig.DEBUG && (intent == null)) {
             throw new AssertionError("intent == null");
         }
-
+        /*
+        FIXME:Think about this solution
         Parcel parcel = Parcel.obtain();
         int flag = 1;
         intent.getExtras().getParcelable(MESSAGE).writeToParcel(parcel, flag);
         DialogueMessage message = DialogueTextMessage.CREATOR.createFromParcel(parcel);
         parcel.recycle();
-
-        return  message;
+        */
+        return  (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
     /**
