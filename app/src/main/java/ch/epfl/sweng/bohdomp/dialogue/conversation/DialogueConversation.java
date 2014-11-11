@@ -14,7 +14,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 /**
  * Class representing a Dialogue conversation. This class is mutable
  */
-public class DialogueConversation implements Conversation {
+public final class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
 
     private final ConversationId mId;

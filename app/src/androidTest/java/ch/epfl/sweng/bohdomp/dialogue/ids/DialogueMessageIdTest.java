@@ -18,9 +18,11 @@ public class DialogueMessageIdTest extends AndroidTestCase {
 
     public void testGetLong() {
         messageId = IdManager.getInstance().newDialogueMessageId();
-
+        
         assertTrue(messageId != null);
         assertTrue(messageId.getLong() > 0);
+        assertTrue(messageId.getLong() < System.currentTimeMillis()+1);
+
     }
 
     public void testFromLong() {
@@ -38,6 +40,7 @@ public class DialogueMessageIdTest extends AndroidTestCase {
 
         assertTrue(messageId3.compareTo(messageId1) > 0);
         assertTrue(messageId2.compareTo(messageId1) == 0);
+        assertTrue(messageId2.compareTo(messageId3) < 0);
     }
 
     public void testEquals() {

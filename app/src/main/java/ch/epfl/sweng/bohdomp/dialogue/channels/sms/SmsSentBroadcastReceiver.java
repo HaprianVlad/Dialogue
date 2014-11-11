@@ -13,7 +13,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  * The "sms sent" broadcast receiver handles the result code (the message was sent or not) returned
  * by the sms manager when sending a sms message.
  */
-public class SmsSentBroadcastReceiver extends BroadcastReceiver {
+public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsSentBroadcastReceiver";
 
     private static final String ACTION_SMS_SENT = "SMS_SENT";

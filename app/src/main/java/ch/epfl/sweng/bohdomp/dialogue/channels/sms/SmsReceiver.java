@@ -16,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 /**
  * Defines an Sms Broadcast Receiver
  */
-public class SmsReceiver extends BroadcastReceiver {
+public final class SmsReceiver extends BroadcastReceiver {
     private  ContactFactory contactFactory = null;
     @Override
     public void onReceive(Context context, Intent intent) {

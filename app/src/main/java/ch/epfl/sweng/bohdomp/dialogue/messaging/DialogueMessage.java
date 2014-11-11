@@ -112,7 +112,7 @@ public abstract class DialogueMessage implements Parcelable {
      */
     public void setMessageAsRead() {
         //FIXME: Decide if we need a listener somewhere or when enter in converstation all messages are read
-        isReadStatus = false;
+        isReadStatus = true;
     }
 
 

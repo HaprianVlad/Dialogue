@@ -12,7 +12,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  * The "sms delivery" broadcast receiver handles the result code (the message was delivered or not)
  * return by the sms manager when sending a sms message.
  */
-public class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
+public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
     @Override

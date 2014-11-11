@@ -2,6 +2,8 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
+import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 
 import org.mockito.Mockito;
@@ -15,7 +17,6 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     private final String text = "Hello world!";
     private final DialogueMessage.MessageStatus status = DialogueMessage.MessageStatus.INCOMING;
-    private final Contact.ChannelType channelType = Contact.ChannelType.SMS;
     private Contact contact;
     private DialogueTextMessage message;
 
@@ -54,31 +55,38 @@ public class DialogueTextMessageTest extends MockTestCase {
     }
 
     public void  testGetContact() {
+        //Contact is immutable
         assertTrue(message.getContact() != null);
+        assertEquals(contact, message.getContact());
     }
 
     public void testGetMessageTimeStamp() {
         assertTrue(message.getMessageTimeStamp() != null);
-        assertTrue(message.getMessageTimeStamp().getTime() > 0);
+        assertTrue(message.getMessageTimeStamp().getTime() == System.currentTimeMillis());
 
     }
 
     public void testGetMessageStatus() {
-        assertTrue(message.getMessageStatus() == status);
+        assertTrue(message.getMessageStatus() != null);
+        assertEquals(status, message.getMessageStatus());
 
     }
 
 
     public void testGetMessageId() {
+        DialogueMessageId afterId = IdManager.getInstance().newDialogueMessageId();
+
         assertTrue(message.getMessageId() != null);
+        assertEquals(message.getMessageId().getLong()+1, afterId.getLong());
     }
 
     public void testSetMessageAsRead() {
         assertFalse(message.getIsReadStatus());
+        message.setMessageAsRead();
+        assertTrue(message.getIsReadStatus());
     }
 
     public void testGetAllowedChannels() {
-
         assertFalse(message.getIsDataMessage());
     }
 
