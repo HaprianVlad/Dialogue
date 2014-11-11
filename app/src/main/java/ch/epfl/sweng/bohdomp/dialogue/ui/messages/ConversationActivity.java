@@ -25,7 +25,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 
 /**
- * @author swengTeam 2013 BohDomp
+ * @author swengTeam 2014 BohDomp
  * Activity displaying a set of messages
  */
 public class ConversationActivity extends Activity implements ConversationListener {
