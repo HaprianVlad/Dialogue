@@ -26,6 +26,9 @@ public class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
     private static final long MILLIS_IN_DAY = 86400000;
 
+    /**
+     * Describes all week day from SimpleDateFormat 'E'
+     */
     private enum weekDays {
         Mon, Tue, Wed, Thu, Fri, Sat, Sun
     }

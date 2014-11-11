@@ -29,6 +29,8 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageSt
 public class DialogueConversationTest extends MockTestCase {
 
     private static final long MILLIS_IN_DAY = 86400000;
+    private static final long NB_YEAR_DAY = 366;
+    private static final long NB_MONTH_DAY = 31;
 
     private Context mContext;
     private SystemTimeProvider mTimeProvider;
@@ -297,7 +299,7 @@ public class DialogueConversationTest extends MockTestCase {
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
         String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
-        Mockito.doReturn(mockedCurrentTimeMills(366*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(mockedCurrentTimeMills(NB_YEAR_DAY*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
@@ -309,10 +311,10 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
         Timestamp lastActivity = mConversation.getLastActivityTime();
-        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
+        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
         String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
-        Mockito.doReturn(mockedCurrentTimeMills(366*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(mockedCurrentTimeMills(NB_MONTH_DAY*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 

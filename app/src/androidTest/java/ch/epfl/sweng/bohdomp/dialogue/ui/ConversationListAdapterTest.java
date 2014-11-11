@@ -34,7 +34,6 @@ public class ConversationListAdapterTest extends AndroidTestCase {
 
         try {
             mAdapter = new ConversationListAdapter(null, mConversations);
-        }
 
             fail("Null context argument not throwing");
         } catch (NullArgumentException e) {
