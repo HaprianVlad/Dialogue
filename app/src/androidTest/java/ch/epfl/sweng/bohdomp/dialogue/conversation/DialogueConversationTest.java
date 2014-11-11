@@ -8,7 +8,6 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
@@ -130,7 +129,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     }
 
     public void testRemoveNonAddedContact() {
-        mContact = new UnknownContact("0887341234");
+        mContact = mContactFactory.contactFromNumber("0887341234");
 
         // this should do nothing and throw no runtime exception!
         mConversation.removeContact(mContact);
