@@ -62,7 +62,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testGetMessageTimeStamp() {
         assertTrue(message.getMessageTimeStamp() != null);
-        assertTrue(message.getMessageTimeStamp().getTime() == System.currentTimeMillis());
+        assertTrue(message.getMessageTimeStamp().getTime() <= System.currentTimeMillis());
 
     }
 
