@@ -20,7 +20,6 @@ import java.util.Set;
 /**
  *  junit test class for ContactFactory class
  *
- *  /!\ don't run on your actual device will delete all contacts
  */
 public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
