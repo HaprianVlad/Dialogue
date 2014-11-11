@@ -81,8 +81,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     public void onConversationChanged(ConversationId id) {
-        Log.i("hello", "notify");
-
         if (mConversation.getId() == id) {
             mMessageItemListAdapter.updateData(mConversation.getMessages());
         } else {

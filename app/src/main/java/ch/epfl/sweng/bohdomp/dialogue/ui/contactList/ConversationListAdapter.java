@@ -109,11 +109,7 @@ public class ConversationListAdapter extends BaseAdapter{
 
         final Conversation c = (Conversation) getItem(position);
 
-        if (c != null) {
-            setupView(c, viewHolder);
-        } else {
-            throw new NullPointerException("Conversation");
-        }
+        setupView(c, viewHolder);
 
         viewHolder.deleteConversation.setOnClickListener(new View.OnClickListener() {
             @Override
