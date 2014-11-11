@@ -48,6 +48,7 @@ public class DialogueConversation implements Conversation {
     /**
      * Constructor of the class
      * @param contacts - set of contacts we add to conversation
+     * @param systemTimeProvider - will provide us system time
      */
     public DialogueConversation(List<Contact> contacts, SystemTimeProvider systemTimeProvider) {
         if (contacts == null) {

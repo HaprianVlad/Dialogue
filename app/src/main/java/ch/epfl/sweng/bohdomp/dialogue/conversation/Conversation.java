@@ -46,6 +46,11 @@ public interface Conversation {
      */
     Timestamp getLastActivityTime();
 
+    /**
+     * Depending on the last activity gives you an info to display.
+     * @param context Context in which function has to be evaluated.
+     * @return pretty string to display last activity.
+     */
     String getLastConversationActivityString(Context context);
 
     /**
