@@ -13,11 +13,7 @@ import android.widget.TextView;
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
@@ -35,7 +31,6 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  */
 public class ConversationListAdapter extends BaseAdapter{
     private static final String LOG_TAG = "ConversationListAdapter";
-    private static final long MILLIS_IN_DAY = 86400000;
 
     private final Context mContext;
     private List<Conversation> mConversations;
@@ -165,7 +160,6 @@ public class ConversationListAdapter extends BaseAdapter{
     private void setupView(Conversation c, ContactListViewHolder viewHolder) {
 
         String name = c.getName();
-        Timestamp time = c.getLastActivityTime();
         Boolean unread = c.hasUnread();
 
         viewHolder.contactName.setText(name);
@@ -174,52 +168,6 @@ public class ConversationListAdapter extends BaseAdapter{
             viewHolder.unRead.setVisibility(View.VISIBLE);
         }
 
-        viewHolder.lastMessage.setText(getLastConversationActivityString(time));
-    }
-
-    private String getLastConversationActivityString(Timestamp last) {
-
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - last.getTime();
-        long millisElapsedToday = currentTime % MILLIS_IN_DAY;
-
-        if (elapsedTime <= millisElapsedToday) {
-            SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-
-            return onlyHoursAndMin.format(last);
-        }
-
-        if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
-
-            return mContext.getString(R.string.yesterday);
-        }
-
-        if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
-
-            return mContext.getString(R.string.two_days_ago);
-        }
-
-        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-        Date currentDate = new Date(currentTime);
-
-        if (year.format(currentDate).equals(year.format(last))) {
-            SimpleDateFormat onlyMonthYear = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
-
-            return onlyMonthYear.format(last);
-        }
-
-        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.ENGLISH);
-
-        if (month.format(currentDate).equals(year.format(last))) {
-            SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
-
-            return onlyDayMonth.format(last);
-        }
-
-        SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("u", Locale.ENGLISH);
-
-        int indexWeekDay = Integer.getInteger(dayOfTheWeek.format(last)) - 1;
-
-        return mContext.getResources().getStringArray(R.array.days_of_week)[indexWeekDay];
+        viewHolder.lastMessage.setText(c.getLastConversationActivityString(mContext));
     }
 }
