@@ -73,17 +73,4 @@ public class MessageAdapterTest extends AndroidTestCase {
             // Everything works fine
         }
     }
-
-    /*
-    public void testGetView() {
-        ViewGroup parent = new LinearLayout(getContext());
-        View view = mAdapter.getView(0, null, parent);
-
-        TextView body = (TextView) view.findViewById(R.id.text_content);
-
-        assertNotNull("Body", body);
-
-        assertEquals("Body not equals", body.getText().toString(), mBodyText);
-    }
-    */
 }

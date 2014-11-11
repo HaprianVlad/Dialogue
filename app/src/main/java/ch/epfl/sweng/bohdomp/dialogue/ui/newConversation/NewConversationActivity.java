@@ -15,7 +15,8 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
+
 /**
  * @author swengTeam 2013 BohDomp
  * Activity enables the user to create a new conversation
@@ -54,7 +55,7 @@ public class NewConversationActivity extends Activity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MessagesActivity.class);
+                Intent intent = new Intent(v.getContext(), ConversationActivity.class);
 
                 ContactFactory factory = new ContactFactory(getApplicationContext());
                 Contact contact = factory.contactFromNumber(mToEditText.getText().toString());
