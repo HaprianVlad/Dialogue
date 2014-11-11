@@ -179,7 +179,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     public void testAddListener() {
         ConversationListener listener = new ConversationListener() {
             @Override
-            public void onConversationChanged(Conversation conversation) {
+            public void onConversationChanged(ConversationId conversation) {
                 mHasBeenCalled = true;
             }
         };
@@ -210,7 +210,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     public void testAddAndRemoveListener() {
         ConversationListener listener = new ConversationListener() {
             @Override
-            public void onConversationChanged(Conversation conversation) {
+            public void onConversationChanged(ConversationId conversation) {
                 mHasBeenCalled = true;
             }
         };
@@ -228,7 +228,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     public void testRemoveNonAddedListener() {
         ConversationListener listener = new ConversationListener() {
             @Override
-            public void onConversationChanged(Conversation conversation) {
+            public void onConversationChanged(ConversationId conversation) {
                 mHasBeenCalled = true;
             }
         };

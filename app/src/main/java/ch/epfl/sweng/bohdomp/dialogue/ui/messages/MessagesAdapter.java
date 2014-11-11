@@ -1,10 +1,12 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.messages;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -76,8 +78,7 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        //FIXME
-        return 0;
+        return mMessagesList.get(position).getMessageId().getLong();
     }
 
     @Override
@@ -107,6 +108,19 @@ public class MessagesAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void updateData(List<DialogueMessage> items) {
+        if (items == null) {
+            throw new NullArgumentException("items");
+        }
+
+        if (items.contains(null)) {
+            throw new IllegalArgumentException("items contains null");
+        }
+
+        this.mMessagesList = items;
+        notifyDataSetChanged();
+    }
+
     /**
      * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter}
      * @param convertView Old view to reuse if possible
@@ -131,6 +145,22 @@ public class MessagesAdapter extends BaseAdapter {
      * @param viewHolder The View Holder containing all view to update
      */
     private void setupView(DialogueMessage msg, MessageViewHolder viewHolder) {
-        //TODO
+        if (BuildConfig.DEBUG && msg == null) {
+            throw new AssertionError("null msg");
+        }
+        if (BuildConfig.DEBUG && viewHolder == null) {
+            throw new AssertionError("null viewHolder");
+        }
+
+        String body = msg.getBody().getMessageBody();
+
+        viewHolder.messageContent.setText(body);
+
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.messageContent.getLayoutParams();
+        if (msg.getMessageStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+            lp.gravity = Gravity.RIGHT;
+        } else if (msg.getMessageStatus() == DialogueMessage.MessageStatus.INCOMING) {
+            lp.gravity = Gravity.LEFT;
+        }
     }
 }

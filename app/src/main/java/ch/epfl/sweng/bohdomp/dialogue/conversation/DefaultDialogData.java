@@ -80,10 +80,10 @@ public final class DefaultDialogData implements DialogueData {
         // Default case, conversation not found.
         List<Contact> contacts = new ArrayList<Contact>();
         contacts.add(contact);
-        Conversation converstation = new DialogueConversation(contacts);
+        Conversation conversation = new DialogueConversation(contacts);
 
-        mConversations.put(converstation.getId(), converstation);
-        return converstation;
+        mConversations.put(conversation.getId(), conversation);
+        return conversation;
     }
 
     /*

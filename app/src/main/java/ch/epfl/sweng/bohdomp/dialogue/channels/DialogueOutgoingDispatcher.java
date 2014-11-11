@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -31,6 +33,11 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         } else if (message == null) {
             throw new NullArgumentException("message");
         }
+
+        /* Add message to its conversation */
+        Contact contact = message.getContact();
+        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(contact);
+        c.addMessage(message);
 
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
