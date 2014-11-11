@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
+
+
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -14,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 /**
  * Defines an Sms Broadcast Receiver
  */
-public class SmsReceiver extends BroadcastReceiver {
+public final class SmsReceiver extends BroadcastReceiver {
     private  ContactFactory contactFactory = null;
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -42,6 +44,9 @@ public class SmsReceiver extends BroadcastReceiver {
     private DialogueTextMessage convertFromSmsMessage(SmsMessage smsMessage) {
         Contact contact = contactFactory.contactFromNumber(smsMessage.getDisplayOriginatingAddress());
         String stringBody = smsMessage.getMessageBody();
+
         return new DialogueTextMessage(contact, stringBody, DialogueMessage.MessageStatus.INCOMING);
     }
+
+
 }

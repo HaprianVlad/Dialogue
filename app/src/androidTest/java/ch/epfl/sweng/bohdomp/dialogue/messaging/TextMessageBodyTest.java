@@ -39,6 +39,6 @@ public class TextMessageBodyTest extends AndroidTestCase {
 
     public void testCorrectMessageBody() {
         this.messageBody = new TextMessageBody(body);
-        assertTrue(messageBody.getMessageBody() == body);
+        assertEquals(body, messageBody.getMessageBody());
     }
 }

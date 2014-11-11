@@ -10,7 +10,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 /**
  *  Class representing the body of a text message
  */
-public class TextMessageBody implements MessageBody{
+public final class TextMessageBody implements MessageBody{
 
     public final static int MAX_MESSAGE_SIZE = SmsMessage.MAX_USER_DATA_BYTES;
     private final String body;

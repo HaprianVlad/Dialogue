@@ -9,7 +9,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 /**
  *  Represents a service that during a phone call sends an sms if needed
  */
-public class HeadlessSmsSendService extends Service {
+public final class HeadlessSmsSendService extends Service {
     public HeadlessSmsSendService() {
     }
 

@@ -32,6 +32,8 @@ public final class DefaultDialogData implements DialogueData {
     private HashMap<ConversationId, Conversation> mConversations =
             new HashMap<ConversationId, Conversation>();
 
+    private final List<DialogueDataListener> mListeners =  new ArrayList<DialogueDataListener>();
+
     /**
      * Gets the singleton instance
      * @return gets the singleton instance
@@ -83,7 +85,18 @@ public final class DefaultDialogData implements DialogueData {
         contacts.add(contact);
         Conversation conversation = new DialogueConversation(contacts, new SystemTimeProvider());
 
+
+        //Notify Dialogue Data listeners if a conversation changes
+        conversation.addListener(new ConversationListener() {
+            @Override
+            public void onConversationChanged(ConversationId id) {
+                notifyListeners();
+            }
+        });
+
         mConversations.put(conversation.getId(), conversation);
+        notifyListeners();
+
         return conversation;
     }
 
@@ -93,6 +106,35 @@ public final class DefaultDialogData implements DialogueData {
     public void removeConversation(ConversationId id) {
         if (mConversations.containsKey(id)) {
             mConversations.remove(id);
+            notifyListeners();
+        }
+    }
+
+    @Override
+    public void addListener(DialogueDataListener listener) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+
+        mListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(DialogueDataListener listener) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+
+        if (mListeners.contains(listener)) {
+            mListeners.remove(listener);
+        }
+    }
+
+
+    //Method that notifies listeners when a change in conversation occurs
+    private void notifyListeners() {
+        for (DialogueDataListener listener : mListeners) {
+            listener.onDialogueDataChanged();
         }
     }
 }

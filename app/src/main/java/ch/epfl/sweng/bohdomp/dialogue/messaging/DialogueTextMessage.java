@@ -9,7 +9,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 /**
  * Class representing a dialogue text message
  */
-public class DialogueTextMessage extends DialogueMessage {
+public final class DialogueTextMessage extends DialogueMessage {
 
 
     public static final Parcelable.Creator<DialogueTextMessage> CREATOR=new Parcelable.Creator<DialogueTextMessage>() {
