@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.content.Context;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -43,6 +45,8 @@ public interface Conversation {
      * @return the current timestamp
      */
     Timestamp getLastActivityTime();
+
+    public String getLastConversationActivityString(Context context);
 
     /**
      * Getter for the number of messages in the conversation

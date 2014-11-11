@@ -1,29 +1,38 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.content.Context;
+
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Class representing a Dialogue conversation. This class is mutable
  */
 public class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
+    private static final long MILLIS_IN_DAY = 86400000;
 
     private final ConversationId mId;
     private final List<Contact> mContacts;
 
     private final List<DialogueMessage> mMessages;
-    private final Timestamp mLastActivityTime;
-
     private final List<ConversationListener> mListeners;
+    private final SystemTimeProvider mTimeProvider;
+
+    private Timestamp mLastActivityTime;
+
 
     private int mMessageCount;
     private boolean mHasUnread;
@@ -32,7 +41,7 @@ public class DialogueConversation implements Conversation {
      * Constructor of the class
      * @param contacts - set of contacts we add to conversation
      */
-    public DialogueConversation(List<Contact> contacts) {
+    public DialogueConversation(List<Contact> contacts, SystemTimeProvider systemTimeProvider) {
         if (contacts == null) {
             throw new NullArgumentException("contacts == null!");
         }
@@ -44,6 +53,7 @@ public class DialogueConversation implements Conversation {
         this.mMessageCount = 0;
         this.mLastActivityTime = new Timestamp((new Date()).getTime());
         this.mHasUnread = false;
+        this.mTimeProvider = systemTimeProvider;
     }
 
 
@@ -74,6 +84,51 @@ public class DialogueConversation implements Conversation {
         return mLastActivityTime;
     }
 
+    @Override
+    public String getLastConversationActivityString(Context context) {
+
+        long currentTime = mTimeProvider.currentTimeMillis();
+        long elapsedTime = currentTime - mLastActivityTime.getTime();
+        long millisElapsedToday = currentTime % MILLIS_IN_DAY;
+
+        if (elapsedTime <= millisElapsedToday) {
+            SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
+            return onlyHoursAndMin.format(mLastActivityTime);
+        }
+
+        if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
+
+            return context.getString(R.string.yesterday);
+        }
+
+        if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
+
+            return context.getString(R.string.two_days_ago);
+        }
+
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        Date currentDate = new Date(currentTime);
+
+        if (year.format(currentDate).equals(year.format(mLastActivityTime))) {
+            SimpleDateFormat onlyMonthYear = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
+
+            return onlyMonthYear.format(mLastActivityTime);
+        }
+
+        SimpleDateFormat week = new SimpleDateFormat("ww", Locale.ENGLISH);
+
+        if (!week.format(currentDate).equals(week.format(mLastActivityTime))) {
+            SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
+
+            return onlyDayMonth.format(mLastActivityTime);
+        }
+
+        SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("u", Locale.ENGLISH);
+        int indexWeekDay = Integer.getInteger(dayOfTheWeek.format(mLastActivityTime)) - 1;
+
+        return context.getResources().getStringArray(R.array.days_of_week)[indexWeekDay];
+    }
 
     @Override
     public int getMessageCount() {
@@ -118,6 +173,8 @@ public class DialogueConversation implements Conversation {
         mHasUnread = true;
         mMessages.add(message);
         mMessageCount = mMessageCount + 1;
+
+        mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
 
         notifyListeners();
     }

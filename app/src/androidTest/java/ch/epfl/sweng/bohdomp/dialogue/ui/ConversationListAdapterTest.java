@@ -4,9 +4,13 @@ import android.test.AndroidTestCase;
 
 import junit.framework.Assert;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ConversationListAdapter;
@@ -16,6 +20,10 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ConversationListAdapter;
  */
 public class ConversationListAdapterTest extends AndroidTestCase {
 
+
+    private ConversationListAdapter mAdapter;
+    private List<Conversation> mConversations;
+
     public ConversationListAdapterTest() {
         super();
     }
@@ -23,14 +31,18 @@ public class ConversationListAdapterTest extends AndroidTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+
+        mConversations  = new ArrayList<Conversation>();
+        mAdapter = new ConversationListAdapter(getContext(), mConversations);
     }
 
     public void testNullContext() {
-        List<Conversation> dialogueConversations = new ArrayList<Conversation>();
 
         try {
-            ConversationListAdapter adapter = new ConversationListAdapter(null, dialogueConversations);
-            Assert.fail("Null context argument not throwing");
+            mAdapter = new ConversationListAdapter(null, mConversations);
+        }
+
+            fail("Null context argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -38,8 +50,9 @@ public class ConversationListAdapterTest extends AndroidTestCase {
 
     public void testNullItems() {
         try {
-            ConversationListAdapter adapter = new ConversationListAdapter(getContext(), null);
-            Assert.fail("Null list argument not throwing");
+            mAdapter = new ConversationListAdapter(getContext(), null);
+
+            fail("Null list argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -47,11 +60,12 @@ public class ConversationListAdapterTest extends AndroidTestCase {
 
     public void testItemsContainNull() {
         try {
-            List<Conversation> dialogueConversations = new ArrayList<Conversation>();
-            dialogueConversations.add(null);
+            mConversations.add(null);
+            mAdapter =  new ConversationListAdapter(getContext(), mConversations);
 
-            ConversationListAdapter adapter = new ConversationListAdapter(getContext(), dialogueConversations);
-            Assert.fail("Null list argument not throwing");
+            ConversationListAdapter adapter = new ConversationListAdapter(getContext(), mConversations);
+
+            fail("Null list argument not throwing");
         } catch (IllegalArgumentException e) {
             // Everything works fine
         }

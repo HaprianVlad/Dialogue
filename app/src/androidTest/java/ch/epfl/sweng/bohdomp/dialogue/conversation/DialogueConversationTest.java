@@ -3,9 +3,13 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
@@ -13,6 +17,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
 
@@ -20,6 +25,8 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageSt
  * Created by BohDomp! on 08.11.14.
  */
 public class DialogueConversationTest extends ApplicationTestCase<Application> {
+
+    private static final long MILLIS_IN_DAY = 86400000;
     private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
@@ -41,7 +48,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
 
-        mConversation = new DialogueConversation(mContacts);
+        mConversation = new DialogueConversation(mContacts, new SystemTimeProvider());
         mMessages = new ArrayList<DialogueMessage>();
         mHasBeenCalled = false;
     }
@@ -49,7 +56,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     public void testConstructorContactsNotNull() {
 
         try {
-            mConversation = new DialogueConversation(null);
+            mConversation = new DialogueConversation(null, new SystemTimeProvider());
             fail("No NullArgumentException thrown");
         } catch (NullArgumentException e) {
             // all good :)
@@ -234,6 +241,25 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
 
         // this should do nothing and throw no runtime exception!
         mConversation.removeListener(listener);
+    }
+
+    public void testLastActivitySameDay() {
+        Timestamp todayLastActivity = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+        String expectedDisplay = onlyHoursAndMin.format(todayLastActivity);
+
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
+    public void testLastActivityYesterday() {
+        Timestamp yesterdayLastActivity = new Timestamp(System.currentTimeMillis() - MILLIS_IN_DAY);
+        String expectedDisplay = getContext().getString(R.string.yesterday);
+
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
     }
 }
 
