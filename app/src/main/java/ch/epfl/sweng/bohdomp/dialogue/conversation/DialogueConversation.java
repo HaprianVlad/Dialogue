@@ -17,12 +17,18 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
+import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
+
 /**
  * Class representing a Dialogue conversation. This class is mutable
  */
 public class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
     private static final long MILLIS_IN_DAY = 86400000;
+
+    private enum weekDays {
+        Mon, Tue, Wed, Thu, Fri, Sat, Sun
+    }
 
     private final ConversationId mId;
     private final List<Contact> mContacts;
@@ -32,7 +38,6 @@ public class DialogueConversation implements Conversation {
     private final SystemTimeProvider mTimeProvider;
 
     private Timestamp mLastActivityTime;
-
 
     private int mMessageCount;
     private boolean mHasUnread;
@@ -110,7 +115,7 @@ public class DialogueConversation implements Conversation {
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
         Date currentDate = new Date(currentTime);
 
-        if (year.format(currentDate).equals(year.format(mLastActivityTime))) {
+        if (!year.format(currentDate).equals(year.format(mLastActivityTime))) {
             SimpleDateFormat onlyMonthYear = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
 
             return onlyMonthYear.format(mLastActivityTime);
@@ -124,8 +129,9 @@ public class DialogueConversation implements Conversation {
             return onlyDayMonth.format(mLastActivityTime);
         }
 
-        SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("u", Locale.ENGLISH);
-        int indexWeekDay = Integer.getInteger(dayOfTheWeek.format(mLastActivityTime)) - 1;
+        SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("E", Locale.ENGLISH);
+
+        int indexWeekDay = weekDays.valueOf(dayOfTheWeek.format(mLastActivityTime)).ordinal();
 
         return context.getResources().getStringArray(R.array.days_of_week)[indexWeekDay];
     }
@@ -170,7 +176,10 @@ public class DialogueConversation implements Conversation {
             throw new NullArgumentException("message == null !");
         }
 
-        mHasUnread = true;
+        if (message.getMessageStatus() == MessageStatus.INCOMING) {
+            mHasUnread = true;
+        }
+
         mMessages.add(message);
         mMessageCount = mMessageCount + 1;
 

@@ -10,6 +10,7 @@ import java.util.List;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Default implementation of DialogData
@@ -80,7 +81,7 @@ public final class DefaultDialogData implements DialogueData {
         // Default case, conversation not found.
         List<Contact> contacts = new ArrayList<Contact>();
         contacts.add(contact);
-        Conversation conversation = new DialogueConversation(contacts);
+        Conversation conversation = new DialogueConversation(contacts, new SystemTimeProvider());
 
         mConversations.put(conversation.getId(), conversation);
         return conversation;

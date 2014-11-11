@@ -5,5 +5,5 @@ package ch.epfl.sweng.bohdomp.dialogue.utils;
  */
 public interface TimeProvider {
 
-    public long currentTimeMillis();
+    long currentTimeMillis();
 }

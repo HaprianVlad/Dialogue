@@ -1,7 +1,8 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.content.Context;
+
+import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
+import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
@@ -24,9 +26,12 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageSt
 /**
  * Created by BohDomp! on 08.11.14.
  */
-public class DialogueConversationTest extends ApplicationTestCase<Application> {
+public class DialogueConversationTest extends MockTestCase {
 
     private static final long MILLIS_IN_DAY = 86400000;
+
+    private Context mContext;
+    private SystemTimeProvider mTimeProvider;
     private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
@@ -34,21 +39,18 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     private List<DialogueMessage> mMessages;
     private boolean mHasBeenCalled;
 
-    public DialogueConversationTest() {
-        super(Application.class);
-    }
-
     public void setUp() throws Exception {
         super.setUp();
-        createApplication();
 
-        mContactFactory = new ContactFactory(getContext());
+        mContext = getInstrumentation().getTargetContext();
+        mTimeProvider = new SystemTimeProvider();
+        mContactFactory = new ContactFactory(mContext);
 
         mContact = mContactFactory.contactFromNumber("0773207769");
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
 
-        mConversation = new DialogueConversation(mContacts, new SystemTimeProvider());
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
         mMessages = new ArrayList<DialogueMessage>();
         mHasBeenCalled = false;
     }
@@ -56,7 +58,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     public void testConstructorContactsNotNull() {
 
         try {
-            mConversation = new DialogueConversation(null, new SystemTimeProvider());
+            mConversation = new DialogueConversation(null, mTimeProvider);
             fail("No NullArgumentException thrown");
         } catch (NullArgumentException e) {
             // all good :)
@@ -152,8 +154,16 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
         }
     }
 
-    public void testAddMessage() {
+    public void testAddOutgoingMessage() {
         DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        mConversation.addMessage(message);
+        mMessages.add(message);
+
+        assertEquals(mMessages, mConversation.getMessages());
+    }
+
+    public void testAddIncomingMessage() {
+        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
         mConversation.addMessage(message);
         mMessages.add(message);
 
@@ -162,7 +172,7 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     }
 
     public void testSetAllMessagesAsRead() {
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
         mConversation.addMessage(message);
 
         assertTrue(mConversation.hasUnread());
@@ -244,9 +254,9 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     }
 
     public void testLastActivitySameDay() {
-        Timestamp todayLastActivity = new Timestamp(System.currentTimeMillis());
+        Timestamp lastActivity = mConversation.getLastActivityTime();
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        String expectedDisplay = onlyHoursAndMin.format(todayLastActivity);
+        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
@@ -254,12 +264,63 @@ public class DialogueConversationTest extends ApplicationTestCase<Application> {
     }
 
     public void testLastActivityYesterday() {
-        Timestamp yesterdayLastActivity = new Timestamp(System.currentTimeMillis() - MILLIS_IN_DAY);
-        String expectedDisplay = getContext().getString(R.string.yesterday);
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        Mockito.doReturn(mockedCurrentTimeMills(MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+
+        String expectedDisplay = mContext.getString(R.string.yesterday);
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
+    }
+
+    public void testLastActivityTwoDaysAgo() {
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        Mockito.doReturn(mockedCurrentTimeMills(2*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+
+        String expectedDisplay = mContext.getString(R.string.two_days_ago);
+
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
+    public void testLastActivityOneYearAgo() {
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        Timestamp lastActivity = mConversation.getLastActivityTime();
+        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
+        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
+
+        Mockito.doReturn(mockedCurrentTimeMills(366*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
+    public void testLastActivityOneMonthAgo() {
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        Timestamp lastActivity = mConversation.getLastActivityTime();
+        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
+        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
+
+        Mockito.doReturn(mockedCurrentTimeMills(366*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
+    private long mockedCurrentTimeMills(long bias) {
+        return System.currentTimeMillis() + bias;
     }
 }
 

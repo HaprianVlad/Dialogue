@@ -46,7 +46,7 @@ public interface Conversation {
      */
     Timestamp getLastActivityTime();
 
-    public String getLastConversationActivityString(Context context);
+    String getLastConversationActivityString(Context context);
 
     /**
      * Getter for the number of messages in the conversation

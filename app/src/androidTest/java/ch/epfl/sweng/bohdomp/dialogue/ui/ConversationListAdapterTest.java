@@ -2,15 +2,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ui;
 
 import android.test.AndroidTestCase;
 
-import junit.framework.Assert;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ConversationListAdapter;
