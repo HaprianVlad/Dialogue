@@ -28,8 +28,8 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  * @author swengTeam 2013 BohDomp
  * Activity displaying a set of messages
  */
-public class MessagesActivity extends Activity implements ConversationListener {
-    private static final String LOG_TAG = "MessagesActivity";
+public class ConversationActivity extends Activity implements ConversationListener {
+    private static final String LOG_TAG = "ConversationActivity";
 
     private ListView mMessageList;
     private EditText mNewMessageText;

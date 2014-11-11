@@ -33,8 +33,8 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  * - {@link java.lang.IllegalArgumentException} if the array is equal to null
  * - {@link java.lang.NullPointerException} if one of the conversation inside the array is null
  */
-public class ContactListAdapter extends BaseAdapter{
-    private static final String LOG_TAG = "ContactListAdapter";
+public class ConversationListAdapter extends BaseAdapter{
+    private static final String LOG_TAG = "ConversationListAdapter";
     private static final long MILLIS_IN_DAY = 86400000;
 
     private final Context mContext;
@@ -58,7 +58,7 @@ public class ContactListAdapter extends BaseAdapter{
      * @param context The current context
      * @param items The array of conversation used to populate the list
      */
-    public ContactListAdapter(Context context, List<Conversation> items) {
+    public ConversationListAdapter(Context context, List<Conversation> items) {
         super();
 
         if (context == null) {
@@ -133,9 +133,9 @@ public class ContactListAdapter extends BaseAdapter{
     }
 
     /**
-     * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ContactListAdapter.ContactListViewHolder}
+     * Create a new {@link ConversationListAdapter.ContactListViewHolder}
      * @param convertView Old view to reuse if possible
-     * @return {@link ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ContactListAdapter.ContactListViewHolder}
+     * @return {@link ConversationListAdapter.ContactListViewHolder}
      * A new ContactListViewHolder
      */
     private ContactListViewHolder createViewHolder(View convertView) {

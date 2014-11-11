@@ -37,7 +37,8 @@ public class MessagesAdapter extends BaseAdapter {
      * It is used to implement the view holder pattern
      */
     private static class MessageViewHolder {
-        protected TextView messageContent;
+        protected TextView body;
+        protected TextView timeStamp;
     }
 
     /**
@@ -134,7 +135,8 @@ public class MessagesAdapter extends BaseAdapter {
 
         MessageViewHolder viewHolder = new MessageViewHolder();
 
-        viewHolder.messageContent = (TextView) convertView.findViewById(R.id.text_content);
+        viewHolder.body = (TextView) convertView.findViewById(R.id.body);
+        viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.timeStamp);
 
         return viewHolder;
     }
@@ -153,10 +155,12 @@ public class MessagesAdapter extends BaseAdapter {
         }
 
         String body = msg.getBody().getMessageBody();
+        viewHolder.body.setText(body);
 
-        viewHolder.messageContent.setText(body);
+        String timeStamp = msg.getMessageTimeStamp().toString();
+        viewHolder.timeStamp.setText(timeStamp);
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.messageContent.getLayoutParams();
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.body.getLayoutParams();
         if (msg.getMessageStatus() == DialogueMessage.MessageStatus.OUTGOING) {
             lp.gravity = Gravity.RIGHT;
         } else if (msg.getMessageStatus() == DialogueMessage.MessageStatus.INCOMING) {

@@ -19,15 +19,15 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 
 /**
  * @author swengTeam 2013 BohDomp
  * Activity displaying the set of conversation
  */
-public class ContactListActivity extends Activity {
-    private static final String LOG_TAG = "ContactListActivity";
+public class ConversationListActivity extends Activity {
+    private static final String LOG_TAG = "ConversationListActivity";
 
     private ListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
@@ -54,7 +54,7 @@ public class ContactListActivity extends Activity {
     private void initData() {
         myPackageName = getPackageName();
         mConversationList = DefaultDialogData.getInstance().getConversations();
-        mContactItemListAdapter = new ContactListAdapter(this, mConversationList);
+        mContactItemListAdapter = new ConversationListAdapter(this, mConversationList);
     }
 
     /*
@@ -100,7 +100,7 @@ public class ContactListActivity extends Activity {
                 ListView listView = (ListView) parent;
                 DialogueConversation c = (DialogueConversation) listView.getItemAtPosition(position);
 
-                Intent intent = new Intent(view.getContext(), MessagesActivity.class);
+                Intent intent = new Intent(view.getContext(), ConversationActivity.class);
                 intent.putExtra(DialogueConversation.CONVERSATION_ID, c.getId());
 
                 startActivity(intent);
