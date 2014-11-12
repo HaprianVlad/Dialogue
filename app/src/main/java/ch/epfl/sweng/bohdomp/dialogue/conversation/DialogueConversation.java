@@ -60,9 +60,9 @@ public final class DialogueConversation implements Conversation {
         this.mMessages = new ArrayList<DialogueMessage>();
         this.mListeners = new ArrayList<ConversationListener>();
         this.mMessageCount = 0;
-        this.mLastActivityTime = new Timestamp((new Date()).getTime());
-        this.mHasUnread = false;
         this.mTimeProvider = systemTimeProvider;
+        this.mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
+        this.mHasUnread = false;
     }
 
 
