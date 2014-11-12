@@ -226,6 +226,7 @@ class AndroidContact implements Contact {
         dest.writeList(availableChannels);
     }
 
+    @SuppressWarnings("unchecked")
     private AndroidContact(Parcel in) {
         this.mLookupKey = in.readString();
         this.mDisplayName = in.readString();
