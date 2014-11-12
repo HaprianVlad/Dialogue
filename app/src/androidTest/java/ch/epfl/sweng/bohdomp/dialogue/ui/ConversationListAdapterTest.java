@@ -59,6 +59,35 @@ public class ConversationListAdapterTest extends MockTestCase {
         mAdapter = new ConversationListAdapter(mContext, mConversationList);
     }
 
+    public void testUpdateDataNull() {
+        try {
+            mAdapter.update(null);
+            fail("Null context argument not throwing");
+        } catch (NullArgumentException e) {
+            // Everything works fine
+        }
+    }
+
+    public void testUpdateDataContainsNull() {
+        try {
+            mConversationList.add(null);
+            mAdapter.update(mConversationList);
+            fail("Null context argument not throwing");
+        } catch (IllegalArgumentException e) {
+            // Everything works fine
+        }
+    }
+
+    public void testUpdateData() {
+        mConversationList.add(new DialogueConversation(mContactList, new SystemTimeProvider()));
+
+        mAdapter.update(mConversationList);
+
+        assertEquals(mConversationList.size(), mAdapter.getCount());
+        assertEquals(mConversationList.get(0), mAdapter.getItem(0));
+        assertEquals(mConversationList.get(1), mAdapter.getItem(1));
+    }
+
     public void testNullContext() {
         try {
             new ConversationListAdapter(null, mConversationList);
@@ -90,6 +119,7 @@ public class ConversationListAdapterTest extends MockTestCase {
     public void testParentNull() {
         try {
             mAdapter.getView(0, null, null);
+            fail("Parent null");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -102,6 +132,7 @@ public class ConversationListAdapterTest extends MockTestCase {
     public void testGetItemInvalidPosition() {
         try {
             mAdapter.getItem(-1);
+            fail("Invalid Position");
         } catch (IndexOutOfBoundsException e) {
             // Everything works fine
         }
@@ -115,6 +146,7 @@ public class ConversationListAdapterTest extends MockTestCase {
     public void testGetItemIdInvalidPosition() {
         try {
             mAdapter.getItemId(-1);
+            fail("Invalid Position");
         } catch (IndexOutOfBoundsException e) {
             // Everything works fine
         }

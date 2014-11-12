@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +18,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
 import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 
@@ -26,7 +26,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity
  * @author swengTeam 2013 BohDomp
  * Activity displaying the set of conversation
  */
-public class ConversationListActivity extends Activity {
+public class ConversationListActivity extends Activity implements DialogueDataListener{
     private static final String LOG_TAG = "ConversationListActivity";
 
     private ListView mContactListView;
@@ -36,12 +36,13 @@ public class ConversationListActivity extends Activity {
     private String myPackageName;
 
     private List<Conversation> mConversationList;
-    private BaseAdapter mContactItemListAdapter;
+    private ConversationListAdapter mConversationItemListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
+        DefaultDialogData.getInstance().addListener(this);
 
         initData();
         setViewElements();
@@ -54,7 +55,13 @@ public class ConversationListActivity extends Activity {
     private void initData() {
         myPackageName = getPackageName();
         mConversationList = DefaultDialogData.getInstance().getConversations();
-        mContactItemListAdapter = new ConversationListAdapter(this, mConversationList);
+        mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
+    }
+
+    @Override
+    public void onDialogueDataChanged() {
+        mConversationList = DefaultDialogData.getInstance().getConversations();
+        mConversationItemListAdapter.update(mConversationList);
     }
 
     /*
@@ -66,7 +73,7 @@ public class ConversationListActivity extends Activity {
 
         mChangeDefaultAppButton = (Button) findViewById(R.id.setDefaultAppButton);
         mContactListView = (ListView) findViewById(R.id.listConversationsView);
-        mContactListView.setAdapter(mContactItemListAdapter);
+        mContactListView.setAdapter(mConversationItemListAdapter);
     }
 
     /**
