@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import junit.framework.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +56,7 @@ public class MessageAdapterTest extends MockTestCase {
     public void testUpdateDataNull() {
         try {
             mAdapter.updateData(null);
-            Assert.fail("Null context argument not throwing");
+            fail("Null context argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -69,7 +67,7 @@ public class MessageAdapterTest extends MockTestCase {
             List<DialogueMessage> msgList = new ArrayList<DialogueMessage>();
             msgList.add(null);
             mAdapter.updateData(msgList);
-            Assert.fail("Null context argument not throwing");
+            fail("Null context argument not throwing");
         } catch (IllegalArgumentException e) {
             // Everything works fine
         }
@@ -94,7 +92,7 @@ public class MessageAdapterTest extends MockTestCase {
 
         try {
             new MessagesAdapter(null, msgSet);
-            Assert.fail("Null context argument not throwing");
+            fail("Null context argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -103,7 +101,7 @@ public class MessageAdapterTest extends MockTestCase {
     public void testNullItems() {
         try {
             new MessagesAdapter(mContext, null);
-            Assert.fail("Null list argument not throwing");
+            fail("Null list argument not throwing");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -115,7 +113,7 @@ public class MessageAdapterTest extends MockTestCase {
             msgSet.add(null);
 
             new MessagesAdapter(mContext, msgSet);
-            Assert.fail("Null list argument not throwing");
+            fail("Null list argument not throwing");
         } catch (IllegalArgumentException e) {
             // Everything works fine
         }
@@ -124,6 +122,7 @@ public class MessageAdapterTest extends MockTestCase {
     public void testGetViewParentNull() {
         try {
             mAdapter.getView(0, null, null);
+            fail("Parent null");
         } catch (NullArgumentException e) {
             // Everything works fine
         }
@@ -134,6 +133,7 @@ public class MessageAdapterTest extends MockTestCase {
             mAdapter.getItem(-1);
             ViewGroup parent = new LinearLayout(mContext);
             View viewInit = mAdapter.getView(-1, null, parent);
+            fail("Invalid Position");
         } catch (IndexOutOfBoundsException e) {
             // Everything works fine
         }
@@ -146,6 +146,7 @@ public class MessageAdapterTest extends MockTestCase {
     public void testGetItemInvalidPosition() {
         try {
             mAdapter.getItem(-1);
+            fail("Invalid Position");
         } catch (IndexOutOfBoundsException e) {
             // Everything works fine
         }
@@ -159,6 +160,7 @@ public class MessageAdapterTest extends MockTestCase {
     public void testGetItemIdInvalidPosition() {
         try {
             mAdapter.getItemId(-1);
+            fail("Invalid Position");
         } catch (IndexOutOfBoundsException e) {
             // Everything works fine
         }

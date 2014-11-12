@@ -60,6 +60,11 @@ public class ConversationListAdapter extends BaseAdapter{
             throw new NullArgumentException("context");
         }
 
+        this.mContext = context;
+        initItems(items);
+    }
+
+    private void initItems(List<Conversation> items) {
         if (items == null) {
             throw new NullArgumentException("items");
         }
@@ -68,7 +73,6 @@ public class ConversationListAdapter extends BaseAdapter{
             throw new IllegalArgumentException("items contains null");
         }
 
-        this.mContext = context;
         this.mConversations = items;
     }
 
@@ -121,6 +125,11 @@ public class ConversationListAdapter extends BaseAdapter{
         });
 
         return convertView;
+    }
+
+    public void update(List<Conversation> items) {
+        initItems(items);
+        notifyDataSetChanged();
     }
 
     /**
