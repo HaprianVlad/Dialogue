@@ -52,7 +52,7 @@ public abstract class DialogueMessage implements Parcelable {
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
-    public DialogueMessage(Contact contactParameter, String messageBodyParameter,
+    DialogueMessage(Contact contactParameter, String messageBodyParameter,
                            MessageStatus messageStatusParameter, boolean isDataMessageParameter) {
         if (contactParameter == null) {
             throw new NullArgumentException("contactParameter");
