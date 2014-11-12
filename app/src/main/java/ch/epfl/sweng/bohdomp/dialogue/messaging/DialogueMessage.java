@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,6 +27,8 @@ public abstract class DialogueMessage implements Parcelable {
         INCOMING, OUTGOING
     }
 
+    public static final String MESSAGE = "MESSAGE";
+
     private final Contact contact;
     private final MessageBody messageBody;
     private final long timestamp;
@@ -35,6 +38,19 @@ public abstract class DialogueMessage implements Parcelable {
     private boolean isReadStatus;
     private boolean isDataMessage;
 
+
+    /**
+     * Extracts a DialogueMessage from an intent.
+     * @param intent containing the message.
+     * @return the message contained in the intent.
+     */
+    public static DialogueMessage extractMessage(Intent intent) {
+        if (intent == null) {
+            throw new NullArgumentException("intent");
+        }
+
+        return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
+    }
 
     public DialogueMessage(Contact contactParameter, String messageBodyParameter,
                            MessageStatus messageStatusParameter, boolean isDataMessageParameter) {

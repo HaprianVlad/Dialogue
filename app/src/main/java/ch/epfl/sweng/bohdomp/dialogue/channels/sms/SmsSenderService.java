@@ -22,8 +22,6 @@ public class SmsSenderService extends IntentService {
     private static final String ACTION_SMS_SENT = "SMS_SENT";
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
-    public static final String MESSAGE = "message";
-
     private BroadcastReceiver mSentBroadcastReceiver = new SmsSentBroadcastReceiver();
     private BroadcastReceiver mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
 
@@ -45,7 +43,7 @@ public class SmsSenderService extends IntentService {
         // setIntentRedelivery(true);
 
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
-            DialogueMessage message = getMessage(intent);
+            DialogueMessage message = DialogueMessage.extractMessage(intent);
             SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
                     message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());
         }
@@ -65,28 +63,6 @@ public class SmsSenderService extends IntentService {
         unregisterReceiver(mDeliveryBroadcastReceiver);
 
         super.onDestroy();
-    }
-
-
-    /**
-     * Extracts the message out of the intent.
-     *
-     * @param intent containing the message to be sent.
-     * @return the message to be sent.
-     */
-    private DialogueMessage getMessage(Intent intent) {
-        if (BuildConfig.DEBUG && (intent == null)) {
-            throw new AssertionError("intent == null");
-        }
-        /*
-        FIXME:Think about this solution
-        Parcel parcel = Parcel.obtain();
-        int flag = 1;
-        intent.getExtras().getParcelable(MESSAGE).writeToParcel(parcel, flag);
-        DialogueMessage message = DialogueTextMessage.CREATOR.createFromParcel(parcel);
-        parcel.recycle();
-        */
-        return  (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
     /**

@@ -16,7 +16,6 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
  * Dispatches the outgoing message to the channels.
  */
 public final class DialogueOutgoingDispatcher extends IntentService {
-    public static final String MESSAGE = "MESSAGE";
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
 
@@ -42,7 +41,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
         intent.setAction(ACTION_SEND_MESSAGE);
-        intent.putExtra(MESSAGE, message);
+        intent.putExtra(DialogueMessage.MESSAGE, message);
         context.startService(intent);
     }
 
@@ -52,7 +51,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new NullArgumentException("intent");
         }
 
-        DialogueMessage message = extractMessage(intent);
+        DialogueMessage message = DialogueMessage.extractMessage(intent);
 
         if (canSendSms(message)) {
             sendSms(message);
@@ -68,7 +67,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
         intent.setAction(SmsSenderService.ACTION_SEND_SMS);
-        intent.putExtra(SmsSenderService.MESSAGE, message);
+        intent.putExtra(DialogueMessage.MESSAGE, message);
         getApplicationContext().startService(intent);
 
     }
@@ -97,15 +96,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         return message.getContact().availableChannels().contains(Contact.ChannelType.MMS);
     }
-
-    private DialogueMessage extractMessage(Intent intent) {
-        if (BuildConfig.DEBUG && (intent == null)) {
-            throw new AssertionError("intent == null");
-        }
-
-        return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
-    }
-
 }
 
 
