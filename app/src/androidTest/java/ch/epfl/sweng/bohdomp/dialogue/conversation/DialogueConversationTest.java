@@ -5,6 +5,7 @@ import android.content.Context;
 import org.mockito.Mockito;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,10 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageSt
 public class DialogueConversationTest extends MockTestCase {
 
     private static final long MILLIS_IN_DAY = 86400000;
-    private static final long NB_YEAR_DAY = 366;
-    private static final long NB_MONTH_DAY = 31;
+    private static final int NB_YEAR_DAY = 366;
+    private static final int NB_MONTH_DAY = 31;
+    private static final int FOUR = 4;
+    private static final long MAGIC_MONDAY = 1415628854000L;
 
     private Context mContext;
     private SystemTimeProvider mTimeProvider;
@@ -267,9 +270,10 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testLastActivityYesterday() {
         mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        Mockito.doReturn(mockedCurrentTimeMills(MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
 
         String expectedDisplay = mContext.getString(R.string.yesterday);
 
@@ -280,9 +284,10 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testLastActivityTwoDaysAgo() {
         mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        Mockito.doReturn(mockedCurrentTimeMills(2*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(timeSinceMagicMonday(2)).when(mTimeProvider).currentTimeMillis();
 
         String expectedDisplay = mContext.getString(R.string.two_days_ago);
 
@@ -293,13 +298,14 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testLastActivityOneYearAgo() {
         mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
         Timestamp lastActivity = mConversation.getLastActivityTime();
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
         String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
-        Mockito.doReturn(mockedCurrentTimeMills(NB_YEAR_DAY*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(timeSinceMagicMonday(NB_YEAR_DAY)).when(mTimeProvider).currentTimeMillis();
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
@@ -308,21 +314,37 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testLastActivityOneMonthAgo() {
         mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
         Timestamp lastActivity = mConversation.getLastActivityTime();
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
         String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
-        Mockito.doReturn(mockedCurrentTimeMills(NB_MONTH_DAY*MILLIS_IN_DAY)).when(mTimeProvider).currentTimeMillis();
+        Mockito.doReturn(timeSinceMagicMonday(NB_MONTH_DAY)).when(mTimeProvider).currentTimeMillis();
 
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
 
-    private long mockedCurrentTimeMills(long bias) {
-        return System.currentTimeMillis() + bias;
+    public void testLastActivityEarlierThisWeek() throws ParseException {
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
+
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        String expectedDisplay = mContext.getResources().getStringArray(R.array.days_of_week)[1];
+
+        Mockito.doReturn(timeSinceMagicMonday(FOUR)).when(mTimeProvider).currentTimeMillis();
+        String toDisplay = mConversation.getLastConversationActivityString(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
+    private long timeSinceMagicMonday(int nbDaysToAdd) {
+
+        return MAGIC_MONDAY + nbDaysToAdd * MILLIS_IN_DAY;
     }
 }
 
