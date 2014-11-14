@@ -12,22 +12,19 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.AndroidContact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
-
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
 
 /**
  * Class representing a Dialogue conversation. This class is mutable
  */
-public final class DialogueConversation implements Conversation, android.os.Parcelable {
+public final class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
     private static final long MILLIS_IN_DAY = 86400000;
 
@@ -249,8 +246,8 @@ public final class DialogueConversation implements Conversation, android.os.Parc
 
     private DialogueConversation(Parcel in) {
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
-        in.readTypedList(mContacts, AndroidContact.CREATOR);
-        in.readTypedList(mMessages, DialogueTextMessage.CREATOR);
+        this.mContacts = new ArrayList<Contact>(in.readArrayList(getClass().getClassLoader()));
+        this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(getClass().getClassLoader()));
         this.mLastActivityTime = new Timestamp(in.readLong());
         this.mMessageCount = in.readInt();
         this.mHasUnread = in.readByte() != 0;

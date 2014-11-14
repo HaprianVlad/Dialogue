@@ -11,7 +11,7 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 /**
  * class representing a contact for which no entry was found in the contact database
  */
-class UnknownContact implements Contact {
+public class UnknownContact implements Contact {
 
     private final String mPhoneNumber;
 
@@ -57,7 +57,7 @@ class UnknownContact implements Contact {
         this.mPhoneNumber = in.readString();
     }
 
-    public static final Creator<UnknownContact> CREATOR = new Creator<UnknownContact>() {
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         public UnknownContact createFromParcel(Parcel source) {
             return new UnknownContact(source);
         }

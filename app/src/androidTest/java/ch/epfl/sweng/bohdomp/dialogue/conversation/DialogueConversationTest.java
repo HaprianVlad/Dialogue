@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import android.content.Context;
+import android.os.Parcel;
 
 import org.mockito.Mockito;
 
@@ -58,6 +59,7 @@ public class DialogueConversationTest extends MockTestCase {
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
         mMessages = new ArrayList<DialogueMessage>();
+
         mHasBeenCalled = false;
     }
 
@@ -350,6 +352,36 @@ public class DialogueConversationTest extends MockTestCase {
     private long timeSinceMagicMonday(int nbDaysToAdd) {
 
         return MAGIC_MONDAY + nbDaysToAdd * MILLIS_IN_DAY;
+    }
+
+
+    public void testParcelability() {
+
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
+
+        mContacts = new ArrayList<Contact>();
+
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+        Parcel parcel = Parcel.obtain();
+
+        mConversation.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
+        Conversation conversationFromParcel;
+
+        conversationFromParcel = DialogueConversation.CREATOR.createFromParcel(parcel);
+        parcel.recycle();
+
+        assertTrue(conversationFromParcel!=null);
+        assertFalse(mConversation == conversationFromParcel);
+        assertEquals(mConversation.getMessageCount(), conversationFromParcel.getMessageCount());
+        assertEquals(mConversation.getId(), conversationFromParcel.getId());
+        assertEquals(mConversation.getContacts(), conversationFromParcel.getContacts());
+        assertEquals(mConversation.getLastActivityTime().getTime(),
+                conversationFromParcel.getLastActivityTime().getTime());
+        assertEquals(mConversation.getMessages(), conversationFromParcel.getMessages());
+        assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
     }
 }
 
