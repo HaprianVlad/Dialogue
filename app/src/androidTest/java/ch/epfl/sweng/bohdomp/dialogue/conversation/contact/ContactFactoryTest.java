@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
 import android.test.ApplicationTestCase;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     private ContactFactory mContactFactory;
+    private Context mContext;
 
     private static final String DISPLAY_NAME_1 = "Dummy 1";
     private static final String DISPLAY_NAME_2 = "Dummy 2";
@@ -111,6 +113,89 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         for (final String name : ALL_NAMES) {
             assertTrue(displayNames.contains(name));
         }
+    }
+
+    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromEqualPhoneNumbers() {
+        final String validUnknownPhoneNumber = "+41 21 693 11 11";
+
+        final Contact firstContact = mContactFactory.contactFromNumber(validUnknownPhoneNumber);
+        final Contact secondContact = mContactFactory.contactFromNumber(validUnknownPhoneNumber);
+
+        contactEqualityCheck(firstContact, secondContact);
+    }
+
+    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromReformattedPhoneNumbers() {
+
+        final String validUnknownPhoneNumber = "+41 21 693 11 11";
+        final String reformattedValidUnknownPhoneNumber = "0216931111"; // no country prefix and no spaces
+
+        final Contact firstContact = mContactFactory.contactFromNumber(validUnknownPhoneNumber);
+        final Contact secondContact = mContactFactory.contactFromNumber(reformattedValidUnknownPhoneNumber);
+
+        contactEqualityCheck(firstContact, secondContact);
+    }
+
+    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromEqualPhoneNumbers() {
+
+        final Contact firstContact = mContactFactory.contactFromNumber(PHONE_1);
+        final Contact secondContact = mContactFactory.contactFromNumber(PHONE_1);
+
+        contactEqualityCheck(firstContact, secondContact);
+    }
+
+    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromReformattedPhoneNumbers() {
+
+        final String reformattedPhone1 = PhoneNumberUtils.stripSeparators(PHONE_1);
+
+        // sanity check that the test is actually useful
+        assertFalse(reformattedPhone1.equals(PHONE_1));
+
+        final Contact firstContact = mContactFactory.contactFromNumber(PHONE_1);
+        final Contact secondContact = mContactFactory.contactFromNumber(reformattedPhone1);
+
+        contactEqualityCheck(firstContact, secondContact);
+    }
+
+    public void testContactFromPhoneNumberUpdatedContactsAreEqual() {
+
+        final String phoneNumber = "+41 21 693 11 11";
+        final String displayName = "dummy 4";
+
+        Context context = getContext();
+        final ContactFactory contactFactory = new ContactFactory(context);
+
+        // contact not yet known
+        Contact firstContact = contactFactory.contactFromNumber(phoneNumber);
+
+        try {
+            addContact(context, displayName, phoneNumber);
+
+            // contact should be known now since it was just added
+            Contact secondContact = contactFactory.contactFromNumber(phoneNumber);
+
+            // AndroidContact and UnknownContacts are not equals
+            contactNonEqualityCheck(firstContact, secondContact);
+
+            // updated UnknownContact is equal to AndroidContact
+            contactEqualityCheck(firstContact.updateInfo(context), secondContact);
+        } catch (RemoteException e) {
+            fail();
+        } catch (OperationApplicationException e) {
+            fail();
+        } finally {
+            removeContactByDisplayName(context, displayName);
+        }
+    }
+
+    private static void contactEqualityCheck(final Contact c1, final Contact c2) {
+        assertTrue(c1.equals(c2));
+        assertTrue(c2.equals(c1));
+        assertTrue(c1.hashCode() == c2.hashCode());
+    }
+
+    private static void contactNonEqualityCheck(final Contact c1, final Contact c2) {
+        assertFalse(c1.equals(c2));
+        assertFalse(c2.equals(c1));
     }
 
     private static void addContact(Context context, final String displayName, final String phoneNumber)

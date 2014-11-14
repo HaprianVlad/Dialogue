@@ -57,11 +57,10 @@ class AndroidContact implements Contact {
     public Contact updateInfo(final Context context) {
         // since database look-ups are done in constructor we
         // try to recreate this contact from its look-up-key
+        // TODO return this if mLookupKey is no longer valid (contact deleted in the meantime)
         return new AndroidContact(this.mLookupKey, context);
     }
 
-    /*
-    TODO would probably be nice to be able to compare to any Contact
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -72,14 +71,13 @@ class AndroidContact implements Contact {
             return false;
         }
 
-        return this.mLookupKey == ((AndroidContact) o).mLookupKey;
+        return this.mLookupKey.equals(((AndroidContact) o).mLookupKey);
     }
 
     @Override
     public int hashCode() {
         return mLookupKey.hashCode();
     }
-    */
 
     /**
      * sample code taken from this question:
