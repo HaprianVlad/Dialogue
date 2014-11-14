@@ -234,7 +234,7 @@ class AndroidContact implements Contact {
         this.mAvailableChannels = new HashSet<ChannelType>(in.readArrayList(getClass().getClassLoader()));
     }
 
-    public static final Creator<AndroidContact> CREATOR = new Creator<AndroidContact>() {
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         public AndroidContact createFromParcel(Parcel source) {
             return new AndroidContact(source);
         }

@@ -1,6 +1,8 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import android.content.Context;
+import android.os.Parcel;
+
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -15,8 +17,8 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
 
 /**
@@ -33,12 +35,12 @@ public final class DialogueConversation implements Conversation {
         Mon, Tue, Wed, Thu, Fri, Sat, Sun
     }
 
-    private final ConversationId mId;
-    private final List<Contact> mContacts;
+    private  ConversationId mId;
+    private  List<Contact> mContacts;
 
-    private final List<DialogueMessage> mMessages;
-    private final List<ConversationListener> mListeners;
-    private final SystemTimeProvider mTimeProvider;
+    private  List<DialogueMessage> mMessages;
+    private  List<ConversationListener> mListeners;
+    private  SystemTimeProvider mTimeProvider;
 
     private Timestamp mLastActivityTime;
 
@@ -224,4 +226,41 @@ public final class DialogueConversation implements Conversation {
             listener.onConversationChanged(this.getId());
         }
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.mId, flags);
+        dest.writeTypedList(mContacts);
+        dest.writeTypedList(mMessages);
+        dest.writeLong(this.mLastActivityTime.getTime());
+        dest.writeInt(this.mMessageCount);
+        dest.writeByte(mHasUnread ? (byte) 1 : (byte) 0);
+
+    }
+
+    private DialogueConversation(Parcel in) {
+        this.mId = in.readParcelable(ConversationId.class.getClassLoader());
+        this.mContacts = new ArrayList<Contact>(in.readArrayList(getClass().getClassLoader()));
+        this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(getClass().getClassLoader()));
+        this.mLastActivityTime = new Timestamp(in.readLong());
+        this.mMessageCount = in.readInt();
+        this.mHasUnread = in.readByte() != 0;
+
+    }
+
+    public static final Creator<DialogueConversation> CREATOR = new Creator<DialogueConversation>() {
+        public DialogueConversation createFromParcel(Parcel source) {
+            return new DialogueConversation(source);
+        }
+
+        public DialogueConversation[] newArray(int size) {
+            return new DialogueConversation[size];
+        }
+    };
 }

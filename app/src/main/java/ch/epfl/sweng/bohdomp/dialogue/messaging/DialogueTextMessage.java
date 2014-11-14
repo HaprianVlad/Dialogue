@@ -12,7 +12,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 public final class DialogueTextMessage extends DialogueMessage {
 
 
-    public static final Parcelable.Creator<DialogueTextMessage> CREATOR=new Parcelable.Creator<DialogueTextMessage>() {
+    public static final Parcelable.Creator<DialogueMessage> CREATOR=new Parcelable.Creator<DialogueMessage>() {
         public DialogueTextMessage createFromParcel(Parcel source) {
             return new DialogueTextMessage(source);
         }

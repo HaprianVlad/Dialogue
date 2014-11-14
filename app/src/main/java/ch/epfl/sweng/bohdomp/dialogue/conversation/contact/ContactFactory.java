@@ -10,6 +10,7 @@ import android.util.Patterns;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
@@ -42,13 +43,13 @@ public class ContactFactory {
      * @param phoneNumber
      * @return a Contact for this number
      */
-    public Contact contactFromNumber(final String phoneNumber) {
+    public Contact contactFromNumber(final String phoneNumber) throws InvalidNumberException {
 
         if (phoneNumber == null) {
             throw new NullArgumentException("phoneNumber");
         }
         if (!verifyPhoneNumber(phoneNumber)) {
-            throw new IllegalArgumentException(phoneNumber + " is not a valid phone number");
+            throw new InvalidNumberException(" is not a valid phone number");
         }
 
         final String lookupKey = lookupKeyFromPhoneNumber(phoneNumber);

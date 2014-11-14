@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
+
 /**
  *  junit test class for ContactFactory class
  *
@@ -60,10 +62,15 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         }
     }
 
-    public void testContactFromPhoneNumberWhenNumberIsNotKnownButValid() {
+    public void testContactFromPhoneNumberWhenNumberIsNotKnownButValid()  {
         String validPhoneNumber = "+41 21 693 11 11"; //EPFL front desk .-P
 
-        Contact contact = mContactFactory.contactFromNumber(validPhoneNumber);
+        Contact contact = null;
+        try {
+            contact = mContactFactory.contactFromNumber(validPhoneNumber);
+        } catch (InvalidNumberException e) {
+            fail("Exception should not be thrown here!");
+        }
 
         String expectedName = "unknown: " + validPhoneNumber;
         assertEquals(expectedName, contact.getDisplayName());
@@ -85,19 +92,29 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
         try {
             Contact contact = mContactFactory.contactFromNumber(invalidPhoneNumber);
-            fail("should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
+            fail("should have thrown InvalidNumberException");
+        } catch (InvalidNumberException e) {
+
         }
     }
 
     public void testContactFromPhoneNumberWhenNumberIsKnownAndIdentical() {
-        Contact contact = mContactFactory.contactFromNumber(PHONE_1);
+        Contact contact = null;
+        try {
+            contact = mContactFactory.contactFromNumber(PHONE_1);
+        } catch (InvalidNumberException e) {
+            fail("Exception should not be thrown here!");
+        }
         assertTrue(contact.getDisplayName().equals(DISPLAY_NAME_1));
     }
 
     public void testContactFromPhoneNumberWhenNumberIsKnownAndDifferentFormat() {
-        Contact contact = mContactFactory.contactFromNumber(PHONE_1.replaceAll("\\s", ""));
+        Contact contact = null;
+        try {
+            contact = mContactFactory.contactFromNumber(PHONE_1.replaceAll("\\s", ""));
+        } catch (InvalidNumberException e) {
+            fail("Exception should not be thrown here!");
+        }
         assertTrue(contact.getDisplayName().equals(DISPLAY_NAME_1));
     }
 
