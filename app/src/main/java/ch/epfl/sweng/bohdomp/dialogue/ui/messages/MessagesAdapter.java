@@ -20,7 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
  * @author swengTeam 2013 BohDomp
  *
  * A concrete implementation of {@link android.widget.BaseAdapter} that is backed by an array of
- * {@link ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueSmsMessage}.
+ * {@link ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage}.
  *
  * It may throw:
  * - {@link java.lang.IllegalArgumentException} if the array is equal to null
@@ -47,23 +47,14 @@ public class MessagesAdapter extends BaseAdapter {
      * @param items The array of messages used to populate the list
      */
     public MessagesAdapter(Context context, List<DialogueMessage> items) {
-
         super();
 
         if (context == null) {
             throw new NullArgumentException("context");
         }
 
-        if (items == null) {
-            throw new NullArgumentException("items");
-        }
-
-        if (items.contains(null)) {
-            throw new IllegalArgumentException("items contains null");
-        }
-
         this.mContext = context;
-        this.mMessagesList = items;
+        updateData(items);
 
     }
 
@@ -84,7 +75,6 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         if (parent == null) {
             throw new NullArgumentException("parent");
         }

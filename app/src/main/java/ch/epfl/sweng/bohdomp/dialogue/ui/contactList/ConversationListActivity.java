@@ -106,7 +106,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         mContactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ListView listView = (ListView) parent;
                 DialogueConversation c = (DialogueConversation) listView.getItemAtPosition(position);
 
@@ -140,6 +139,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

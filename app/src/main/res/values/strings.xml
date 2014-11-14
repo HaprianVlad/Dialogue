@@ -23,6 +23,7 @@
     <string name="create_conversation_button">Create</string>
     <string name="yesterday">Yesterday</string>
     <string name="two_days_ago">Two days ago</string>
+    <string name="newConversationActivityTitle">New Conversation</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

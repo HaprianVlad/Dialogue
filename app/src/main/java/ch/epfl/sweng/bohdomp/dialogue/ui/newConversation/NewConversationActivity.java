@@ -3,8 +3,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.newConversation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
@@ -28,6 +30,9 @@ public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
     private static final String APP_DATA = "APP_DATA";
 
+    private DialogueData mData;
+    private ContactFactory mContactFactory;
+
     private EditText mToEditText;
     private Button mSendButton;
 
@@ -35,21 +40,34 @@ public class NewConversationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setDialogueData(DefaultDialogData.getInstance());
+        mContactFactory = new ContactFactory(getApplicationContext());
 
         setViewElement();
         setupListener();
-
     }
 
+    /*
+     * Set DialogueData
+     */
+    private void setDialogueData(DialogueData data) {
+        if (data == null) {
+            throw new IllegalStateException("DialogueData is null");
+        }
+
+        mData = data;
+    }
 
     /*
      * Set all view elements
      */
     private void setViewElement() {
-        setTitle("New Conversation");
+        setTitle(getString(R.string.newConversationActivityTitle));
         mToEditText = (EditText) findViewById(R.id.message_to);
         mSendButton = (Button) findViewById(R.id.create_conversation_button);
+        mSendButton.setEnabled(false);
     }
 
 
@@ -57,25 +75,71 @@ public class NewConversationActivity extends Activity {
      * Setup all listener related to the view displayed by the activity
      */
     private void setupListener() {
+        mToEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() != 0 && Patterns.PHONE.matcher(editable).matches()) {
+                    mSendButton.setEnabled(true);
+
+                } else {
+                    mSendButton.setEnabled(false);
+                }
+            }
+        });
+
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ConversationActivity.class);
 
-                ContactFactory factory = new ContactFactory(getApplicationContext());
                 Contact contact = null;
+
                 try {
-                    contact = factory.contactFromNumber(mToEditText.getText().toString());
+                    contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
+                    Conversation conversation = mData.createOrGetConversation(contact);
+                    intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
+                    startActivity(intent);
                 } catch (InvalidNumberException e) {
+                    mSendButton.setEnabled(false);
                     Toast.makeText(getApplicationContext(), "This is not a valid input for phone number, please retry!",
                             Toast.LENGTH_LONG).show();
                 }
-                Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
-
-                intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
-                startActivity(intent);
             }
         });
+    }
+
+    /*
+
+    *** IF MENU IS NEEDED UNCOMMENT ***
+
+    /**
+     * Set the DialogueData used in this activity
+     * @param data the new DialogueData to use
+     */
+
+    /*
+    public void setDialogueData(DialogueData data){
+        if(data == null){
+            throw new NullArgumentException("Data");
+        }
+
+        mData = data;
+    }
+
+    public void setContactFactory(ContactFactory contactFactory){
+        if(contactFactory == null){
+            throw new NullArgumentException("Data");
+        }
+
+        mContactFactory = contactFactory;
     }
 
     @Override
@@ -97,6 +161,8 @@ public class NewConversationActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    */
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the current  state
@@ -112,6 +178,5 @@ public class NewConversationActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-
     }
 }
