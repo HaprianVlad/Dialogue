@@ -16,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 /**
  * dialogue representation of an android contact
  */
-class AndroidContact implements Contact {
+public class AndroidContact implements Contact {
     private final String mLookupKey;
     private final String mDisplayName;
     private final Set<String> mPhoneNumbers;
@@ -234,7 +234,7 @@ class AndroidContact implements Contact {
         this.mAvailableChannels = new HashSet<ChannelType>(in.readArrayList(getClass().getClassLoader()));
     }
 
-    public static final Creator<AndroidContact> CREATOR = new Creator<AndroidContact>() {
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         public AndroidContact createFromParcel(Parcel source) {
             return new AndroidContact(source);
         }

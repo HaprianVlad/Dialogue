@@ -27,7 +27,8 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity
  * Activity displaying the set of conversation
  */
 public class ConversationListActivity extends Activity implements DialogueDataListener{
-    private static final String LOG_TAG = "ConversationListActivity";
+    private final static String LOG_TAG = "ConversationListActivity";
+    private final static String APP_DATA = "APP_DATA";
 
     private ListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
@@ -41,6 +42,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_contact_list);
         DefaultDialogData.getInstance().addListener(this);
 
@@ -138,6 +141,24 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        Bundle b =DefaultDialogData.getInstance().createBundle();
+        savedInstanceState.putBundle(APP_DATA, b);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
+    }
+
+
     /**
      * Method called when the new conversation is clicked
      * Start the "new message activity"
@@ -146,4 +167,5 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         Intent intent = new Intent(this, NewConversationActivity.class);
         startActivity(intent);
     }
+
 }

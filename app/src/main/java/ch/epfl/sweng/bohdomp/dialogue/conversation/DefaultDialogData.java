@@ -1,12 +1,16 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -29,7 +33,11 @@ public final class DefaultDialogData implements DialogueData {
 
     private final static DialogueData OBJECT = new DefaultDialogData();
 
-    private HashMap<ConversationId, Conversation> mConversations =
+    private final static String CONVERSATION_ID = "CONVERSATION_ID";
+    private final static String CONVERSATION = "CONVERSATION";
+
+
+    private Map<ConversationId, Conversation> mConversations =
             new HashMap<ConversationId, Conversation>();
 
     private final List<DialogueDataListener> mListeners =  new ArrayList<DialogueDataListener>();
@@ -130,11 +138,45 @@ public final class DefaultDialogData implements DialogueData {
         }
     }
 
+    @Override
+    public void restoreFromBundle(Bundle savedData) {
+        if (savedData == null) {
+            throw new NullArgumentException("savedData");
+        }
+
+        List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
+        List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
+        if (conversationIds!= null && conversations!= null) {
+            if (BuildConfig.DEBUG && (conversationIds.size() != conversations.size())) {
+                throw new AssertionError("Wrong bundle instance in restoreFromBundle, DialogueData");
+            }
+
+            for (int i=0; i<conversationIds.size(); i++) {
+                mConversations.put((ConversationId) conversationIds.get(i), (Conversation) conversations.get(i));
+            }
+            notifyListeners();
+
+
+        }
+    }
+
+    @Override
+    public Bundle createBundle() {
+        Bundle b = new Bundle();
+
+        b.putParcelableArrayList(CONVERSATION_ID, new ArrayList<ConversationId>(mConversations.keySet()));
+        b.putParcelableArrayList(CONVERSATION, new ArrayList<Conversation>(mConversations.values()));
+
+        return b;
+    }
+
 
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {
-        for (DialogueDataListener listener : mListeners) {
-            listener.onDialogueDataChanged();
+        if (mListeners.size() > 0) {
+            for (DialogueDataListener listener : mListeners) {
+                listener.onDialogueDataChanged();
+            }
         }
     }
 }

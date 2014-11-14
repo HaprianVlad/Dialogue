@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
@@ -23,6 +24,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
  */
 public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
+    private static final String APP_DATA = "APP_DATA";
 
     private EditText mToEditText;
     private Button mSendButton;
@@ -31,6 +33,7 @@ public class NewConversationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
+
 
         setViewElement();
         setupListener();
@@ -84,5 +87,23 @@ public class NewConversationActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the current  state
+        savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
+
     }
 }

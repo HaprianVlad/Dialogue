@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+import android.os.Bundle;
+
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -49,5 +51,17 @@ public interface DialogueData {
      * @param listener the listener to be removed
      */
     void removeListener(DialogueDataListener listener);
+
+    /**
+     * Method that recreates the dialogue data from a bundle saved state
+     * @param savedData the save state of the application
+     */
+    void restoreFromBundle(Bundle savedData);
+
+    /**
+     * Method that creates a bundle containing the state of the application
+     * @return bundle representing the state of the application
+     */
+    Bundle createBundle();
 
 }

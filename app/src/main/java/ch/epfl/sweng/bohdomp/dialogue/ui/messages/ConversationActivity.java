@@ -30,6 +30,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  */
 public class ConversationActivity extends Activity implements ConversationListener {
     private static final String LOG_TAG = "ConversationActivity";
+    private static final String APP_DATA = "APP_DATA";
 
     private ListView mMessageList;
     private EditText mNewMessageText;
@@ -154,5 +155,22 @@ public class ConversationActivity extends Activity implements ConversationListen
     protected void onStop() {
         mConversation.removeListener(this);
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the current  state
+        savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
     }
 }

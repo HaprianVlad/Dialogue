@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import android.content.Context;
+import android.os.Parcelable;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -12,7 +13,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 /**
  *
  */
-public interface Conversation {
+public interface Conversation extends Parcelable {
 
     /**
      * Getter for conversation id

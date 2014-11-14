@@ -1,11 +1,12 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
+
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 
 /**
  * Interface representing a listener for conversation
  */
-public interface ConversationListener {
+public interface ConversationListener  {
 
     /**
      * This method is called when the conversation is changed
