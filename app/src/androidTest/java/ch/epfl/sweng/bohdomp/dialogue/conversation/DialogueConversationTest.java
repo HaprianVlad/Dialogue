@@ -14,6 +14,7 @@ import java.util.Locale;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
@@ -118,7 +119,11 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testAddContact() {
-        mContact = mContactFactory.contactFromNumber("0888431243");
+        try {
+            mContact = mContactFactory.contactFromNumber("0888431243");
+        } catch (InvalidNumberException e) {
+            fail("Exception should not be thrown");
+        }
         mConversation.addContact(mContact);
         mContacts.add(mContact);
 
@@ -143,7 +148,11 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testRemoveNonAddedContact() {
-        mContact = mContactFactory.contactFromNumber("0887341234");
+        try {
+            mContact = mContactFactory.contactFromNumber("0887341234");
+        } catch (InvalidNumberException e) {
+            fail("Exception should not be thrown!");
+        }
 
         // this should do nothing and throw no runtime exception!
         mConversation.removeContact(mContact);

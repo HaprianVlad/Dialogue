@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
@@ -16,6 +17,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
 
 /**
@@ -61,7 +63,13 @@ public class NewConversationActivity extends Activity {
                 Intent intent = new Intent(v.getContext(), ConversationActivity.class);
 
                 ContactFactory factory = new ContactFactory(getApplicationContext());
-                Contact contact = factory.contactFromNumber(mToEditText.getText().toString());
+                Contact contact = null;
+                try {
+                    contact = factory.contactFromNumber(mToEditText.getText().toString());
+                } catch (InvalidNumberException e) {
+                    Toast.makeText(getApplicationContext(), "This is not a valid input for phone number, please retry!",
+                            Toast.LENGTH_LONG).show();
+                }
                 Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
                 intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());

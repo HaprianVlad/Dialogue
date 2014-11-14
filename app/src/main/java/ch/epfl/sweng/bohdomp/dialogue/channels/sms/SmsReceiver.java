@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
+import android.widget.Toast;
 
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
@@ -37,11 +39,17 @@ public final class SmsReceiver extends BroadcastReceiver {
                 throw new AssertionError("smsMessage == null");
             }
             //Starting the DialogueIncomingDispatcher for each received message
-            DialogueMessage dialogueMessage = convertFromSmsMessage(smsMessage);
+            DialogueMessage dialogueMessage = null;
+            try {
+                dialogueMessage = convertFromSmsMessage(smsMessage);
+            } catch (InvalidNumberException e) {
+                Toast.makeText(context, "Incomming message from strange address: "
+                        + smsMessage.getDisplayOriginatingAddress(), Toast.LENGTH_LONG).show();
+            }
             DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
         }
     }
-    private DialogueTextMessage convertFromSmsMessage(SmsMessage smsMessage) {
+    private DialogueTextMessage convertFromSmsMessage(SmsMessage smsMessage) throws InvalidNumberException {
         Contact contact = contactFactory.contactFromNumber(smsMessage.getDisplayOriginatingAddress());
         String stringBody = smsMessage.getMessageBody();
 
