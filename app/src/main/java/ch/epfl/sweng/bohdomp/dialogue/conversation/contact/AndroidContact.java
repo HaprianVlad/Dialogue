@@ -16,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 /**
  * dialogue representation of an android contact
  */
-public class AndroidContact implements Contact {
+class AndroidContact implements Contact {
     private final String mLookupKey;
     private final String mDisplayName;
     private final Set<String> mPhoneNumbers;
