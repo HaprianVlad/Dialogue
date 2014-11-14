@@ -118,12 +118,10 @@ public class DialogueConversationTest extends MockTestCase {
         }
     }
 
-    public void testAddContact() {
-        try {
-            mContact = mContactFactory.contactFromNumber("0888431243");
-        } catch (InvalidNumberException e) {
-            fail("Exception should not be thrown");
-        }
+    public void testAddContact() throws InvalidNumberException {
+
+        mContact = mContactFactory.contactFromNumber("0888431243");
+
         mConversation.addContact(mContact);
         mContacts.add(mContact);
 
@@ -147,12 +145,10 @@ public class DialogueConversationTest extends MockTestCase {
         assertEquals(mContacts, mConversation.getContacts());
     }
 
-    public void testRemoveNonAddedContact() {
-        try {
-            mContact = mContactFactory.contactFromNumber("0887341234");
-        } catch (InvalidNumberException e) {
-            fail("Exception should not be thrown!");
-        }
+    public void testRemoveNonAddedContact() throws InvalidNumberException {
+
+        mContact = mContactFactory.contactFromNumber("0887341234");
+
 
         // this should do nothing and throw no runtime exception!
         mConversation.removeContact(mContact);
