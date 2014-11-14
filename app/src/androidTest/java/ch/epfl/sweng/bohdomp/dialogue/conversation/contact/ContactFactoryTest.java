@@ -132,7 +132,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         }
     }
 
-    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromEqualPhoneNumbers() {
+    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromEqualPhoneNumbers()
+        throws InvalidNumberException {
+
         final String validUnknownPhoneNumber = "+41 21 693 11 11";
 
         final Contact firstContact = mContactFactory.contactFromNumber(validUnknownPhoneNumber);
@@ -141,7 +143,8 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         contactEqualityCheck(firstContact, secondContact);
     }
 
-    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromReformattedPhoneNumbers() {
+    public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromReformattedPhoneNumbers()
+        throws InvalidNumberException {
 
         final String validUnknownPhoneNumber = "+41 21 693 11 11";
         final String reformattedValidUnknownPhoneNumber = "0216931111"; // no country prefix and no spaces
@@ -152,7 +155,8 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         contactEqualityCheck(firstContact, secondContact);
     }
 
-    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromEqualPhoneNumbers() {
+    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromEqualPhoneNumbers()
+        throws InvalidNumberException {
 
         final Contact firstContact = mContactFactory.contactFromNumber(PHONE_1);
         final Contact secondContact = mContactFactory.contactFromNumber(PHONE_1);
@@ -160,7 +164,8 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         contactEqualityCheck(firstContact, secondContact);
     }
 
-    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromReformattedPhoneNumbers() {
+    public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromReformattedPhoneNumbers()
+        throws InvalidNumberException {
 
         final String reformattedPhone1 = PhoneNumberUtils.stripSeparators(PHONE_1);
 
@@ -173,7 +178,8 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         contactEqualityCheck(firstContact, secondContact);
     }
 
-    public void testContactFromPhoneNumberUpdatedContactsAreEqual() {
+    public void testContactFromPhoneNumberUpdatedContactsAreEqual()
+        throws InvalidNumberException {
 
         final String phoneNumber = "+41 21 693 11 11";
         final String displayName = "dummy 4";

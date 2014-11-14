@@ -148,7 +148,7 @@ public final class DefaultDialogData implements DialogueData {
         if (conversationIds!= null && conversations!= null) {
             if (conversationIds.size() != conversations.size()) {
                 for (int i=0; i<conversationIds.size(); i++) {
-                    mConversations.put((ConversationId) conversationIds.get(i), (Conversation) conversations.get(i));
+                    mConversations.put(conversationIds.get(i), conversations.get(i));
                 }
                 notifyListeners();
             }

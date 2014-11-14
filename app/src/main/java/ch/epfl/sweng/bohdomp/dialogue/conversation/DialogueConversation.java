@@ -35,12 +35,13 @@ public final class DialogueConversation implements Conversation {
         Mon, Tue, Wed, Thu, Fri, Sat, Sun
     }
 
-    private  ConversationId mId;
-    private  List<Contact> mContacts;
+    private final ConversationId mId;
+    private final SystemTimeProvider mTimeProvider;
 
-    private  List<DialogueMessage> mMessages;
-    private  List<ConversationListener> mListeners;
-    private  SystemTimeProvider mTimeProvider;
+    private List<Contact> mContacts;
+
+    private List<DialogueMessage> mMessages;
+    private List<ConversationListener> mListeners;
 
     private Timestamp mLastActivityTime;
 
@@ -187,7 +188,7 @@ public final class DialogueConversation implements Conversation {
         }
 
         mMessages.add(message);
-        mMessageCount = mMessageCount + 1;
+        mMessageCount += mMessageCount;
 
         mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
 
@@ -244,8 +245,10 @@ public final class DialogueConversation implements Conversation {
 
     }
 
-    private DialogueConversation(Parcel in) {
+    private DialogueConversation(Parcel in, SystemTimeProvider timeProvider) {
+        this.mTimeProvider = timeProvider;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
+        // FIXME !! List are not treated correctly
         this.mContacts = new ArrayList<Contact>(in.readArrayList(getClass().getClassLoader()));
         this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(getClass().getClassLoader()));
         this.mLastActivityTime = new Timestamp(in.readLong());
@@ -256,7 +259,7 @@ public final class DialogueConversation implements Conversation {
 
     public static final Creator<DialogueConversation> CREATOR = new Creator<DialogueConversation>() {
         public DialogueConversation createFromParcel(Parcel source) {
-            return new DialogueConversation(source);
+            return new DialogueConversation(source, new SystemTimeProvider());
         }
 
         public DialogueConversation[] newArray(int size) {
