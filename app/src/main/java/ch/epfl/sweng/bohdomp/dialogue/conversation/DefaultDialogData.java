@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -147,16 +146,12 @@ public final class DefaultDialogData implements DialogueData {
         List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
         if (conversationIds!= null && conversations!= null) {
-            if (BuildConfig.DEBUG && (conversationIds.size() != conversations.size())) {
-                throw new AssertionError("Wrong bundle instance in restoreFromBundle, DialogueData");
+            if (conversationIds.size() != conversations.size()) {
+                for (int i=0; i<conversationIds.size(); i++) {
+                    mConversations.put((ConversationId) conversationIds.get(i), (Conversation) conversations.get(i));
+                }
+                notifyListeners();
             }
-
-            for (int i=0; i<conversationIds.size(); i++) {
-                mConversations.put((ConversationId) conversationIds.get(i), (Conversation) conversations.get(i));
-            }
-            notifyListeners();
-
-
         }
     }
 

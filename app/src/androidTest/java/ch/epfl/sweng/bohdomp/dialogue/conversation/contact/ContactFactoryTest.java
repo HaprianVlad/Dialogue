@@ -92,9 +92,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
         try {
             Contact contact = mContactFactory.contactFromNumber(invalidPhoneNumber);
-            fail("should have thrown IllegalArgumentException");
+            fail("should have thrown InvalidNumberException");
         } catch (InvalidNumberException e) {
-            assertTrue(true);
+
         }
     }
 
