@@ -3,10 +3,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ids;
 import android.os.Parcel;
 
 /**
- * Created by BohDomp! on 08.11.14.
+ * Abstract class defining an id.
  */
 abstract class Id implements Identifier, Comparable<Id> {
-
     private final long mId;
 
     protected Id(long id) {

@@ -8,7 +8,6 @@ package ch.epfl.sweng.bohdomp.dialogue.exceptions;
  * Avoid the pain of complicated IllegalArgumentExceptions
  */
 public class NullArgumentException extends IllegalArgumentException {
-
     private static final long serialVersionUID = 1L;
 
     public NullArgumentException(String message) {

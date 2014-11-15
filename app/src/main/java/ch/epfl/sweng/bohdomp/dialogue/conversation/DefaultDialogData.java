@@ -13,13 +13,14 @@ import java.util.Map;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Default implementation of DialogData
  */
 public final class DefaultDialogData implements DialogueData {
-    private  final static Comparator<Conversation> TIME_STAMPS_COMPARATOR;
+    private static final Comparator<Conversation> TIME_STAMPS_COMPARATOR;
 
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
@@ -30,16 +31,14 @@ public final class DefaultDialogData implements DialogueData {
         };
     }
 
-    private final static DialogueData OBJECT = new DefaultDialogData();
+    private static final DialogueData OBJECT = new DefaultDialogData();
 
-    private final static String CONVERSATION_ID = "CONVERSATION_ID";
-    private final static String CONVERSATION = "CONVERSATION";
+    private static final String CONVERSATION_ID = "CONVERSATION_ID";
+    private static final String CONVERSATION = "CONVERSATION";
 
+    private Map<ConversationId, Conversation> mConversations = new HashMap<ConversationId, Conversation>();
 
-    private Map<ConversationId, Conversation> mConversations =
-            new HashMap<ConversationId, Conversation>();
-
-    private final List<DialogueDataListener> mListeners =  new ArrayList<DialogueDataListener>();
+    private final List<DialogueDataListener> mListeners = new ArrayList<DialogueDataListener>();
 
     /**
      * Gets the singleton instance
@@ -92,7 +91,6 @@ public final class DefaultDialogData implements DialogueData {
         contacts.add(contact);
         Conversation conversation = new DialogueConversation(contacts, new SystemTimeProvider());
 
-
         //Notify Dialogue Data listeners if a conversation changes
         conversation.addListener(new ConversationListener() {
             @Override
@@ -115,6 +113,16 @@ public final class DefaultDialogData implements DialogueData {
             mConversations.remove(id);
             notifyListeners();
         }
+    }
+
+    @Override
+    public void addMessageToConversation(DialogueMessage message) {
+        if (message == null) {
+            throw new NullArgumentException("message");
+        }
+
+        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
+        c.addMessage(message);
     }
 
     @Override
@@ -145,6 +153,7 @@ public final class DefaultDialogData implements DialogueData {
 
         List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
+
         if (conversationIds!= null && conversations!= null) {
             if (conversationIds.size() != conversations.size()) {
                 for (int i=0; i<conversationIds.size(); i++) {
@@ -164,7 +173,6 @@ public final class DefaultDialogData implements DialogueData {
 
         return b;
     }
-
 
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {

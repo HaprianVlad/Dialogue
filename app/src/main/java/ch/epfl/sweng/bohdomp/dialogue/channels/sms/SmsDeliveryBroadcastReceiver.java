@@ -25,7 +25,6 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
             throw new NullArgumentException("intent");
         }
 
-
         if (intent.getAction().equals(ACTION_SMS_DELIVERED)) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:

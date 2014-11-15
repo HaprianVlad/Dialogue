@@ -4,10 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by BohDomp! on 08.11.14.
+ * Class defining a dialogue message id.
  */
 public final class DialogueMessageId extends Id {
-
     private DialogueMessageId(long id) {
         super(id);
     }

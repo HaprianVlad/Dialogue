@@ -6,25 +6,25 @@ import android.os.Parcel;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
- * Class representing the body of a data message
+ * Class representing the mBody of a data message
  */
 public final class DataMessageBody implements MessageBody{
 
     //FIXME: Find exactly how uri works
 
-    private final Uri body;
+    private final Uri mBody;
 
-    public DataMessageBody(String bodyParameter) {
-        if (bodyParameter != null) {
-            this.body = Uri.parse(bodyParameter);
-        } else {
-            throw new NullArgumentException("bodyParameter");
+    public DataMessageBody(String body) {
+        if (body == null) {
+            throw new NullArgumentException("body");
         }
+
+        this.mBody = Uri.parse(body);
     }
 
     @Override
     public String getMessageBody() {
-        return body.getFragment();
+        return mBody.getFragment();
     }
 
     @Override
@@ -34,11 +34,11 @@ public final class DataMessageBody implements MessageBody{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.body, 0);
+        dest.writeParcelable(this.mBody, 0);
     }
 
     private DataMessageBody(Parcel in) {
-        this.body = in.readParcelable(Uri.class.getClassLoader());
+        this.mBody = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<DataMessageBody> CREATOR = new Creator<DataMessageBody>() {

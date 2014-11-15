@@ -6,6 +6,9 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+
+
 /**
  * Represents all conversation in the application
  * This interface should be directly connected to the GUI
@@ -38,6 +41,12 @@ public interface DialogueData {
      * Delete the conversation with the given ID
      */
     void removeConversation(ConversationId id);
+
+    /**
+     * Adds the message to the correct conversation.
+     * @param message to be added.
+     */
+    void addMessageToConversation(DialogueMessage message);
 
     /**
      * Adds a listener to Dialogue Data

@@ -11,7 +11,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 /**
- *
+ * Interface representing a conversation.
  */
 public interface Conversation extends Parcelable {
 
@@ -86,7 +86,7 @@ public interface Conversation extends Parcelable {
     void addMessage(DialogueMessage message);
 
     /**
-     * Adds a listener to the converstation
+     * Adds a listener to the conversation
      * @param listener
      */
     void addListener(ConversationListener listener);

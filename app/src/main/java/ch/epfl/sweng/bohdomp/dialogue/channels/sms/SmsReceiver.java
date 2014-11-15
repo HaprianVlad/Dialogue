@@ -19,18 +19,20 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  * Defines an Sms Broadcast Receiver
  */
 public final class SmsReceiver extends BroadcastReceiver {
-    private  ContactFactory contactFactory = null;
+    private  ContactFactory mContactFactory;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (context == null) {
             throw new NullArgumentException("context");
         }
+
         if (intent == null) {
             throw new NullArgumentException("intent");
         }
 
-        if (contactFactory == null) {
-            contactFactory = new ContactFactory(context);
+        if (mContactFactory == null) {
+            mContactFactory = new ContactFactory(context);
         }
 
         SmsMessage[] smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
@@ -38,23 +40,28 @@ public final class SmsReceiver extends BroadcastReceiver {
             if (BuildConfig.DEBUG && (smsMessage == null)) {
                 throw new AssertionError("smsMessage == null");
             }
-            //Starting the DialogueIncomingDispatcher for each received message
-            DialogueMessage dialogueMessage = null;
-            try {
-                dialogueMessage = convertFromSmsMessage(smsMessage);
-            } catch (InvalidNumberException e) {
-                Toast.makeText(context, "Incomming message from strange address: "
-                        + smsMessage.getDisplayOriginatingAddress(), Toast.LENGTH_LONG).show();
-            }
-            DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
+
+            sendToIncomingDispatcher(context, smsMessage);
         }
     }
+
+    private void sendToIncomingDispatcher(Context context, SmsMessage smsMessage) {
+        DialogueMessage dialogueMessage = null;
+
+        try {
+            dialogueMessage = convertFromSmsMessage(smsMessage);
+        } catch (InvalidNumberException e) {
+            Toast.makeText(context, "Incoming message from strange address: "
+                    + smsMessage.getDisplayOriginatingAddress(), Toast.LENGTH_LONG).show();
+        }
+
+        DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
+    }
+
     private DialogueTextMessage convertFromSmsMessage(SmsMessage smsMessage) throws InvalidNumberException {
-        Contact contact = contactFactory.contactFromNumber(smsMessage.getDisplayOriginatingAddress());
+        Contact contact = mContactFactory.contactFromNumber(smsMessage.getDisplayOriginatingAddress());
         String stringBody = smsMessage.getMessageBody();
 
         return new DialogueTextMessage(contact, stringBody, DialogueMessage.MessageStatus.INCOMING);
     }
-
-
 }

@@ -3,7 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.ids;
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 
 /**
- * Created by BohDomp! on 08.11.14.
+ * Manages ids.
  */
 public final class IdManager {
     private long mPreviousDialogueMessageId;
