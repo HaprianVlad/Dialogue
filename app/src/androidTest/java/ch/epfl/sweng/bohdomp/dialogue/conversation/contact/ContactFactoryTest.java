@@ -37,7 +37,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     private static final String PHONE_3 = "234 567 89 01";
 
     private static final String[] ALL_NAMES = {DISPLAY_NAME_1, DISPLAY_NAME_2, DISPLAY_NAME_3};
-    private static final Set<String> NAME_SET = new HashSet<String>(Arrays.asList(ALL_NAMES));
 
     public ContactFactoryTest() {
         super(Application.class);

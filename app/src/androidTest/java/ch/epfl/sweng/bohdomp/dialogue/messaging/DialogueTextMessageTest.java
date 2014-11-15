@@ -18,7 +18,7 @@ import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
  * Test class for dialogue text messages
  */
 public class DialogueTextMessageTest extends MockTestCase {
-    private final String mText = "Hello world!";
+    private static final String TEXT = "Hello world!";
     private final DialogueMessage.MessageStatus mStatus = DialogueMessage.MessageStatus.INCOMING;
     private Contact mContact;
     private DialogueTextMessage mMessage;
@@ -26,7 +26,7 @@ public class DialogueTextMessageTest extends MockTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         this.mContact = Mockito.mock(Contact.class);
-        this.mMessage = new DialogueTextMessage(mContact, mText, mStatus);
+        this.mMessage = new DialogueTextMessage(mContact, TEXT, mStatus);
     }
 
     public void testParcelRoundTrip() throws InvalidNumberException {
@@ -37,7 +37,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
         Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
 
-        DialogueMessage message = new DialogueTextMessage(contact, mText, mStatus);
+        DialogueMessage message = new DialogueTextMessage(contact, TEXT, mStatus);
 
         Parcel parcel = Parcel.obtain();
         message.writeToParcel(parcel, 0);
@@ -61,7 +61,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullContactArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(null, mText, mStatus);
+            this.mMessage = new DialogueTextMessage(null, TEXT, mStatus);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
@@ -79,7 +79,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullStatusArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(mContact, mText, null);
+            this.mMessage = new DialogueTextMessage(mContact, TEXT, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
