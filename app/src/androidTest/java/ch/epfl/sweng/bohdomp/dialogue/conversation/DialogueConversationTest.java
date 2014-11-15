@@ -357,12 +357,17 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testParcelability() {
 
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
+        mTimeProvider = new SystemTimeProvider();
 
         mContacts = new ArrayList<Contact>();
+        // FIXME: mContacts.add(mContact);
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        // FIXME!!
+        // DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        // mConversation.addMessage(message);
+
         Parcel parcel = Parcel.obtain();
 
         mConversation.writeToParcel(parcel, 0);
@@ -373,15 +378,56 @@ public class DialogueConversationTest extends MockTestCase {
         conversationFromParcel = DialogueConversation.CREATOR.createFromParcel(parcel);
         parcel.recycle();
 
-        assertTrue(conversationFromParcel!=null);
-        assertFalse(mConversation == conversationFromParcel);
-        assertEquals(mConversation.getMessageCount(), conversationFromParcel.getMessageCount());
-        assertEquals(mConversation.getId(), conversationFromParcel.getId());
+        assertTrue(conversationFromParcel != null);
+        assertFalse("Conversations are not equals",
+                mConversation == conversationFromParcel);
+        assertEquals("Message count are not equals",
+                mConversation.getMessageCount(), conversationFromParcel.getMessageCount());
+        assertEquals("Id are not equals",
+                mConversation.getId(), conversationFromParcel.getId());
         assertEquals(mConversation.getContacts(), conversationFromParcel.getContacts());
         assertEquals(mConversation.getLastActivityTime().getTime(),
                 conversationFromParcel.getLastActivityTime().getTime());
         assertEquals(mConversation.getMessages(), conversationFromParcel.getMessages());
         assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
+    }
+
+    public void testParcelabilityWithUnread() {
+
+        mTimeProvider = new SystemTimeProvider();
+
+        mContacts = new ArrayList<Contact>();
+
+        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+
+        // FIXME !!
+        // DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
+        // mConversation.addMessage(message);
+
+        Parcel parcel = Parcel.obtain();
+        mConversation.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
+        Conversation conversationFromParcel;
+
+        conversationFromParcel = DialogueConversation.CREATOR.createFromParcel(parcel);
+        parcel.recycle();
+
+        assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
+    }
+
+    public void testDescribeContents() {
+
+        assertEquals(0, mConversation.describeContents());
+    }
+
+    public void testNewArray() {
+        DialogueConversation[] expectedNewArray = new DialogueConversation[FOUR];
+
+        DialogueConversation[] foundNewArray;
+        foundNewArray = DialogueConversation.CREATOR.newArray(FOUR);
+
+        assertEquals(expectedNewArray.length, foundNewArray.length);
     }
 }
 
