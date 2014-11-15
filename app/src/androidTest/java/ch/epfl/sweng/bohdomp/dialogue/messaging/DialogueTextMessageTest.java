@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+import android.content.Context;
 import android.os.Parcel;
 
 import org.mockito.Mockito;
@@ -29,8 +30,10 @@ public class DialogueTextMessageTest extends MockTestCase {
     }
 
     public void testParcelRoundTrip() throws InvalidNumberException {
+        Context context = getInstrumentation().getTargetContext().getApplicationContext();
+
         ContactFactory contactFactory;
-        contactFactory = new ContactFactory(getInstrumentation().getTargetContext().getApplicationContext());
+        contactFactory = new ContactFactory(context);
 
         Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
 
