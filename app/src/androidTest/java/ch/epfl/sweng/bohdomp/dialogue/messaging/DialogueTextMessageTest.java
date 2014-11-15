@@ -1,45 +1,77 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+import android.content.Context;
+import android.os.Parcel;
+
+import org.mockito.Mockito;
+
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
-
-import org.mockito.Mockito;
 
 
 /**
  * Test class for dialogue text messages
  */
 public class DialogueTextMessageTest extends MockTestCase {
-
-
-    private final String text = "Hello world!";
-    private final DialogueMessage.MessageStatus status = DialogueMessage.MessageStatus.INCOMING;
-    private Contact contact;
-    private DialogueTextMessage message;
+    private static final String TEXT = "Hello world!";
+    private final DialogueMessage.MessageStatus mStatus = DialogueMessage.MessageStatus.INCOMING;
+    private Contact mContact;
+    private DialogueTextMessage mMessage;
 
     protected void setUp() throws Exception {
         super.setUp();
-        this.contact = Mockito.mock(Contact.class);
-        this.message = new DialogueTextMessage(contact, text, status);
+        this.mContact = Mockito.mock(Contact.class);
+        this.mMessage = new DialogueTextMessage(mContact, TEXT, mStatus);
+    }
 
+    public void testParcelRoundTrip() throws InvalidNumberException {
+        Context context = getInstrumentation().getTargetContext().getApplicationContext();
+
+        ContactFactory contactFactory;
+        contactFactory = new ContactFactory(context);
+
+        Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
+
+        DialogueMessage message = new DialogueTextMessage(contact, TEXT, mStatus);
+
+        Parcel parcel = Parcel.obtain();
+        message.writeToParcel(parcel, 0);
+
+        parcel.setDataPosition(0); // reset parcel for reading
+
+        DialogueMessage messageFromParcel = DialogueTextMessage.CREATOR.createFromParcel(parcel);
+
+        parcel.recycle();
+
+        assertNotNull(messageFromParcel);
+
+        assertEquals(message.getContact(), messageFromParcel.getContact());
+        assertEquals(message.getBody().getMessageBody(), messageFromParcel.getBody().getMessageBody());
+        assertEquals(message.getMessageStatus(), messageFromParcel.getMessageStatus());
+        assertEquals(message.getIsDataMessage(), messageFromParcel.getIsDataMessage());
+        assertEquals(message.getIsReadStatus(), messageFromParcel.getIsReadStatus());
+        assertEquals(message.getMessageId(), messageFromParcel.getMessageId());
+        assertEquals(message.getMessageTimeStamp(), messageFromParcel.getMessageTimeStamp());
     }
 
     public void testNullContactArgument() {
         try {
-            this.message = new DialogueTextMessage(null, text, status);
-            fail("Exception should have been trown");
+            this.mMessage = new DialogueTextMessage(null, TEXT, mStatus);
+            fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
-           //success
+            //success
         }
     }
 
     public void testNullTextArgument() {
         try {
-            this.message = new DialogueTextMessage(contact, null, status);
-            fail("Exception should have been trown");
+            this.mMessage = new DialogueTextMessage(mContact, null, mStatus);
+            fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
         }
@@ -47,28 +79,28 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullStatusArgument() {
         try {
-            this.message = new DialogueTextMessage(contact, text, null);
-            fail("Exception should have been trown");
+            this.mMessage = new DialogueTextMessage(mContact, TEXT, null);
+            fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
         }
     }
 
-    public void  testGetContact() {
+    public void testGetContact() {
         //Contact is immutable
-        assertTrue(message.getContact() != null);
-        assertEquals(contact, message.getContact());
+        assertTrue(mMessage.getContact() != null);
+        assertEquals(mContact, mMessage.getContact());
     }
 
     public void testGetMessageTimeStamp() {
-        assertTrue(message.getMessageTimeStamp() != null);
-        assertTrue(message.getMessageTimeStamp().getTime() <= System.currentTimeMillis());
+        assertTrue(mMessage.getMessageTimeStamp() != null);
+        assertTrue(mMessage.getMessageTimeStamp().getTime() <= System.currentTimeMillis());
 
     }
 
     public void testGetMessageStatus() {
-        assertTrue(message.getMessageStatus() != null);
-        assertEquals(status, message.getMessageStatus());
+        assertTrue(mMessage.getMessageStatus() != null);
+        assertEquals(mStatus, mMessage.getMessageStatus());
 
     }
 
@@ -76,18 +108,18 @@ public class DialogueTextMessageTest extends MockTestCase {
     public void testGetMessageId() {
         DialogueMessageId afterId = IdManager.getInstance().newDialogueMessageId();
 
-        assertTrue(message.getMessageId() != null);
-        assertEquals(message.getMessageId().getLong()+1, afterId.getLong());
+        assertTrue(mMessage.getMessageId() != null);
+        assertEquals(mMessage.getMessageId().getLong() + 1, afterId.getLong());
     }
 
     public void testSetMessageAsRead() {
-        assertFalse(message.getIsReadStatus());
-        message.setMessageAsRead();
-        assertTrue(message.getIsReadStatus());
+        assertFalse(mMessage.getIsReadStatus());
+        mMessage.setMessageAsRead();
+        assertTrue(mMessage.getIsReadStatus());
     }
 
     public void testGetAllowedChannels() {
-        assertFalse(message.getIsDataMessage());
+        assertFalse(mMessage.getIsDataMessage());
     }
 
 

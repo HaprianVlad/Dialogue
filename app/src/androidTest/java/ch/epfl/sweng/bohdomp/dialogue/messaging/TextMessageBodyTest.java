@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+import android.os.Parcel;
 import android.telephony.SmsMessage;
 import android.test.AndroidTestCase;
 
@@ -10,35 +11,52 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  */
 public class TextMessageBodyTest extends AndroidTestCase {
 
-    private  MessageBody messageBody;
-    private final String body = "Hello world!";
+    private  MessageBody mMessageBody;
+    private static final String BODY = "Hello world!";
+
+    public void testParcelRoundTrip() {
+        mMessageBody = new TextMessageBody(BODY);
+
+        Parcel parcel = Parcel.obtain();
+        mMessageBody.writeToParcel(parcel, 0);
+
+        parcel.setDataPosition(0); // reset parcel for reading
+
+        MessageBody messageFromParcel = TextMessageBody.CREATOR.createFromParcel(parcel);
+
+        parcel.recycle();
+
+        assertEquals(mMessageBody.getMessageBody(), messageFromParcel.getMessageBody());
+    }
 
     public void testNullMessageBody() {
         try {
-            this.messageBody = new TextMessageBody(null);
-            fail("Exception should have been trown");
+            this.mMessageBody = new TextMessageBody(null);
+            fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
-            //succes
+            // success
         }
     }
 
     public void testTooLongMessageBody() {
         String longBody = "";
+
         for (int i=0; i <= SmsMessage.MAX_USER_DATA_BYTES; i++) {
             longBody += "a";
         }
-        assertTrue(longBody.getBytes().length > SmsMessage.MAX_USER_DATA_BYTES);
-        try {
-            this.messageBody = new TextMessageBody(longBody);
-            fail("Exception should have been thrown");
 
+        assertTrue(longBody.getBytes().length > SmsMessage.MAX_USER_DATA_BYTES);
+
+        try {
+            this.mMessageBody = new TextMessageBody(longBody);
+            fail("Exception should have been thrown");
         } catch (IllegalArgumentException e) {
-            //success
+            // success
         }
     }
 
     public void testCorrectMessageBody() {
-        this.messageBody = new TextMessageBody(body);
-        assertEquals(body, messageBody.getMessageBody());
+        this.mMessageBody = new TextMessageBody(BODY);
+        assertEquals(BODY, mMessageBody.getMessageBody());
     }
 }

@@ -13,7 +13,6 @@ import android.telephony.PhoneNumberUtils;
 import android.test.ApplicationTestCase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +26,6 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     private ContactFactory mContactFactory;
-    private Context mContext;
 
     private static final String DISPLAY_NAME_1 = "Dummy 1";
     private static final String DISPLAY_NAME_2 = "Dummy 2";
@@ -38,7 +36,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     private static final String PHONE_3 = "234 567 89 01";
 
     private static final String[] ALL_NAMES = {DISPLAY_NAME_1, DISPLAY_NAME_2, DISPLAY_NAME_3};
-    private static final Set<String> NAME_SET = new HashSet<String>(Arrays.asList(ALL_NAMES));
 
     public ContactFactoryTest() {
         super(Application.class);
@@ -134,7 +131,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromEqualPhoneNumbers()
         throws InvalidNumberException {
-
         final String validUnknownPhoneNumber = "+41 21 693 11 11";
 
         final Contact firstContact = mContactFactory.contactFromNumber(validUnknownPhoneNumber);
@@ -145,7 +141,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromReformattedPhoneNumbers()
         throws InvalidNumberException {
-
         final String validUnknownPhoneNumber = "+41 21 693 11 11";
         final String reformattedValidUnknownPhoneNumber = "0216931111"; // no country prefix and no spaces
 
@@ -157,7 +152,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromEqualPhoneNumbers()
         throws InvalidNumberException {
-
         final Contact firstContact = mContactFactory.contactFromNumber(PHONE_1);
         final Contact secondContact = mContactFactory.contactFromNumber(PHONE_1);
 
@@ -166,7 +160,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     public void testContactFromPhoneNumberReturnsEqualAndroidContactsFromReformattedPhoneNumbers()
         throws InvalidNumberException {
-
         final String reformattedPhone1 = PhoneNumberUtils.stripSeparators(PHONE_1);
 
         // sanity check that the test is actually useful
@@ -180,7 +173,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
     public void testContactFromPhoneNumberUpdatedContactsAreEqual()
         throws InvalidNumberException {
-
         final String phoneNumber = "+41 21 693 11 11";
         final String displayName = "dummy 4";
 
