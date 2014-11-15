@@ -11,13 +11,11 @@ import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 
-
 /**
  * The sms sender service sends the message passed to it via the intent and handles the different errors
  * that can occur when sending a sms.
  */
 public class SmsSenderService extends IntentService {
-
     public static final String ACTION_SEND_SMS = "SEND_SMS";
     private static final String ACTION_SMS_SENT = "SMS_SENT";
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
@@ -40,13 +38,20 @@ public class SmsSenderService extends IntentService {
             throw new AssertionError("intent == null");
         }
 
-        // setIntentRedelivery(true);
-
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
-            SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
-                    message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());
+
+            sendMessage(message);
         }
+    }
+
+    private void sendMessage(DialogueMessage message) {
+        if (BuildConfig.DEBUG && message == null) {
+            throw new AssertionError("message == null");
+        }
+
+        SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
+                message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());
     }
 
     @Override
@@ -100,5 +105,4 @@ public class SmsSenderService extends IntentService {
 
         return deliveryPendingIntent;
     }
-
 }

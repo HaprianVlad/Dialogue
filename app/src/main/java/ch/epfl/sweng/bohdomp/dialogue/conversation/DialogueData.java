@@ -6,6 +6,8 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+
+
 /**
  * Represents all conversation in the application
  * This interface should be directly connected to the GUI

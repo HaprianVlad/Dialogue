@@ -19,7 +19,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
  * Default implementation of DialogData
  */
 public final class DefaultDialogData implements DialogueData {
-    private  final static Comparator<Conversation> TIME_STAMPS_COMPARATOR;
+    private static final Comparator<Conversation> TIME_STAMPS_COMPARATOR;
 
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
@@ -30,16 +30,14 @@ public final class DefaultDialogData implements DialogueData {
         };
     }
 
-    private final static DialogueData OBJECT = new DefaultDialogData();
+    private static final DialogueData OBJECT = new DefaultDialogData();
 
-    private final static String CONVERSATION_ID = "CONVERSATION_ID";
-    private final static String CONVERSATION = "CONVERSATION";
+    private static final String CONVERSATION_ID = "CONVERSATION_ID";
+    private static final String CONVERSATION = "CONVERSATION";
 
+    private Map<ConversationId, Conversation> mConversations = new HashMap<ConversationId, Conversation>();
 
-    private Map<ConversationId, Conversation> mConversations =
-            new HashMap<ConversationId, Conversation>();
-
-    private final List<DialogueDataListener> mListeners =  new ArrayList<DialogueDataListener>();
+    private final List<DialogueDataListener> mListeners = new ArrayList<DialogueDataListener>();
 
     /**
      * Gets the singleton instance
@@ -91,7 +89,6 @@ public final class DefaultDialogData implements DialogueData {
         List<Contact> contacts = new ArrayList<Contact>();
         contacts.add(contact);
         Conversation conversation = new DialogueConversation(contacts, new SystemTimeProvider());
-
 
         //Notify Dialogue Data listeners if a conversation changes
         conversation.addListener(new ConversationListener() {
@@ -145,6 +142,7 @@ public final class DefaultDialogData implements DialogueData {
 
         List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
+
         if (conversationIds!= null && conversations!= null) {
             if (conversationIds.size() != conversations.size()) {
                 for (int i=0; i<conversationIds.size(); i++) {
@@ -164,7 +162,6 @@ public final class DefaultDialogData implements DialogueData {
 
         return b;
     }
-
 
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {

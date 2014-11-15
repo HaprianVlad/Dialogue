@@ -18,14 +18,16 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 public final class DialogueOutgoingDispatcher extends IntentService {
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
-
-
-//FIXME:Adds logic to dispatch in Dialogue Data
-
     public DialogueOutgoingDispatcher() {
         super("DialogueOutgoingDispatcher");
     }
 
+    /**
+     * Handles the sending of messages.
+     *
+     * @param context of the application.
+     * @param message to be sent.
+     */
     public static void sendMessage(Context context, DialogueMessage message) {
         if (context == null) {
             throw new NullArgumentException("context");
@@ -33,10 +35,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new NullArgumentException("message");
         }
 
-        /* Add message to its conversation */
-        Contact contact = message.getContact();
-        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(contact);
-        c.addMessage(message);
+        addMessageToConversation(message);
 
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
@@ -60,16 +59,25 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         }
     }
 
+    private static void addMessageToConversation(DialogueMessage message) {
+        if (BuildConfig.DEBUG && message == null) {
+            throw new AssertionError("message == null");
+        }
+
+        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
+        c.addMessage(message);
+    }
+
     private void sendSms(DialogueMessage message) {
         if (BuildConfig.DEBUG && (message == null)) {
             throw new AssertionError("message == null");
         }
 
+        /* Create intent and send to SmsSenderService */
         Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
         intent.setAction(SmsSenderService.ACTION_SEND_SMS);
         intent.putExtra(DialogueMessage.MESSAGE, message);
         getApplicationContext().startService(intent);
-
     }
 
     private void sendMms(DialogueMessage message) {

@@ -8,30 +8,27 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 
 /**
- *  Class representing the body of a text message
+ *  Class representing the mBody of a text message
  */
 public final class TextMessageBody implements MessageBody{
-
     public final static int MAX_MESSAGE_SIZE = SmsMessage.MAX_USER_DATA_BYTES;
-    private final String body;
+    private final String mBody;
 
-    public TextMessageBody(String bodyParameter) {
-        if (bodyParameter == null) {
-            throw new NullArgumentException("bodyParameter");
+    public TextMessageBody(String body) {
+        if (body == null) {
+            throw new NullArgumentException("body");
         }
-        if (bodyParameter.getBytes().length > MAX_MESSAGE_SIZE) {
+        if (body.getBytes().length > MAX_MESSAGE_SIZE) {
             throw new IllegalArgumentException("Too big message body!");
         }
 
-        this.body = bodyParameter;
-
+        this.mBody = body;
     }
 
     @Override
     public String getMessageBody() {
-        return body;
+        return mBody;
     }
-
 
     @Override
     public int describeContents() {
@@ -40,11 +37,7 @@ public final class TextMessageBody implements MessageBody{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.body);
-    }
-
-    private TextMessageBody(Parcel in) {
-        this.body = in.readString();
+        dest.writeString(this.mBody);
     }
 
     public static final Parcelable.Creator<TextMessageBody> CREATOR = new Parcelable.Creator<TextMessageBody>() {
@@ -56,4 +49,8 @@ public final class TextMessageBody implements MessageBody{
             return new TextMessageBody[size];
         }
     };
+
+    private TextMessageBody(Parcel in) {
+        this.mBody = in.readString();
+    }
 }

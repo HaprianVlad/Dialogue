@@ -4,10 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by BohDomp! on 08.11.14.
+ * Class defining a conversation id.
  */
 public final class ConversationId extends Id {
-
     private ConversationId(long id) {
         super(id);
     }

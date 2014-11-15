@@ -31,7 +31,7 @@ public final class DialogueConversation implements Conversation {
     /**
      * Describes all week day from SimpleDateFormat 'E'
      */
-    private enum weekDays {
+    private enum WeekDays {
         Mon, Tue, Wed, Thu, Fri, Sat, Sun
     }
 
@@ -98,6 +98,9 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public String getLastConversationActivityString(Context context) {
+        if (context == null) {
+            throw new NullArgumentException("context");
+        }
 
         long currentTime = mTimeProvider.currentTimeMillis();
         long elapsedTime = currentTime - mLastActivityTime.getTime();
@@ -110,12 +113,10 @@ public final class DialogueConversation implements Conversation {
         }
 
         if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
-
             return context.getString(R.string.yesterday);
         }
 
         if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
-
             return context.getString(R.string.two_days_ago);
         }
 
@@ -138,7 +139,7 @@ public final class DialogueConversation implements Conversation {
 
         SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("E", Locale.ENGLISH);
 
-        int indexWeekDay = weekDays.valueOf(dayOfTheWeek.format(mLastActivityTime)).ordinal();
+        int indexWeekDay = WeekDays.valueOf(dayOfTheWeek.format(mLastActivityTime)).ordinal();
 
         return context.getResources().getStringArray(R.array.days_of_week)[indexWeekDay];
     }
