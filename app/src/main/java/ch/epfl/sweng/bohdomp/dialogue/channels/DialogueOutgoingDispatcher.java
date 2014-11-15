@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
@@ -35,7 +34,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new NullArgumentException("message");
         }
 
-        addMessageToConversation(message);
+        DefaultDialogData.getInstance().addMessageToConversation(message);
 
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
@@ -57,15 +56,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         } else if (canSendMms(message)) {
             sendMms(message);
         }
-    }
-
-    private static void addMessageToConversation(DialogueMessage message) {
-        if (BuildConfig.DEBUG && message == null) {
-            throw new AssertionError("message == null");
-        }
-
-        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
-        c.addMessage(message);
     }
 
     private void sendSms(DialogueMessage message) {

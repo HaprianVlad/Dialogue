@@ -13,6 +13,7 @@ import java.util.Map;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
@@ -112,6 +113,16 @@ public final class DefaultDialogData implements DialogueData {
             mConversations.remove(id);
             notifyListeners();
         }
+    }
+
+    @Override
+    public void addMessageToConversation(DialogueMessage message) {
+        if (message == null) {
+            throw new NullArgumentException("message");
+        }
+
+        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
+        c.addMessage(message);
     }
 
     @Override

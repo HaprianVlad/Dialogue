@@ -5,8 +5,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -46,15 +44,6 @@ public final class DialogueIncomingDispatcher extends IntentService{
     protected void onHandleIntent(Intent intent) {
         DialogueMessage message = DialogueMessage.extractMessage(intent);
 
-        addMessageToConversation(message);
-    }
-
-    private void addMessageToConversation(DialogueMessage message) {
-        if (BuildConfig.DEBUG && message == null) {
-            throw new AssertionError("message == null");
-        }
-
-        Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
-        conversation.addMessage(message);
+        DefaultDialogData.getInstance().addMessageToConversation(message);
     }
 }
