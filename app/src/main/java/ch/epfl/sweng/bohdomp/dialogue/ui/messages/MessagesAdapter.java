@@ -79,7 +79,7 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return mMessagesList.get(position).getMessageId().getLong();
+        return mMessagesList.get(position).getId().getLong();
     }
 
     @Override
@@ -157,13 +157,13 @@ public class MessagesAdapter extends BaseAdapter {
         String body = msg.getBody().getMessageBody();
         viewHolder.body.setText(body);
 
-        String timeStamp = msg.getMessageTimeStamp().toString();
+        String timeStamp = msg.getTimeStamp().toString();
         viewHolder.timeStamp.setText(timeStamp);
 
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.body.getLayoutParams();
-        if (msg.getMessageStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+        if (msg.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
             lp.gravity = Gravity.RIGHT;
-        } else if (msg.getMessageStatus() == DialogueMessage.MessageStatus.INCOMING) {
+        } else if (msg.getStatus() == DialogueMessage.MessageStatus.INCOMING) {
             lp.gravity = Gravity.LEFT;
         }
     }

@@ -171,6 +171,7 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation.addMessage(message);
         mMessages.add(message);
 
+        assertEquals(mMessages.size(), mConversation.getMessageCount());
         assertEquals(mMessages, mConversation.getMessages());
     }
 
@@ -265,6 +266,15 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation.removeListener(listener);
     }
 
+    public void testLastActivityNullContext() {
+        try {
+            mConversation.getLastConversationActivityString(null);
+            fail("NullArgumentException expected");
+        } catch (NullArgumentException e) {
+            // alles gut! :)
+        }
+    }
+
     public void testLastActivitySameDay() {
         Timestamp lastActivity = mConversation.getLastActivityTime();
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
@@ -354,19 +364,35 @@ public class DialogueConversationTest extends MockTestCase {
         return MAGIC_MONDAY + nbDaysToAdd * MILLIS_IN_DAY;
     }
 
+    public void testWriteToNullParcel() {
+        try {
+            mConversation.writeToParcel(null, -1);
+            fail("NullArgumentException expected");
+        } catch (NullArgumentException e) {
+            // all good :)
+        }
+    }
+
+    public void testCreateFromNullParcel() {
+        try {
+            DialogueConversation.CREATOR.createFromParcel(null);
+            fail("NullArgumentException expected");
+        } catch (NullArgumentException e) {
+            // all good :)
+        }
+    }
 
     public void testParcelability() {
 
         mTimeProvider = new SystemTimeProvider();
 
         mContacts = new ArrayList<Contact>();
-        // FIXME: mContacts.add(mContact);
+        mContacts.add(mContact);
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        // FIXME!!
-        // DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
-        // mConversation.addMessage(message);
+        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();
 
@@ -378,17 +404,26 @@ public class DialogueConversationTest extends MockTestCase {
         conversationFromParcel = DialogueConversation.CREATOR.createFromParcel(parcel);
         parcel.recycle();
 
-        assertTrue(conversationFromParcel != null);
+        assertNotNull(conversationFromParcel);
         assertFalse("Conversations are not equals",
                 mConversation == conversationFromParcel);
         assertEquals("Message count are not equals",
                 mConversation.getMessageCount(), conversationFromParcel.getMessageCount());
         assertEquals("Id are not equals",
                 mConversation.getId(), conversationFromParcel.getId());
-        assertEquals(mConversation.getContacts(), conversationFromParcel.getContacts());
+        assertEquals("Contact list does not contain the same things",
+                mConversation.getContacts().hashCode(), conversationFromParcel.getContacts().hashCode());
         assertEquals(mConversation.getLastActivityTime().getTime(),
                 conversationFromParcel.getLastActivityTime().getTime());
-        assertEquals(mConversation.getMessages(), conversationFromParcel.getMessages());
+
+        mMessages = mConversation.getMessages();
+        List<DialogueMessage> parcelMessages = conversationFromParcel.getMessages();
+
+        for (int i = 0; i < mMessages.size(); i++) {
+            assertEquals("Message list does not contain the same message",
+                    mMessages.get(0).getId(), parcelMessages.get(0).getId());
+        }
+
         assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
     }
 
@@ -400,9 +435,8 @@ public class DialogueConversationTest extends MockTestCase {
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        // FIXME !!
-        // DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
-        // mConversation.addMessage(message);
+        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
+        mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();
         mConversation.writeToParcel(parcel, 0);

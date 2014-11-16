@@ -184,12 +184,12 @@ public final class DialogueConversation implements Conversation {
             throw new NullArgumentException("message == null !");
         }
 
-        if (message.getMessageStatus() == MessageStatus.INCOMING) {
+        if (message.getStatus() == MessageStatus.INCOMING) {
             mHasUnread = true;
         }
 
         mMessages.add(message);
-        mMessageCount += mMessageCount;
+        mMessageCount += 1;
 
         mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
 
@@ -237,19 +237,23 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        if (dest == null) {
+            throw new NullArgumentException("dest == null");
+        }
+
         dest.writeParcelable(this.mId, flags);
-        dest.writeTypedList(mContacts);
-        dest.writeTypedList(mMessages);
+        dest.writeList(mContacts);
+        dest.writeList(mMessages);
         dest.writeLong(this.mLastActivityTime.getTime());
         dest.writeInt(this.mMessageCount);
         dest.writeByte(mHasUnread ? (byte) 1 : (byte) 0);
 
     }
 
+    @SuppressWarnings("unchecked") // we cannot solve this unchecked problem!
     private DialogueConversation(Parcel in, SystemTimeProvider timeProvider) {
         this.mTimeProvider = timeProvider;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
-        // FIXME !! List are not treated correctly
         this.mContacts = new ArrayList<Contact>(in.readArrayList(getClass().getClassLoader()));
         this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(getClass().getClassLoader()));
         this.mLastActivityTime = new Timestamp(in.readLong());
@@ -260,6 +264,10 @@ public final class DialogueConversation implements Conversation {
 
     public static final Creator<DialogueConversation> CREATOR = new Creator<DialogueConversation>() {
         public DialogueConversation createFromParcel(Parcel source) {
+            if (source == null) {
+                throw new NullArgumentException("source == null");
+            }
+
             return new DialogueConversation(source, new SystemTimeProvider());
         }
 

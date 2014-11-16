@@ -168,7 +168,7 @@ public class MessageAdapterTest extends MockTestCase {
 
     public void testGetItemId() {
         final int position = 0;
-        assertEquals("Item", mList.get(position).getMessageId().getLong(),
+        assertEquals("Item", mList.get(position).getId().getLong(),
                 mAdapter.getItemId(position));
     }
 
@@ -186,7 +186,7 @@ public class MessageAdapterTest extends MockTestCase {
 
         assertEquals("Body not equals", body.getText().toString(), MSG_BODY);
         assertEquals("TimeStamp not equals", timeStamp.getText().toString(),
-                mMessage.getMessageTimeStamp().toString());
+                mMessage.getTimeStamp().toString());
 
         View view = mAdapter.getView(0, viewInit, parent);
 
@@ -195,7 +195,7 @@ public class MessageAdapterTest extends MockTestCase {
 
         assertEquals("Body not equals", body.getText().toString(), MSG_BODY);
         assertEquals("TimeStamp not equals", timeStamp.getText().toString(),
-                mMessage.getMessageTimeStamp().toString());
+                mMessage.getTimeStamp().toString());
 
     }
 

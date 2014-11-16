@@ -52,11 +52,11 @@ public class DialogueTextMessageTest extends MockTestCase {
 
         assertEquals(message.getContact(), messageFromParcel.getContact());
         assertEquals(message.getBody().getMessageBody(), messageFromParcel.getBody().getMessageBody());
-        assertEquals(message.getMessageStatus(), messageFromParcel.getMessageStatus());
+        assertEquals(message.getStatus(), messageFromParcel.getStatus());
         assertEquals(message.getIsDataMessage(), messageFromParcel.getIsDataMessage());
         assertEquals(message.getIsReadStatus(), messageFromParcel.getIsReadStatus());
-        assertEquals(message.getMessageId(), messageFromParcel.getMessageId());
-        assertEquals(message.getMessageTimeStamp(), messageFromParcel.getMessageTimeStamp());
+        assertEquals(message.getId(), messageFromParcel.getId());
+        assertEquals(message.getTimeStamp(), messageFromParcel.getTimeStamp());
     }
 
     public void testNullContactArgument() {
@@ -93,14 +93,14 @@ public class DialogueTextMessageTest extends MockTestCase {
     }
 
     public void testGetMessageTimeStamp() {
-        assertTrue(mMessage.getMessageTimeStamp() != null);
-        assertTrue(mMessage.getMessageTimeStamp().getTime() <= System.currentTimeMillis());
+        assertTrue(mMessage.getTimeStamp() != null);
+        assertTrue(mMessage.getTimeStamp().getTime() <= System.currentTimeMillis());
 
     }
 
     public void testGetMessageStatus() {
-        assertTrue(mMessage.getMessageStatus() != null);
-        assertEquals(mStatus, mMessage.getMessageStatus());
+        assertTrue(mMessage.getStatus() != null);
+        assertEquals(mStatus, mMessage.getStatus());
 
     }
 
@@ -108,13 +108,13 @@ public class DialogueTextMessageTest extends MockTestCase {
     public void testGetMessageId() {
         DialogueMessageId afterId = IdManager.getInstance().newDialogueMessageId();
 
-        assertTrue(mMessage.getMessageId() != null);
-        assertEquals(mMessage.getMessageId().getLong() + 1, afterId.getLong());
+        assertTrue(mMessage.getId() != null);
+        assertEquals(mMessage.getId().getLong() + 1, afterId.getLong());
     }
 
     public void testSetMessageAsRead() {
         assertFalse(mMessage.getIsReadStatus());
-        mMessage.setMessageAsRead();
+        mMessage.setAsRead();
         assertTrue(mMessage.getIsReadStatus());
     }
 
