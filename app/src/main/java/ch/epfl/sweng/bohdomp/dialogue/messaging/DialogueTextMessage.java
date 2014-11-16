@@ -15,7 +15,7 @@ public final class DialogueTextMessage extends DialogueMessage {
     }
 
     @Override
-    public MessageBody newMessageBody(String body) {
+    public MessageBody newBody(String body) {
         return new TextMessageBody(body);
     }
 

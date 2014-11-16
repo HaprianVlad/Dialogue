@@ -27,10 +27,10 @@ public abstract class DialogueMessage implements Parcelable {
     public static final String MESSAGE = "MESSAGE";
 
     private final Contact mContact;
-    private final MessageBody mMessageBody;
+    private final MessageBody mBody;
     private final long mTimestamp;
-    private final DialogueMessageId mMessageId;
-    private final MessageStatus mMessageStatus;
+    private final DialogueMessageId mId;
+    private final MessageStatus mStatus;
 
     private boolean mIsReadStatus;
     private boolean mIsDataMessage;
@@ -63,11 +63,11 @@ public abstract class DialogueMessage implements Parcelable {
         }
 
         this.mContact = contactParameter;
-        this.mMessageBody = newMessageBody(messageBodyParameter);
+        this.mBody = newBody(messageBodyParameter);
         this.mTimestamp = System.currentTimeMillis();
-        this.mMessageId = IdManager.getInstance().newDialogueMessageId();
+        this.mId = IdManager.getInstance().newDialogueMessageId();
         this.mIsReadStatus = false;
-        this.mMessageStatus = messageStatusParameter;
+        this.mStatus = messageStatusParameter;
         this.mIsDataMessage = isDataMessageParameter;
     }
 
@@ -86,7 +86,7 @@ public abstract class DialogueMessage implements Parcelable {
      * @return the body message
      */
     public MessageBody getBody() {
-        return mMessageBody;
+        return mBody;
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class DialogueMessage implements Parcelable {
      * Getter for the message time stamp
      * @return the time stamp of the message
      */
-    public Timestamp getMessageTimeStamp() {
+    public Timestamp getTimeStamp() {
         return new Timestamp(mTimestamp);
     }
 
@@ -109,22 +109,22 @@ public abstract class DialogueMessage implements Parcelable {
      * Getter for the message status
      * @return the message status. incoming or outgoing
      */
-    public MessageStatus getMessageStatus() {
-        return mMessageStatus;
+    public MessageStatus getStatus() {
+        return mStatus;
     }
 
     /**
      * Getter for the message id
      * @return the message id
      */
-    public DialogueMessageId getMessageId() {
-        return mMessageId;
+    public DialogueMessageId getId() {
+        return mId;
     }
 
     /**
      * Sets a message as read
      */
-    public void setMessageAsRead() {
+    public void setAsRead() {
         //FIXME: Decide if we need a listener somewhere or when enter in converstation all messages are read
         mIsReadStatus = true;
     }
@@ -142,7 +142,7 @@ public abstract class DialogueMessage implements Parcelable {
      * @param body the string we will put in the body
      * @return the created MessageBody
      */
-    public abstract MessageBody newMessageBody(String body);
+    public abstract MessageBody newBody(String body);
 
     @Override
     public int describeContents() {
@@ -152,21 +152,21 @@ public abstract class DialogueMessage implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mContact, 0);
-        dest.writeParcelable(this.mMessageBody, 0);
+        dest.writeParcelable(this.mBody, 0);
         dest.writeLong(this.mTimestamp);
-        dest.writeParcelable(this.mMessageId, 0);
-        dest.writeInt(this.mMessageStatus == null ? -1 : this.mMessageStatus.ordinal());
+        dest.writeParcelable(this.mId, 0);
+        dest.writeInt(this.mStatus == null ? -1 : this.mStatus.ordinal());
         dest.writeByte(mIsReadStatus ? (byte) 1 : (byte) 0);
         dest.writeByte(mIsDataMessage ? (byte) 1 : (byte) 0);
     }
 
     DialogueMessage(Parcel in) {
         this.mContact = in.readParcelable(Contact.class.getClassLoader());
-        this.mMessageBody = in.readParcelable(MessageBody.class.getClassLoader());
+        this.mBody = in.readParcelable(MessageBody.class.getClassLoader());
         this.mTimestamp = in.readLong();
-        this.mMessageId = in.readParcelable(DialogueMessageId.class.getClassLoader());
+        this.mId = in.readParcelable(DialogueMessageId.class.getClassLoader());
         int tmpMessageStatus = in.readInt();
-        this.mMessageStatus = tmpMessageStatus == -1 ? null : MessageStatus.values()[tmpMessageStatus];
+        this.mStatus = tmpMessageStatus == -1 ? null : MessageStatus.values()[tmpMessageStatus];
         this.mIsReadStatus = in.readByte() != 0;
         this.mIsDataMessage = in.readByte() != 0;
     }
