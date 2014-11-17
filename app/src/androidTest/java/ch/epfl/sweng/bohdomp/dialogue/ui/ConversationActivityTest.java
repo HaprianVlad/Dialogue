@@ -118,6 +118,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         });
 
         mInstrumentation.waitForIdleSync();
+        //FIXME: repair this test,result seems to depend on execution
         assertEquals(count + 1, mMessageList.getAdapter().getCount());
     }
 
@@ -154,6 +155,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
 
         mInstrumentation.waitForIdleSync();
 
+        //FIXME: repair this test, result seems to depend on execution
         assertEquals(mMessageList.getAdapter().getCount(), count + 1);
 
         DialogueMessage msg = (DialogueMessage) mMessageList.getAdapter().getItem(0);

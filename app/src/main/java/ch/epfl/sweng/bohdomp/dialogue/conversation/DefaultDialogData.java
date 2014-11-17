@@ -123,6 +123,7 @@ public final class DefaultDialogData implements DialogueData {
 
         Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
         c.addMessage(message);
+        notifyListeners();
     }
 
     @Override
@@ -155,7 +156,7 @@ public final class DefaultDialogData implements DialogueData {
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
 
         if (conversationIds!= null && conversations!= null) {
-            if (conversationIds.size() != conversations.size()) {
+            if (conversationIds.size() == conversations.size()) {
                 for (int i=0; i<conversationIds.size(); i++) {
                     mConversations.put(conversationIds.get(i), conversations.get(i));
                 }
