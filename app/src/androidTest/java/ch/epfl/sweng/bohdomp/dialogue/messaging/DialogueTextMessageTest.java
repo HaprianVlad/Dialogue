@@ -18,7 +18,10 @@ import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
  * Test class for dialogue text messages
  */
 public class DialogueTextMessageTest extends MockTestCase {
+
     private static final String TEXT = "Hello world!";
+    private static final int ARRAY_SIZE = 6;
+
     private final DialogueMessage.MessageStatus mStatus = DialogueMessage.MessageStatus.INCOMING;
     private Contact mContact;
     private DialogueTextMessage mMessage;
@@ -122,5 +125,10 @@ public class DialogueTextMessageTest extends MockTestCase {
         assertFalse(mMessage.getIsDataMessage());
     }
 
+    public void testNewArray() {
+        DialogueTextMessage[] newArray = DialogueTextMessage.CREATOR.newArray(ARRAY_SIZE);
+
+        assertEquals(ARRAY_SIZE, newArray.length);
+    }
 
 }
