@@ -36,6 +36,7 @@ class AndroidContact implements Contact {
 
         //TODO determine which channels this contact can use
         this.mAvailableChannels = new HashSet<ChannelType>();
+        mAvailableChannels.add(ChannelType.SMS);
     }
 
     @Override

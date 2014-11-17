@@ -42,7 +42,6 @@ public class ConversationActivity extends Activity implements ConversationListen
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,9 +89,13 @@ public class ConversationActivity extends Activity implements ConversationListen
             throw new IllegalStateException("Wrong listener");
         }
 
-        mMessageItemListAdapter.updateData(mConversation.getMessages());
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMessageItemListAdapter.updateData(mConversation.getMessages());
+            }
+        });
     }
-
 
     /*
      * Set all view elements
@@ -109,7 +112,6 @@ public class ConversationActivity extends Activity implements ConversationListen
         mSendButton = (Button) findViewById(R.id.send_message_button);
         mSendButton.setEnabled(false);
     }
-
 
     /**
      * Setup all listener related to the view displayed by the activity
@@ -129,7 +131,6 @@ public class ConversationActivity extends Activity implements ConversationListen
             public void afterTextChanged(Editable editable) {
                 if (editable.length() != 0) {
                     mSendButton.setEnabled(true);
-
                 } else {
                     mSendButton.setEnabled(false);
                 }
@@ -155,32 +156,6 @@ public class ConversationActivity extends Activity implements ConversationListen
         });
 
     }
-
-    /*
-
-    *** IF MENU IS NEEDED UNCOMMENT ***
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.conversation, menu);
-        return true;
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Boolean settingsSelected = item.getItemId() == R.id.action_settings;
-
-        return settingsSelected || super.onOptionsItemSelected(item);
-    }
-
-    */
 
     @Override
     protected void onStop() {

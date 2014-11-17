@@ -116,53 +116,6 @@ public class NewConversationActivity extends Activity {
         });
     }
 
-    /*
-
-    *** IF MENU IS NEEDED UNCOMMENT ***
-
-    /**
-     * Set the DialogueData used in this activity
-     * @param data the new DialogueData to use
-     */
-
-    /*
-    public void setDialogueData(DialogueData data){
-        if(data == null){
-            throw new NullArgumentException("Data");
-        }
-
-        mData = data;
-    }
-
-    public void setContactFactory(ContactFactory contactFactory){
-        if(contactFactory == null){
-            throw new NullArgumentException("Data");
-        }
-
-        mContactFactory = contactFactory;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.new_conversation, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    */
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the current  state

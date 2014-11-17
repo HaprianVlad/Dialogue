@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.channels;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
@@ -34,6 +35,8 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new NullArgumentException("message");
         }
 
+        Log.i("DialogueOutgoingDispatcher", "1");
+
         DefaultDialogData.getInstance().addMessageToConversation(message);
 
         /* Create intent and send to myself */
@@ -49,6 +52,8 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new NullArgumentException("intent");
         }
 
+        Log.i("DialogueOutgoingDispatcher", "2");
+
         DialogueMessage message = DialogueMessage.extractMessage(intent);
 
         if (canSendSms(message)) {
@@ -63,11 +68,14 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new AssertionError("message == null");
         }
 
+        Log.i("DialogueOutgoingDispatcher", "3");
+
         /* Create intent and send to SmsSenderService */
         Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
         intent.setAction(SmsSenderService.ACTION_SEND_SMS);
         intent.putExtra(DialogueMessage.MESSAGE, message);
         getApplicationContext().startService(intent);
+
     }
 
     private void sendMms(DialogueMessage message) {
