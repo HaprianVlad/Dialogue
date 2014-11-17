@@ -3,9 +3,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.messages;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
@@ -40,7 +41,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     }
 
-
     /*
      * Initialize the data used by the activity
      */
@@ -82,13 +81,21 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     public void onConversationChanged(ConversationId id) {
-        if (mConversation.getId() == id) {
-            mMessageItemListAdapter.updateData(mConversation.getMessages());
-        } else {
+        if (id == null) {
+            throw new NullArgumentException("id");
+        }
+
+        if (mConversation.getId() != id) {
             throw new IllegalStateException("Wrong listener");
         }
-    }
 
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMessageItemListAdapter.updateData(mConversation.getMessages());
+            }
+        });
+    }
 
     /*
      * Set all view elements
@@ -103,13 +110,32 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         mNewMessageText = (EditText) findViewById(R.id.new_message_content);
         mSendButton = (Button) findViewById(R.id.send_message_button);
+        mSendButton.setEnabled(false);
     }
-
 
     /**
      * Setup all listener related to the view displayed by the activity
      */
     private void setupListener() {
+
+        mNewMessageText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() != 0) {
+                    mSendButton.setEnabled(true);
+                } else {
+                    mSendButton.setEnabled(false);
+                }
+            }
+        });
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
@@ -129,26 +155,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         });
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.conversation, menu);
-        return true;
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Boolean settingsSelected = item.getItemId() == R.id.action_settings;
-
-        return settingsSelected || super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -188,8 +188,6 @@ public class MessageAdapterTest extends MockTestCase {
         assertEquals("TimeStamp not equals", timeStamp.getText().toString(),
                 mMessage.getTimeStamp().toString());
 
-        View view = mAdapter.getView(0, viewInit, parent);
-
         assertNotNull("Body", body);
         assertNotNull("Timestamp", timeStamp);
 
@@ -198,5 +196,4 @@ public class MessageAdapterTest extends MockTestCase {
                 mMessage.getTimeStamp().toString());
 
     }
-
 }

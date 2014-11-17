@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.contactList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -63,8 +64,14 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
     @Override
     public void onDialogueDataChanged() {
+        Log.i("DialogueOutgoingDispatcher", "2");
         mConversationList = DefaultDialogData.getInstance().getConversations();
-        mConversationItemListAdapter.update(mConversationList);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mConversationItemListAdapter.update(mConversationList);
+            }
+        });
     }
 
     /*
@@ -106,7 +113,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         mContactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ListView listView = (ListView) parent;
                 DialogueConversation c = (DialogueConversation) listView.getItemAtPosition(position);
 
@@ -141,6 +147,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
@@ -156,6 +163,12 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
+    }
+
+    @Override
+    protected void onStop() {
+        DefaultDialogData.getInstance().removeListener(this);
+        super.onStop();
     }
 
 

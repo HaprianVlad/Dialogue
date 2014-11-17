@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -38,9 +39,11 @@ public class SmsSenderService extends IntentService {
             throw new AssertionError("intent == null");
         }
 
+        Log.i("MessageSender", "SMS Message is being sent");
+
+
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
-
             sendMessage(message);
         }
     }
@@ -49,6 +52,8 @@ public class SmsSenderService extends IntentService {
         if (BuildConfig.DEBUG && message == null) {
             throw new AssertionError("message == null");
         }
+
+        Log.i("MessageSender", "SMS is Sent");
 
         SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
                 message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());

@@ -21,7 +21,7 @@ android {
         }
 
         debug{
-            testCoverageEnabled true
+           testCoverageEnabled = true
         }
     }
 
@@ -60,7 +60,7 @@ dependencies {
     androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
   		exclude group: 'org.hamcrest'
     }
+
     //androidTestCompile('org.powermock:powermock-mockito-release-full:1.4.9')
-   
 
 }
