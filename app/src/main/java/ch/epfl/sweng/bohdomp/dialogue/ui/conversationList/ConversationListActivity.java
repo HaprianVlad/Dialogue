@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.ui.contactList;
+package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 
 /**
@@ -43,7 +43,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.activity_contact_list);
         DefaultDialogData.getInstance().addListener(this);
@@ -78,6 +77,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
      * Set all view elements
      */
     private void setViewElements() {
+        this.setTitle(getString(R.string.conversationListTitle));
         mDefaultAppWarningLayout = (LinearLayout) findViewById(R.id.notDefaultWarning);
         checkDefaultApp();
 

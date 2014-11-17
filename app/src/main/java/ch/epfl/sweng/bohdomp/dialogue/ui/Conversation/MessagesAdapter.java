@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.ui.messages;
+package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -113,9 +113,9 @@ public class MessagesAdapter extends BaseAdapter {
     }
 
     /**
-     * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter}
+     * Create a new {@link ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter}
      * @param convertView Old view to reuse if possible
-     * @return {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter.MessageViewHolder}
+     * @return {@link ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter.MessageViewHolder}
      * A new MessageViewHolder
      */
     private MessageViewHolder createViewHolder(View convertView) {

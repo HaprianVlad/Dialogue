@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.ui.contactList;
+package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.content.Context;
 import android.util.Log;
