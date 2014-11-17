@@ -12,9 +12,17 @@ public class InvalidNumberException extends DialogueException {
 
     public InvalidNumberException(String message) {
         super(message);
+
+        if (message == null) {
+            throw new NullArgumentException("message");
+        }
     }
 
     public InvalidNumberException(Throwable throwable) {
         super(throwable);
+
+        if (throwable == null) {
+            throw new NullArgumentException("throwable");
+        }
     }
 }

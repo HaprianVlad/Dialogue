@@ -12,9 +12,19 @@ public class DialogueException extends Exception {
 
     public DialogueException(String message) {
         super(message);
+
+        if (message == null) {
+            throw new NullArgumentException("message");
+        }
     }
 
     public DialogueException(Throwable throwable) {
         super(throwable);
+
+        if (throwable == null) {
+            throw new NullArgumentException("throwable");
+        }
+
+
     }
 }
