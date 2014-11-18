@@ -21,6 +21,32 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 public class AndroidContactTest extends AndroidTestCase {
     private Contact mContact;
 
+    public void testParcelRoundTrip() throws InvalidNumberException {
+        Contact contact = getContact();
+
+        /*
+         The factory should return an UnknownContact but to
+         be sure we add this assert.
+         */
+        assertEquals(AndroidContact.class, contact.getClass());
+
+
+        Parcel parcel = Parcel.obtain();
+        contact.writeToParcel(parcel, 0);
+
+        parcel.setDataPosition(0); // reset parcel for reading
+
+        Contact contactFromParcel = AndroidContact.CREATOR.createFromParcel(parcel);
+
+        parcel.recycle();
+
+        assertEquals(contact, contactFromParcel);
+    }
+
+    public void testDescribeContents() throws InvalidNumberException {
+        assertEquals(0, getContact().describeContents());
+    }
+
     private static void addContact(Context context, final String displayName, final String phoneNumber)
         throws RemoteException, OperationApplicationException {
 
@@ -72,28 +98,6 @@ public class AndroidContactTest extends AndroidTestCase {
         }
     }
 
-    public void testParcelRoundTrip() throws InvalidNumberException {
-        Contact contact = getContact();
-
-        /*
-         The factory should return an UnknownContact but to
-         be sure we add this assert.
-         */
-        assertEquals(AndroidContact.class, contact.getClass());
-
-
-        Parcel parcel = Parcel.obtain();
-        contact.writeToParcel(parcel, 0);
-
-        parcel.setDataPosition(0); // reset parcel for reading
-
-        Contact contactFromParcel = AndroidContact.CREATOR.createFromParcel(parcel);
-
-        parcel.recycle();
-
-        assertEquals(contact, contactFromParcel);
-    }
-
     private Contact getContact() throws InvalidNumberException {
         final Context context = getContext();
 
@@ -118,9 +122,5 @@ public class AndroidContactTest extends AndroidTestCase {
             removeContactByDisplayName(context, displayName);
         }
         return contact;
-    }
-
-    public void testDescribeContents() throws InvalidNumberException {
-        assertEquals(0, getContact().describeContents());
     }
 }
