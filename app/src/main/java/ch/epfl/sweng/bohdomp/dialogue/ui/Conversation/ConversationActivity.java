@@ -1,7 +1,9 @@
-package ch.epfl.sweng.bohdomp.dialogue.ui.messages;
+package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,7 +48,8 @@ public class ConversationActivity extends Activity implements ConversationListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setupActionBar();
 
         Intent intent = getIntent();
 
@@ -62,6 +65,13 @@ public class ConversationActivity extends Activity implements ConversationListen
             Log.e(LOG_TAG, e.getMessage());
         }
 
+    }
+
+    private void setupActionBar() {
+        ActionBar ab = getActionBar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /*

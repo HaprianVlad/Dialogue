@@ -13,18 +13,16 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
-import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 
 /**
  * @author swengTeam 2013 BohDomp
  * Test for the ConversationActivity class
  */
 public class ConversationActivityTest extends ActivityInstrumentationTestCase2<ConversationActivity> {
-    private static final String CONTACT_NUMBER = "1234567890";
+    private static final String CONTACT_NUMBER = "12345667889";
     private static final String MSG_BODY = "HELLO";
 
     private ConversationActivity mActivity;
@@ -38,6 +36,8 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     private DialogueMessage mMessage;
     private Conversation mConversation;
 
+    private int mConversationCountAtStart;
+
     public ConversationActivityTest() {
         super(ConversationActivity.class);
     }
@@ -45,11 +45,12 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        mConversationCountAtStart = DefaultDialogData.getInstance().getConversations().size();
+
         mInstrumentation = getInstrumentation();
 
         mContact = new ContactFactory(mInstrumentation.getTargetContext()).contactFromNumber(CONTACT_NUMBER);
         mMessage = new DialogueTextMessage(mContact, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
-
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(mContact);
 
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ConversationActivity.class);
@@ -63,87 +64,27 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         mSendButton = (Button) mActivity.findViewById(R.id.send_message_button);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         DefaultDialogData.getInstance().removeConversation(mConversation.getId());
-        assertNull(DefaultDialogData.getInstance().getConversation(mConversation.getId()));
+        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
-    public void testActivityTitle() {
-        assertEquals(mActivity.getTitle().toString(), mConversation.getName());
-    }
-
-    public void testSendButtonText() {
-        assertEquals(mSendButton.getText().toString(), mActivity.getString(R.string.send_message_button));
-    }
-
-    public void testSendButtonNotEnableAtStart() {
-        assertFalse(mSendButton.isEnabled());
-    }
-
-    public void testSendButton() {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMessageContent.setText(MSG_BODY);
-            }
-        });
-
-        mInstrumentation.waitForIdleSync();
-        assertTrue(mSendButton.isEnabled());
-    }
-
-    public void testSendButtonEmptyText() {
-        final String msgBody = "";
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMessageContent.setText(msgBody);
-
-            }
-        });
-        mInstrumentation.waitForIdleSync();
-        assertFalse(mSendButton.isEnabled());
-    }
-
-    public void testChangeInConversation() {
-        int count = mConversation.getMessageCount();
-        assertEquals(count, mMessageList.getAdapter().getCount());
-
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mConversation.addMessage(mMessage);
-            }
-        });
-
-        mInstrumentation.waitForIdleSync();
-        //FIXME: repair this test,result seems to depend on execution
-        assertEquals(count + 1, mMessageList.getAdapter().getCount());
-    }
-
-    public void testChangeInConversationNull() {
-        assertEquals(mMessageList.getAdapter().getCount(), mConversation.getMessageCount());
-        try {
-            mActivity.onConversationChanged(null);
-            fail();
-        } catch (NullArgumentException e) {
-        }
-    }
-
-    public void testChangeInConversationIllegalId() {
-        assertEquals(mMessageList.getAdapter().getCount(), mConversation.getMessageCount());
-        try {
-            mActivity.onConversationChanged(IdManager.getInstance().newConversationId());
-            fail();
-        } catch (IllegalStateException e) {
-        }
+    public void testSetup() {
+        assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
+        assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
+        assertNotNull(mMessageList);
+        assertNotNull(mMessageContent);
+        assertNotNull(mSendButton);
     }
 
     public void testSendSms() {
         int count = mConversation.getMessageCount();
 
         assertEquals(mMessageList.getAdapter().getCount(), count);
+
+        assertFalse(mSendButton.isEnabled());
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -153,9 +94,10 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
             }
         });
 
+        assertFalse(mSendButton.isEnabled());
+
         mInstrumentation.waitForIdleSync();
 
-        //FIXME: repair this test, result seems to depend on execution
         assertEquals(mMessageList.getAdapter().getCount(), count + 1);
 
         DialogueMessage msg = (DialogueMessage) mMessageList.getAdapter().getItem(0);

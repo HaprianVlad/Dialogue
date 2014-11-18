@@ -16,11 +16,11 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter;
 
 /**
  * @author swengTeam 2013 BohDomp
- * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.messages.MessagesAdapter}
+ * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter}
  */
 public class MessageAdapterTest extends MockTestCase {
     private static final String CONTACT_NUMBER = "9876";

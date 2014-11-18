@@ -1,7 +1,9 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.newConversation;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,7 +22,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
-import ch.epfl.sweng.bohdomp.dialogue.ui.messages.ConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -40,13 +42,23 @@ public class NewConversationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         setDialogueData(DefaultDialogData.getInstance());
         mContactFactory = new ContactFactory(getApplicationContext());
 
+        setupActionBar();
         setViewElement();
         setupListener();
+    }
+
+    /*
+     * Setup the action bar
+     */
+    private void setupActionBar() {
+        ActionBar ab = getActionBar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /*

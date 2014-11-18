@@ -19,12 +19,12 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
-import ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ConversationListAdapter;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListAdapter;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * @author swengTeam 2013 BohDomp
- * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.contactList.ConversationListAdapter}
+ * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListAdapter}
  */
 public class ConversationListAdapterTest extends MockTestCase {
     private static final String CONTACT_NUMBER = "9876";
@@ -169,14 +169,6 @@ public class ConversationListAdapterTest extends MockTestCase {
         TextView contactChannels = (TextView)  viewInit.findViewById(R.id.contactChannels);
         TextView lastMessage = (TextView)  viewInit.findViewById(R.id.contactLastMessage);
         TextView unRead = (TextView)  viewInit.findViewById(R.id.unReadDot);
-
-        assertNotNull("Picutre", contactPicture);
-        assertNotNull("Name", contactName);
-        assertNotNull("Channels", contactChannels);
-        assertNotNull("Last", lastMessage);
-        assertNotNull("Unread", unRead);
-
-        View view = mAdapter.getView(0, viewInit, parent);
 
         assertNotNull("Picutre", contactPicture);
         assertNotNull("Name", contactName);
