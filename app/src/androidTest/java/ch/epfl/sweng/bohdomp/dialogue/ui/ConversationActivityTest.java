@@ -71,7 +71,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         super.tearDown();
     }
 
-    public void testSetup(){
+    public void testSetup() {
         assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
         assertSame("Not setup correctly", 0, mConversation.getMessageCount());
         assertNotNull(mMessageList);
