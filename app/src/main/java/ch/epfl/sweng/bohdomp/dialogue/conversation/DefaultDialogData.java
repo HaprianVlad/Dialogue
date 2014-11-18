@@ -56,7 +56,11 @@ public final class DefaultDialogData implements DialogueData {
             return null;
         }
 
-        List<Conversation> dialogueConversations = new ArrayList<Conversation>(mConversations.values());
+        List<Conversation> dialogueConversations = new ArrayList<Conversation>();
+
+        for (Conversation c : mConversations.values()) {
+            dialogueConversations.add(new DialogueConversation(c));
+        }
 
         Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
         return dialogueConversations;
@@ -70,7 +74,7 @@ public final class DefaultDialogData implements DialogueData {
             throw new NullArgumentException("conversationId");
         }
 
-        return mConversations.get(conversationId);
+        return new DialogueConversation(mConversations.get(conversationId));
     }
 
     /*
@@ -102,7 +106,7 @@ public final class DefaultDialogData implements DialogueData {
         mConversations.put(conversation.getId(), conversation);
         notifyListeners();
 
-        return conversation;
+        return new DialogueConversation(conversation);
     }
 
     /*
@@ -122,7 +126,7 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
-        c.addMessage(message);
+        mConversations.get(c.getId()).addMessage(message);
         notifyListeners();
     }
 

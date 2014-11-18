@@ -80,6 +80,21 @@ public final class DialogueConversation implements Conversation {
         this.mHasUnread = false;
     }
 
+    public DialogueConversation(Conversation conversation) {
+        if (conversation == null) {
+            throw new NullArgumentException("conversation == null!");
+        }
+
+        this.mId = conversation.getId();
+        this.mContacts = new ArrayList<Contact>(conversation.getContacts());
+        this.mMessages = new ArrayList<DialogueMessage>(conversation.getMessages());
+        this.mListeners = new ArrayList<ConversationListener>(conversation.getListeners());
+        this.mMessageCount = 0;
+        this.mTimeProvider = conversation.getSystemTimeProvider();
+        this.mLastActivityTime =conversation.getLastActivityTime();
+        this.mHasUnread = conversation.getHasUnread();
+    }
+
 
     @Override
     public ConversationId getId() {
@@ -226,6 +241,21 @@ public final class DialogueConversation implements Conversation {
         if (mListeners.contains(listener)) {
             mListeners.remove(listener);
         }
+    }
+
+    @Override
+    public List<ConversationListener> getListeners() {
+        return new ArrayList<ConversationListener>(mListeners);
+    }
+
+    @Override
+    public SystemTimeProvider getSystemTimeProvider() {
+        return mTimeProvider;
+    }
+
+    @Override
+    public boolean getHasUnread() {
+        return mHasUnread;
     }
 
     @Override

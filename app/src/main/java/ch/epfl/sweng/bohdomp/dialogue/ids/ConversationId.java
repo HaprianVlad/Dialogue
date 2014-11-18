@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
- * Class defining a conversation id.
+ * Class defining a conversation id. This class is immutable
  */
 public final class ConversationId extends Id {
     private ConversationId(long id) {

@@ -31,8 +31,12 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     public static void sendMessage(Context context, DialogueMessage message) {
         if (context == null) {
             throw new NullArgumentException("context");
-        } else if (message == null) {
+        }
+        if (message == null) {
             throw new NullArgumentException("message");
+        }
+        if (message.getStatus() == DialogueMessage.MessageStatus.INCOMING) {
+            throw new IllegalArgumentException();
         }
 
         Log.i("DialogueOutgoingDispatcher", "1");

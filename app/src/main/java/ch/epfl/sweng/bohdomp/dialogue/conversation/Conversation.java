@@ -9,6 +9,7 @@ import java.util.List;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Interface representing a conversation.
@@ -96,6 +97,24 @@ public interface Conversation extends Parcelable {
      * @param listener the listener to be removed
      */
     void removeListener(ConversationListener listener);
+
+    /**
+     * Getter for the list of listeners
+     * @return the list of listeners of the conversation
+     */
+    List<ConversationListener> getListeners();
+
+    /**
+     * Getter for the system time provider of the conversation
+     * @return the system time provider of the conversation
+     */
+    SystemTimeProvider getSystemTimeProvider();
+
+    /**
+     * Getter for the hasUnread paramater of the conversation
+     * @return he hasUnread paramater of the conversation
+     */
+    boolean getHasUnread();
 
     /**
      * Sets all messages as read

@@ -50,12 +50,14 @@ public final class SmsReceiver extends BroadcastReceiver {
 
         try {
             dialogueMessage = convertFromSmsMessage(smsMessage);
+            DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
+
         } catch (InvalidNumberException e) {
             Toast.makeText(context, "Incoming message from strange address: "
                     + smsMessage.getDisplayOriginatingAddress(), Toast.LENGTH_LONG).show();
         }
 
-        DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
+
     }
 
     private DialogueTextMessage convertFromSmsMessage(SmsMessage smsMessage) throws InvalidNumberException {

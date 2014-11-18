@@ -15,6 +15,8 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 public final class DialogueIncomingDispatcher extends IntentService{
     public static final String ACTION_RECEIVE_MESSAGE = "ACTION_RECEIVE_MESSAGE";
 
+    private static boolean isRunning;
+
     public DialogueIncomingDispatcher() {
         super("DialogueIncomingDispatcher");
     }
@@ -33,17 +35,37 @@ public final class DialogueIncomingDispatcher extends IntentService{
             throw new NullArgumentException("message");
         }
 
+        if (message.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+            throw new IllegalArgumentException();
+        }
+
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueIncomingDispatcher.class);
         intent.setAction(ACTION_RECEIVE_MESSAGE);
         intent.putExtra(DialogueMessage.MESSAGE, message);
+
         context.startService(intent);
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        DialogueMessage message = DialogueMessage.extractMessage(intent);
-
-        DefaultDialogData.getInstance().addMessageToConversation(message);
+    public static boolean isRunning() {
+        return isRunning;
     }
+
+    @Override
+    public void onHandleIntent(Intent intent) {
+        if (intent.getAction() == ACTION_RECEIVE_MESSAGE) {
+            DialogueMessage message = DialogueMessage.extractMessage(intent);
+            DefaultDialogData.getInstance().addMessageToConversation(message);
+            isRunning=true;
+        }
+        //ignore when receiving other commands
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isRunning=false;
+
+    }
+
 }
