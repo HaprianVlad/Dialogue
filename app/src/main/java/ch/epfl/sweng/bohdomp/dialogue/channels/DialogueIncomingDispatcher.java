@@ -35,6 +35,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
             throw new NullArgumentException("message");
         }
 
+        //An outgoing message should not arrive here
         if (message.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
             throw new IllegalArgumentException();
         }

@@ -86,7 +86,7 @@ public final class DefaultDialogData implements DialogueData {
         // Try finding it first.
         for (Conversation conversation : conversations) {
             if (conversation.getContacts().contains(contact)) {
-                return conversation;
+                return new DialogueConversation(conversation);
             }
         }
 
@@ -137,6 +137,35 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         mListeners.add(listener);
+    }
+
+    @Override
+    public void addListenerForConversation(ConversationListener listener, ConversationId conversationId) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+        if (conversationId == null) {
+            throw new NullArgumentException("conversationId == null !");
+        }
+
+        if (mConversations.containsKey(conversationId)) {
+            mConversations.get(conversationId).addListener(listener);
+        }
+    }
+
+    @Override
+    public void removeListenerForConversation(ConversationListener listener, ConversationId conversationId) {
+        if (listener == null) {
+            throw new NullArgumentException("listener == null !");
+        }
+        if (conversationId == null) {
+            throw new NullArgumentException("conversationId == null !");
+        }
+
+        if (mConversations.containsKey(conversationId)) {
+            mConversations.get(conversationId).removeListener(listener);
+        }
+
     }
 
     @Override

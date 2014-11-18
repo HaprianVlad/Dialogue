@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
@@ -108,7 +109,7 @@ public class MessagesAdapter extends BaseAdapter {
             throw new IllegalArgumentException("items contains null");
         }
 
-        this.mMessagesList = items;
+        this.mMessagesList = new ArrayList<DialogueMessage>(items);
         notifyDataSetChanged();
     }
 

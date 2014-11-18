@@ -68,6 +68,24 @@ public interface Conversation extends Parcelable {
     boolean hasUnread();
 
     /**
+     * Getter for the list of listeners
+     * @return the list of listeners of the conversation
+     */
+    List<ConversationListener> getListeners();
+
+    /**
+     * Getter for the system time provider of the conversation
+     * @return the system time provider of the conversation
+     */
+    SystemTimeProvider getSystemTimeProvider();
+
+    /**
+     * Getter for the hasUnread paramater of the conversation
+     * @return he hasUnread paramater of the conversation
+     */
+    boolean getHasUnread();
+
+    /**
      * Adds a contact to the conversation
      * @param contact the contact we want to add
      */
@@ -98,23 +116,6 @@ public interface Conversation extends Parcelable {
      */
     void removeListener(ConversationListener listener);
 
-    /**
-     * Getter for the list of listeners
-     * @return the list of listeners of the conversation
-     */
-    List<ConversationListener> getListeners();
-
-    /**
-     * Getter for the system time provider of the conversation
-     * @return the system time provider of the conversation
-     */
-    SystemTimeProvider getSystemTimeProvider();
-
-    /**
-     * Getter for the hasUnread paramater of the conversation
-     * @return he hasUnread paramater of the conversation
-     */
-    boolean getHasUnread();
 
     /**
      * Sets all messages as read

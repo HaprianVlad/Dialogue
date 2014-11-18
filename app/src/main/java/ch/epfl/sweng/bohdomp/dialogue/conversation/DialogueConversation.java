@@ -38,9 +38,9 @@ public final class DialogueConversation implements Conversation {
     private final ConversationId mId;
     private final SystemTimeProvider mTimeProvider;
 
-    private List<Contact> mContacts;
+    private final List<Contact> mContacts;
 
-    private List<DialogueMessage> mMessages;
+    private final List<DialogueMessage> mMessages;
     private List<ConversationListener> mListeners;
 
     private Timestamp mLastActivityTime;
@@ -89,7 +89,7 @@ public final class DialogueConversation implements Conversation {
         this.mContacts = new ArrayList<Contact>(conversation.getContacts());
         this.mMessages = new ArrayList<DialogueMessage>(conversation.getMessages());
         this.mListeners = new ArrayList<ConversationListener>(conversation.getListeners());
-        this.mMessageCount = 0;
+        this.mMessageCount = conversation.getMessageCount();
         this.mTimeProvider = conversation.getSystemTimeProvider();
         this.mLastActivityTime =conversation.getLastActivityTime();
         this.mHasUnread = conversation.getHasUnread();

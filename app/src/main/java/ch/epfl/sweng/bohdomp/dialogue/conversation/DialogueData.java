@@ -54,6 +54,21 @@ public interface DialogueData {
      */
     void addListener(DialogueDataListener listener);
 
+    /**
+     * Adds an listener to a conversation in dialogue data
+     * @param listener the listener to add
+     * @param conversationId the conversation where to add the listener
+     */
+    void addListenerForConversation(ConversationListener listener, ConversationId conversationId);
+
+
+    /**
+     * Removes an listener from a conversation in dialogue data
+     * @param listener the listener to remove
+     * @param conversationId the conversation where to remove the listener
+     */
+    void removeListenerForConversation(ConversationListener listener, ConversationId conversationId);
+
 
     /**
      * Removes a listener from Dialogue Data

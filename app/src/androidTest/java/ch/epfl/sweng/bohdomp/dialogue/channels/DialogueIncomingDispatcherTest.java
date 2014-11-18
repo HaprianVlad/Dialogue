@@ -47,8 +47,8 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         intent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);
         intent.putExtra(DialogueMessage.MESSAGE, message);
 
-
     }
+
     public void testReceiveNullContext() {
         try {
             DialogueIncomingDispatcher.receiveMessage(null, message);
