@@ -56,7 +56,7 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         super.tearDown();
         mEditText.setText("");
         DefaultDialogData.getInstance().removeConversation(mId);
-        assertSame("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
     }
 
     public void testTitle() {

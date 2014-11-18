@@ -67,13 +67,13 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     @Override
     protected void tearDown() throws Exception {
         DefaultDialogData.getInstance().removeConversation(mConversation.getId());
-        assertSame("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
     public void testSetup() {
         assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
-        assertSame("Not setup correctly", 0, mConversation.getMessageCount());
+        assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
         assertNotNull(mMessageList);
         assertNotNull(mMessageContent);
         assertNotNull(mSendButton);

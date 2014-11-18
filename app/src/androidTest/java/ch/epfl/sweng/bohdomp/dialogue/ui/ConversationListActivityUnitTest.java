@@ -58,7 +58,7 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
 
     @Override
     protected void tearDown() throws Exception {
-        assertSame("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
@@ -95,7 +95,6 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
         list.performItemClick(list, 0, 0);
 
         Intent intent = getStartedActivityIntent();
-
         assertNotNull(intent);
 
         Bundle b = intent.getExtras();

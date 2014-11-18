@@ -37,7 +37,7 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
 
     @Override
     protected void tearDown() throws Exception {
-        assertSame("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
