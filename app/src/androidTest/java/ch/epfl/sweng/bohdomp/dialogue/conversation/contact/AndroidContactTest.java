@@ -19,8 +19,6 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
  * Tests the AndroidContact class.
  */
 public class AndroidContactTest extends AndroidTestCase {
-    private Contact mContact;
-
     public void testParcelRoundTrip() throws InvalidNumberException {
         Contact contact = getContact();
 
