@@ -9,18 +9,66 @@ import android.test.AndroidTestCase;
     http://stackoverflow.com/questions/5912240/android-junit-testing-how-to-expect-an-exception
  */
 public final class NullArgumentExceptionTest extends AndroidTestCase {
-
-    public void testNullConstr() {
+    public void testConstrNullString() {
         try {
-            new NullArgumentException(null);
-
+            new NullArgumentException((String) null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
 
+    public void testConstrNullThrowable() {
+        try {
+            new NullArgumentException((Throwable) null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrNullStringValidThrowable() {
+        try {
+            new NullArgumentException(null, new Throwable());
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrValidStringNullThrowable() {
+        try {
+            new NullArgumentException("message", null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrNullStringNullThrowable() {
+        try {
+            new NullArgumentException(null, null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
         }
     }
 
     public void testValidConstr() {
-        new NullArgumentException("name");
+        new NullArgumentException();
+    }
+
+    public void testValidConstrString() {
+        new NullArgumentException("message");
+    }
+
+
+    public void testValidConstrThrowable() {
+        new NullArgumentException(new Throwable());
+    }
+
+
+    public void testValidConstrStringThrowable() {
+        new NullArgumentException("message", new Throwable());
     }
 }

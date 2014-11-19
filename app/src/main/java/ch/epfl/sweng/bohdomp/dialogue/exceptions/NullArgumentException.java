@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.exceptions;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Class representing a null argument exception
  * Inspired by
@@ -10,11 +12,23 @@ package ch.epfl.sweng.bohdomp.dialogue.exceptions;
 public class NullArgumentException extends IllegalArgumentException {
     private static final long serialVersionUID = 1L;
 
-    public NullArgumentException(String message) {
-        super("Argument can not be null: " + message);
+    public NullArgumentException() {
+        super();
+    }
 
-        if (message == null) {
-            throw new NullArgumentException("message");
-        }
+    public NullArgumentException(String message) {
+        super(Contract.throwIfNull(message, "message"));
+    }
+
+    public NullArgumentException(Throwable throwable) {
+        super(Contract.throwIfNull(throwable, "throwable"));
+    }
+
+    public NullArgumentException(String message, Throwable throwable) {
+        super(Contract.throwIfNull(message, "message"), Contract.throwIfNull(throwable, "throwable"));
+    }
+
+    private static String makeMessage(String message) {
+        return "Argument can not be null: " + Contract.throwIfNull(message, "message");
     }
 }
