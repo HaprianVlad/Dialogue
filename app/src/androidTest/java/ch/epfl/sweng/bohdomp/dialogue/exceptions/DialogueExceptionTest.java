@@ -8,21 +8,45 @@ import android.test.AndroidTestCase;
  */
 public final class DialogueExceptionTest extends AndroidTestCase {
 
-    public void testNullConstrString() {
+    public void testConstrNullString() {
         try {
-            String s = null;
-            new DialogueException(s);
+            new DialogueException((String) null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
         }
     }
 
-    public void testNullConstrThrowable() {
+    public void testConstrNullThrowable() {
         try {
-            Throwable s = null;
-            new DialogueException(s);
+            new DialogueException((Throwable) null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
 
+    public void testConstrNullStringValidThrowable() {
+        try {
+            new DialogueException(null, new Throwable());
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrValidStringNullThrowable() {
+        try {
+            new DialogueException("message", null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrNullStringNullThrowable() {
+        try {
+            new DialogueException(null, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -30,9 +54,21 @@ public final class DialogueExceptionTest extends AndroidTestCase {
     }
 
     public void testValidConstr() {
-        DialogueException exception1 = new DialogueException();
-        DialogueException exception2 = new DialogueException("message");
-        DialogueException exception3 = new DialogueException(new Throwable());
+        new DialogueException();
+    }
+
+    public void testValidConstrString() {
+        new DialogueException("message");
+    }
+
+
+    public void testValidConstrThrowable() {
+        new DialogueException(new Throwable());
+    }
+
+
+    public void testValidConstrStringThrowable() {
+        new DialogueException("message", new Throwable());
     }
 }
 

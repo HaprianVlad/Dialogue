@@ -7,21 +7,45 @@ import android.test.AndroidTestCase;
  */
 public final class InvalidNumberExceptionTest extends AndroidTestCase {
 
-    public void testNullConstrString() {
+    public void testConstrNullString() {
         try {
-            String s = null;
-            new InvalidNumberException(s);
+            new InvalidNumberException((String) null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
         }
     }
 
-    public void testNullConstrThrowable() {
+    public void testConstrNullThrowable() {
         try {
-            Throwable t = null;
-            new InvalidNumberException(t);
+            new InvalidNumberException((Throwable) null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
 
+    public void testConstrNullStringValidThrowable() {
+        try {
+            new InvalidNumberException(null, new Throwable());
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrValidStringNullThrowable() {
+        try {
+            new InvalidNumberException("message", null);
+            fail("Exception should have been thrown");
+        } catch (NullArgumentException e) {
+            //Everything is ok
+        }
+    }
+
+    public void testConstrNullStringNullThrowable() {
+        try {
+            new InvalidNumberException(null, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -29,9 +53,21 @@ public final class InvalidNumberExceptionTest extends AndroidTestCase {
     }
 
     public void testValidConstr() {
-        DialogueException exception1 = new InvalidNumberException();
-        DialogueException exception2 = new InvalidNumberException("message");
-        DialogueException exception3 = new InvalidNumberException(new Throwable());
+        new InvalidNumberException();
+    }
+
+    public void testValidConstrString() {
+        new InvalidNumberException("message");
+    }
+
+
+    public void testValidConstrThrowable() {
+        new InvalidNumberException(new Throwable());
+    }
+
+
+    public void testValidConstrStringThrowable() {
+        new InvalidNumberException("message", new Throwable());
     }
 }
 
