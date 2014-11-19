@@ -13,14 +13,14 @@ public class InvalidNumberException extends DialogueException {
     }
 
     public InvalidNumberException(String message) {
-        super(Contract.throwIfNull(message, "message"));
+        super(Contract.throwIfArgNull(message, "message"));
     }
 
     public InvalidNumberException(Throwable throwable) {
-        super(Contract.throwIfNull(throwable, "throwable"));
+        super(Contract.throwIfArgNull(throwable, "throwable"));
     }
 
     public InvalidNumberException(String message, Throwable throwable) {
-        super(Contract.throwIfNull(message, "message"), Contract.throwIfNull(throwable, "throwable"));
+        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
 }

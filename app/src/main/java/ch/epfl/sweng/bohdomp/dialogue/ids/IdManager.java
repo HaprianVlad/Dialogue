@@ -28,6 +28,7 @@ public final class IdManager {
         if (BuildConfig.DEBUG && mPreviousConversationId < 0) {
             throw new AssertionError("negative mPreviousConversationId");
         }
+
         mPreviousConversationId += 1;
         return  ConversationId.fromLong(mPreviousConversationId);
     }

@@ -1,24 +1,27 @@
 package ch.epfl.sweng.bohdomp.dialogue.utils;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
  * Contains helpers methods for various checks
  */
 public class Contract {
-    public static <S> S throwIfNull(S obj, String name) {
-        if (obj == null) {
-            throw new NullArgumentException(name);
-        }
+    public static void throwIfArg(Boolean cond, String msg) {
+        throwIfArgNull(msg, "msg");
 
-        return obj;
+        if (cond) {
+            throw new IllegalArgumentException(msg);
+        }
     }
 
+    public static <S> S throwIfArgNull(S obj, String name) {
+        // Using throwIfArgNull would result in stackoverflow
+        if (name == null) {
+            throw new NullArgumentException("name");
+        }
 
-    public static <S> S assertNotNull(S obj, String name) {
-        if (BuildConfig.DEBUG && obj == null) {
-            throw new AssertionError(name + " can not be null");
+        if (obj == null) {
+            throw new NullArgumentException(name);
         }
 
         return obj;
