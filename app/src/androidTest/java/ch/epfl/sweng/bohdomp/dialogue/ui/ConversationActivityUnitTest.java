@@ -130,7 +130,7 @@ public class ConversationActivityUnitTest extends ActivityUnitTestCase<Conversat
         assertEquals(mMessageList.getAdapter().getCount(), mConversation.getMessageCount());
         try {
             mActivity.onConversationChanged(null);
-            fail();
+            fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
         }
     }
@@ -139,7 +139,7 @@ public class ConversationActivityUnitTest extends ActivityUnitTestCase<Conversat
         assertEquals(mMessageList.getAdapter().getCount(), mConversation.getMessageCount());
         try {
             mActivity.onConversationChanged(IdManager.getInstance().newConversationId());
-            fail();
+            fail("Exception should have been thrown");
         } catch (IllegalStateException e) {
         }
     }

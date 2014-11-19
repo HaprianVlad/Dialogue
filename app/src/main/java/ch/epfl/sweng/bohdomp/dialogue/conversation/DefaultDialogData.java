@@ -127,7 +127,8 @@ public final class DefaultDialogData implements DialogueData {
 
         Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
         mConversations.get(c.getId()).addMessage(message);
-        notifyListeners();
+
+       //Listeners will be notified by the change in conversation
     }
 
     @Override

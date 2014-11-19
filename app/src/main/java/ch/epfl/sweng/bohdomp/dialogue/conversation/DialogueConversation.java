@@ -267,7 +267,7 @@ public final class DialogueConversation implements Conversation {
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {
         for (ConversationListener listener : mListeners) {
-            listener.onConversationChanged(this.getId());
+            listener.onConversationChanged(mId);
         }
     }
 

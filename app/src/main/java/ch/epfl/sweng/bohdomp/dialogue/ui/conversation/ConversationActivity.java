@@ -80,10 +80,11 @@ public class ConversationActivity extends Activity implements ConversationListen
      */
     public void initData() {
         Conversation conversation = DefaultDialogData.getInstance().getConversation(mConversationId);
-        DefaultDialogData.getInstance().addListenerForConversation(this, mConversationId);
 
         if (conversation != null) {
+            DefaultDialogData.getInstance().addListenerForConversation(this, mConversationId);
             mMessages = conversation.getMessages();
+
             mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
         } else {
             throw new NullPointerException("Conversation is Null");
@@ -96,9 +97,9 @@ public class ConversationActivity extends Activity implements ConversationListen
             throw new NullArgumentException("id");
         }
 
-        /*if (mConversationId != id) {
+        if (mConversationId.getLong() != id.getLong()) {
             throw new IllegalStateException("Wrong listener");
-        }*/
+        }
 
         this.runOnUiThread(new Runnable() {
             @Override

@@ -8,14 +8,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 
 /**
@@ -34,8 +32,6 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     private Button mSendButton;
 
     private Contact mContact;
-    private DialogueMessage mMessage;
-    //private Conversation mConversation;
     private ConversationId mConversationId;
 
     private int mConversationCountAtStart;
@@ -52,12 +48,13 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         mInstrumentation = getInstrumentation();
 
         mContact = new ContactFactory(mInstrumentation.getTargetContext()).contactFromNumber(CONTACT_NUMBER);
-        mMessage = new DialogueTextMessage(mContact, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
-        Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(mContact);
-        mConversationId = conversation.getId();
+        //DialogueMessage mMessage = new DialogueTextMessage
+        // (mContact, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
+
+        mConversationId =  DefaultDialogData.getInstance().createOrGetConversation(mContact).getId();
 
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ConversationActivity.class);
-        intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
+        intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversationId);
 
         setActivityIntent(intent);
         mActivity = getActivity();
