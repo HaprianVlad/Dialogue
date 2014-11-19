@@ -1,0 +1,11 @@
+#!/bin/bash -e
+# Transforms all SVG images in top-level resource directory
+# into PNG images of appropriate sizes
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+SVGS=`pwd`/app/src/main/res/*.svg
+for svg in $SVGS; do
+  echo "Processing $svg svg..."
+  ${SCRIPTDIR}/svg2png -w48 `basename "$svg"`
+done
