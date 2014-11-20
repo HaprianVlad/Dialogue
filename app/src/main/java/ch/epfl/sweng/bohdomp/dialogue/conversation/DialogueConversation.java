@@ -38,9 +38,9 @@ public final class DialogueConversation implements Conversation {
     private final ConversationId mId;
     private final SystemTimeProvider mTimeProvider;
 
-    private List<Contact> mContacts;
+    private final List<Contact> mContacts;
 
-    private List<DialogueMessage> mMessages;
+    private final List<DialogueMessage> mMessages;
     private List<ConversationListener> mListeners;
 
     private Timestamp mLastActivityTime;
@@ -78,6 +78,21 @@ public final class DialogueConversation implements Conversation {
         this.mTimeProvider = systemTimeProvider;
         this.mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
         this.mHasUnread = false;
+    }
+
+    public DialogueConversation(Conversation conversation) {
+        if (conversation == null) {
+            throw new NullArgumentException("conversation == null!");
+        }
+
+        this.mId = conversation.getId();
+        this.mContacts = new ArrayList<Contact>(conversation.getContacts());
+        this.mMessages = new ArrayList<DialogueMessage>(conversation.getMessages());
+        this.mListeners = new ArrayList<ConversationListener>(conversation.getListeners());
+        this.mMessageCount = conversation.getMessageCount();
+        this.mTimeProvider = conversation.getSystemTimeProvider();
+        this.mLastActivityTime =conversation.getLastActivityTime();
+        this.mHasUnread = conversation.getHasUnread();
     }
 
 
@@ -229,6 +244,21 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
+    public List<ConversationListener> getListeners() {
+        return new ArrayList<ConversationListener>(mListeners);
+    }
+
+    @Override
+    public SystemTimeProvider getSystemTimeProvider() {
+        return mTimeProvider;
+    }
+
+    @Override
+    public boolean getHasUnread() {
+        return mHasUnread;
+    }
+
+    @Override
     public void setAllMessagesAsRead() {
         mHasUnread = false;
         notifyListeners();
@@ -237,7 +267,7 @@ public final class DialogueConversation implements Conversation {
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {
         for (ConversationListener listener : mListeners) {
-            listener.onConversationChanged(this.getId());
+            listener.onConversationChanged(mId);
         }
     }
 

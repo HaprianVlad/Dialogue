@@ -123,7 +123,7 @@ public final class DefaultDialogData implements DialogueData {
 
         Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
         c.addMessage(message);
-        notifyListeners();
+        //Listeners are notified by the listener of the conversation
     }
 
     @Override

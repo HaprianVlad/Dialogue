@@ -4,7 +4,7 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 
 /**
- * Interface representing a listener for conversation
+ * Interface representing a listener for conversation.
  */
 public interface ConversationListener  {
 

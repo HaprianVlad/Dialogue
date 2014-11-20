@@ -18,7 +18,6 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
@@ -32,7 +31,7 @@ public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
     private static final String APP_DATA = "APP_DATA";
 
-    private DialogueData mData;
+
     private ContactFactory mContactFactory;
 
     private EditText mToEditText;
@@ -43,7 +42,6 @@ public class NewConversationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
 
-        setDialogueData(DefaultDialogData.getInstance());
         mContactFactory = new ContactFactory(getApplicationContext());
 
         setupActionBar();
@@ -61,16 +59,7 @@ public class NewConversationActivity extends Activity {
         }
     }
 
-    /*
-     * Set DialogueData
-     */
-    private void setDialogueData(DialogueData data) {
-        if (data == null) {
-            throw new IllegalStateException("DialogueData is null");
-        }
 
-        mData = data;
-    }
 
     /*
      * Set all view elements
@@ -116,7 +105,7 @@ public class NewConversationActivity extends Activity {
 
                 try {
                     contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
-                    Conversation conversation = mData.createOrGetConversation(contact);
+                    Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
                     intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
                     startActivity(intent);
                 } catch (InvalidNumberException e) {
