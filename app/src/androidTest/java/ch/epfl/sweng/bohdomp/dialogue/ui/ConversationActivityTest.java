@@ -8,12 +8,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
-import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 
 /**
@@ -32,7 +33,8 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     private Button mSendButton;
 
     private Contact mContact;
-    private ConversationId mConversationId;
+    private DialogueMessage mMessage;
+    private Conversation mConversation;
 
     private int mConversationCountAtStart;
 
@@ -48,13 +50,11 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         mInstrumentation = getInstrumentation();
 
         mContact = new ContactFactory(mInstrumentation.getTargetContext()).contactFromNumber(CONTACT_NUMBER);
-        //DialogueMessage mMessage = new DialogueTextMessage
-        // (mContact, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
-
-        mConversationId =  DefaultDialogData.getInstance().createOrGetConversation(mContact).getId();
+        mMessage = new DialogueTextMessage(mContact, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
+        mConversation = DefaultDialogData.getInstance().createOrGetConversation(mContact);
 
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ConversationActivity.class);
-        intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversationId);
+        intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
 
         setActivityIntent(intent);
         mActivity = getActivity();
@@ -66,24 +66,21 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
 
     @Override
     protected void tearDown() throws Exception {
-        DefaultDialogData.getInstance().removeConversation(mConversationId);
+        DefaultDialogData.getInstance().removeConversation(mConversation.getId());
         assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
     public void testSetup() {
-        assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversationId));
-        assertEquals("Not setup correctly", 0, DefaultDialogData.getInstance().
-                getConversation(mConversationId).getMessageCount());
+        assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
+        assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
         assertNotNull(mMessageList);
         assertNotNull(mMessageContent);
         assertNotNull(mSendButton);
     }
 
     public void testSendSms() {
-
-        int count = DefaultDialogData.getInstance().
-                getConversation(mConversationId).getMessageCount();
+        int count = mConversation.getMessageCount();
 
         assertEquals(mMessageList.getAdapter().getCount(), count);
 
@@ -101,10 +98,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
 
         mInstrumentation.waitForIdleSync();
 
-        count = DefaultDialogData.getInstance().
-                getConversation(mConversationId).getMessageCount();
-
-        assertEquals(mMessageList.getAdapter().getCount(), count);
+        assertEquals(mMessageList.getAdapter().getCount(), count + 1);
 
         DialogueMessage msg = (DialogueMessage) mMessageList.getAdapter().getItem(0);
 

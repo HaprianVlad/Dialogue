@@ -56,11 +56,7 @@ public final class DefaultDialogData implements DialogueData {
             return null;
         }
 
-        List<Conversation> dialogueConversations = new ArrayList<Conversation>();
-
-        for (Conversation c : mConversations.values()) {
-            dialogueConversations.add(new DialogueConversation(c));
-        }
+        List<Conversation> dialogueConversations = new ArrayList<Conversation>(mConversations.values());
 
         Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
         return dialogueConversations;
@@ -74,7 +70,7 @@ public final class DefaultDialogData implements DialogueData {
             throw new NullArgumentException("conversationId");
         }
 
-        return new DialogueConversation(mConversations.get(conversationId));
+        return mConversations.get(conversationId);
     }
 
     /*
@@ -86,7 +82,7 @@ public final class DefaultDialogData implements DialogueData {
         // Try finding it first.
         for (Conversation conversation : conversations) {
             if (conversation.getContacts().contains(contact)) {
-                return new DialogueConversation(conversation);
+                return conversation;
             }
         }
 
@@ -106,7 +102,7 @@ public final class DefaultDialogData implements DialogueData {
         mConversations.put(conversation.getId(), conversation);
         notifyListeners();
 
-        return new DialogueConversation(conversation);
+        return conversation;
     }
 
     /*
@@ -126,9 +122,8 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
-        mConversations.get(c.getId()).addMessage(message);
-
-       //Listeners will be notified by the change in conversation
+        c.addMessage(message);
+        //Listeners are notified by the listener of the conversation
     }
 
     @Override
@@ -138,35 +133,6 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         mListeners.add(listener);
-    }
-
-    @Override
-    public void addListenerForConversation(ConversationListener listener, ConversationId conversationId) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
-        if (conversationId == null) {
-            throw new NullArgumentException("conversationId == null !");
-        }
-
-        if (mConversations.containsKey(conversationId)) {
-            mConversations.get(conversationId).addListener(listener);
-        }
-    }
-
-    @Override
-    public void removeListenerForConversation(ConversationListener listener, ConversationId conversationId) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
-        if (conversationId == null) {
-            throw new NullArgumentException("conversationId == null !");
-        }
-
-        if (mConversations.containsKey(conversationId)) {
-            mConversations.get(conversationId).removeListener(listener);
-        }
-
     }
 
     @Override

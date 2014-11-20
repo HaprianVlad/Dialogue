@@ -41,8 +41,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     private MessagesAdapter mMessageItemListAdapter;
 
-   // private Conversation mConversation;
-    private ConversationId mConversationId;
+    private Conversation mConversation;
     private List<DialogueMessage> mMessages;
 
     @Override
@@ -55,10 +54,10 @@ public class ConversationActivity extends Activity implements ConversationListen
         Intent intent = getIntent();
 
         try {
+            ConversationId conversationID;
+            conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
 
-            mConversationId = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
-
-            initData();
+            initData(conversationID);
             setViewElement();
             setupListener();
 
@@ -78,13 +77,12 @@ public class ConversationActivity extends Activity implements ConversationListen
     /*
      * Initialize the data used by the activity
      */
-    public void initData() {
-        Conversation conversation = DefaultDialogData.getInstance().getConversation(mConversationId);
+    public void initData(ConversationId conversationId) {
+        mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
+        mConversation.addListener(this);
 
-        if (conversation != null) {
-            DefaultDialogData.getInstance().addListenerForConversation(this, mConversationId);
-            mMessages = conversation.getMessages();
-
+        if (mConversation != null) {
+            mMessages = mConversation.getMessages();
             mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
         } else {
             throw new NullPointerException("Conversation is Null");
@@ -97,15 +95,14 @@ public class ConversationActivity extends Activity implements ConversationListen
             throw new NullArgumentException("id");
         }
 
-        if (mConversationId.getLong() != id.getLong()) {
+        if (mConversation.getId() != id) {
             throw new IllegalStateException("Wrong listener");
         }
 
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Conversation conversation = DefaultDialogData.getInstance().getConversation(mConversationId);
-                mMessageItemListAdapter.updateData(conversation.getMessages());
+                mMessageItemListAdapter.updateData(mConversation.getMessages());
             }
         });
     }
@@ -114,8 +111,8 @@ public class ConversationActivity extends Activity implements ConversationListen
      * Set all view elements
      */
     private void setViewElement() {
-        Conversation conversation = DefaultDialogData.getInstance().getConversation(mConversationId);
-        setTitle(conversation.getName());
+
+        setTitle(mConversation.getName());
 
         mMessageList = (ListView) findViewById(R.id.message_List);
         mMessageList.setAdapter(mMessageItemListAdapter);
@@ -155,8 +152,8 @@ public class ConversationActivity extends Activity implements ConversationListen
             @Override
             public void onClick(View v) {
                 String draftText = mNewMessageText.getText().toString();
-                Conversation conversation = DefaultDialogData.getInstance().getConversation(mConversationId);
-                for (Contact contact : conversation.getContacts()) {
+
+                for (Contact contact : mConversation.getContacts()) {
                     DialogueMessage message = new DialogueTextMessage(contact, draftText,
                             DialogueMessage.MessageStatus.OUTGOING);
 
@@ -172,7 +169,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     protected void onStop() {
-        DefaultDialogData.getInstance().removeListenerForConversation(this, mConversationId);
+        mConversation.removeListener(this);
         super.onStop();
     }
 
