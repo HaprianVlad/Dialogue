@@ -83,7 +83,7 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testConstructorNullContact() {
-        List contactsWithNull = new ArrayList<Contact>();
+        List<Contact> contactsWithNull = new ArrayList<Contact>();
         contactsWithNull.add(null);
 
         try {
