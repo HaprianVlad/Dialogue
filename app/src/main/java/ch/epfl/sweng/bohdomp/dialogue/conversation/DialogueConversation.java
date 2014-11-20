@@ -55,7 +55,19 @@ public final class DialogueConversation implements Conversation {
      */
     public DialogueConversation(List<Contact> contacts, SystemTimeProvider systemTimeProvider) {
         if (contacts == null) {
-            throw new NullArgumentException("contacts == null!");
+            throw new NullArgumentException("contacts");
+        }
+
+        if (contacts.size() == 0) {
+            throw new IllegalArgumentException("Must have at least one contact");
+        }
+
+        if (contacts.contains(null)) {
+            throw new IllegalArgumentException("There is a null contact");
+        }
+
+        if (systemTimeProvider == null) {
+            throw new NullArgumentException("systemTimeProvider");
         }
 
         this.mId = IdManager.getInstance().newConversationId();
