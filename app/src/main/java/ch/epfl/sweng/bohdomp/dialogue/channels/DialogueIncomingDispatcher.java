@@ -17,6 +17,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
 
     private static boolean isRunning;
 
+
     private Notificator mNotificator;
 
     public DialogueIncomingDispatcher() {

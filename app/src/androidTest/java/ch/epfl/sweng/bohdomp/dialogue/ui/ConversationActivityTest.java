@@ -68,7 +68,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     protected void tearDown() throws Exception {
         DefaultDialogData.getInstance().removeConversation(mConversation.getId());
         //FIXME: take a look at this test
-        //assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        //assertEquals("Not reset",mConversationCountAtStart,DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
