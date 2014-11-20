@@ -17,18 +17,18 @@ public class NullArgumentException extends IllegalArgumentException {
     }
 
     public NullArgumentException(String message) {
-        super(Contract.throwIfNull(message, "message"));
+        super(Contract.throwIfArgNull(message, "message"));
     }
 
     public NullArgumentException(Throwable throwable) {
-        super(Contract.throwIfNull(throwable, "throwable"));
+        super(Contract.throwIfArgNull(throwable, "throwable"));
     }
 
     public NullArgumentException(String message, Throwable throwable) {
-        super(Contract.throwIfNull(message, "message"), Contract.throwIfNull(throwable, "throwable"));
+        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
 
     private static String makeMessage(String message) {
-        return "Argument can not be null: " + Contract.throwIfNull(message, "message");
+        return "Argument can not be null: " + Contract.throwIfArgNull(message, "message");
     }
 }

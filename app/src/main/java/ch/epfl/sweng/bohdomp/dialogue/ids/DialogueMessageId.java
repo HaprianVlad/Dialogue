@@ -3,6 +3,8 @@ package ch.epfl.sweng.bohdomp.dialogue.ids;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Class defining a dialogue message id.
  */
@@ -12,9 +14,7 @@ public final class DialogueMessageId extends Id {
     }
 
     public static DialogueMessageId fromLong(long id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("Given long to construct ConversationId is smaller than 0!");
-        }
+        Contract.throwIfArg(id < 0, "Given long to construct ConversationId is smaller than 0!");
 
         return new DialogueMessageId(id);
     }
