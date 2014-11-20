@@ -73,6 +73,36 @@ public class DialogueConversationTest extends MockTestCase {
         }
     }
 
+    public void testConstructorNoContacts() {
+        try {
+            mConversation = new DialogueConversation(new ArrayList<Contact>(), mTimeProvider);
+            fail("Should detect an empty contact list");
+        } catch (IllegalArgumentException e) {
+            // OK
+        }
+    }
+
+    public void testConstructorNullContact() {
+        List contactsWithNull = new ArrayList<Contact>();
+        contactsWithNull.add(null);
+
+        try {
+            mConversation = new DialogueConversation(contactsWithNull, mTimeProvider);
+            fail("Should detect a null contact");
+        } catch (IllegalArgumentException e) {
+            // OK
+        }
+    }
+
+    public void testConstructorNullSystemTimeProvider() {
+        try {
+            mConversation = new DialogueConversation(mContacts, null);
+            fail("Should detect a null contact");
+        } catch (IllegalArgumentException e) {
+            // OK
+        }
+    }
+
     public void testGetId() {
         ConversationId nextId = IdManager.getInstance().newConversationId();
 
@@ -432,6 +462,7 @@ public class DialogueConversationTest extends MockTestCase {
         mTimeProvider = new SystemTimeProvider();
 
         mContacts = new ArrayList<Contact>();
+        mContacts.add(mContact);
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
