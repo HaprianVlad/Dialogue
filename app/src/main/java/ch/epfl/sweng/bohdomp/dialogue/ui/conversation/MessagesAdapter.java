@@ -13,8 +13,8 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -49,9 +49,8 @@ public class MessagesAdapter extends BaseAdapter {
     public MessagesAdapter(Context context, List<DialogueMessage> items) {
         super();
 
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(items, "items");
 
         this.mContext = context;
         updateData(items);
@@ -75,9 +74,7 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (parent == null) {
-            throw new NullArgumentException("parent");
-        }
+        Contract.throwIfArgNull(parent, "parent");
 
         MessageViewHolder viewHolder;
 
@@ -100,13 +97,8 @@ public class MessagesAdapter extends BaseAdapter {
     }
 
     public void updateData(List<DialogueMessage> items) {
-        if (items == null) {
-            throw new NullArgumentException("items");
-        }
-
-        if (items.contains(null)) {
-            throw new IllegalArgumentException("items contains null");
-        }
+        Contract.throwIfArgNull(items, "items");
+        Contract.throwIfArg(items.contains(null), "items contains null");
 
         this.mMessagesList = items;
         notifyDataSetChanged();

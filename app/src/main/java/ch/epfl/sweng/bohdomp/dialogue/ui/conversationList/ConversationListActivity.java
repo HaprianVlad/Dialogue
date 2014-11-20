@@ -22,6 +22,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -65,6 +66,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     public void onDialogueDataChanged() {
         Log.i("DialogueOutgoingDispatcher", "2");
         mConversationList = DefaultDialogData.getInstance().getConversations();
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -104,7 +106,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         mChangeDefaultAppButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
                 intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, myPackageName);
                 startActivity(intent);
@@ -113,6 +115,9 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         mContactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Contract.throwIfArgNull(parent, "parent");
+                Contract.throwIfArgNull(view, "view");
+
                 ListView listView = (ListView) parent;
                 DialogueConversation c = (DialogueConversation) listView.getItemAtPosition(position);
 
@@ -150,6 +155,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
         Bundle b =DefaultDialogData.getInstance().createBundle();
         savedInstanceState.putBundle(APP_DATA, b);
@@ -160,6 +166,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));

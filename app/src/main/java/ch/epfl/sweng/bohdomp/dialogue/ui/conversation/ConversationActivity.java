@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
@@ -22,10 +23,10 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2014 BohDomp
@@ -46,6 +47,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
@@ -78,26 +81,23 @@ public class ConversationActivity extends Activity implements ConversationListen
      * Initialize the data used by the activity
      */
     public void initData(ConversationId conversationId) {
+        Contract.throwIfArgNull(conversationId, "conversationId");
+
+        if (BuildConfig.DEBUG && mConversation == null) {
+            throw new AssertionError("null mConversation");
+        }
+
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
         mConversation.addListener(this);
 
-        if (mConversation != null) {
-            mMessages = mConversation.getMessages();
-            mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
-        } else {
-            throw new NullPointerException("Conversation is Null");
-        }
+        mMessages = mConversation.getMessages();
+        mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
     }
 
     @Override
-    public void onConversationChanged(ConversationId id) {
-        if (id == null) {
-            throw new NullArgumentException("id");
-        }
-
-        if (mConversation.getId() != id) {
-            throw new IllegalStateException("Wrong listener");
-        }
+    public void onConversationChanged(ConversationId conversationId) {
+        Contract.throwIfArgNull(conversationId, "id");
+        Contract.throwIfArg(mConversation.getId() != conversationId, "Wrong listener");
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -139,6 +139,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Contract.throwIfArgNull(editable, "editable");
+
                 if (editable.length() != 0) {
                     mSendButton.setEnabled(true);
                 } else {
@@ -150,14 +152,16 @@ public class ConversationActivity extends Activity implements ConversationListen
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                Contract.throwIfArgNull(view, "view");
+
                 String draftText = mNewMessageText.getText().toString();
 
                 for (Contact contact : mConversation.getContacts()) {
                     DialogueMessage message = new DialogueTextMessage(contact, draftText,
                             DialogueMessage.MessageStatus.OUTGOING);
 
-                    DialogueOutgoingDispatcher.sendMessage(v.getContext(), message);
+                    DialogueOutgoingDispatcher.sendMessage(view.getContext(), message);
                 }
 
                 mNewMessageText.setText("");
@@ -175,6 +179,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         // Save the current  state
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
 
@@ -184,6 +190,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 

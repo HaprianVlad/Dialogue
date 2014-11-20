@@ -22,6 +22,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -39,6 +40,8 @@ public class NewConversationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
 
@@ -58,7 +61,6 @@ public class NewConversationActivity extends Activity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
     }
-
 
 
     /*
@@ -87,6 +89,8 @@ public class NewConversationActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Contract.throwIfArgNull(editable, "editable");
+
                 if (editable.length() != 0 && Patterns.PHONE.matcher(editable).matches()) {
                     mSendButton.setEnabled(true);
 
@@ -98,15 +102,17 @@ public class NewConversationActivity extends Activity {
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ConversationActivity.class);
+            public void onClick(View view) {
+                Contract.throwIfArgNull(view, "view");
 
-                Contact contact = null;
+                Intent intent = new Intent(view.getContext(), ConversationActivity.class);
 
                 try {
-                    contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
+                    Contact contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
                     Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
+
                     intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
+
                     startActivity(intent);
                 } catch (InvalidNumberException e) {
                     mSendButton.setEnabled(false);
@@ -119,6 +125,8 @@ public class NewConversationActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         // Save the current  state
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
 
@@ -128,6 +136,8 @@ public class NewConversationActivity extends Activity {
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
