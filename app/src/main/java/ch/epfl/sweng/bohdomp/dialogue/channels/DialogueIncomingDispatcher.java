@@ -17,6 +17,8 @@ public final class DialogueIncomingDispatcher extends IntentService{
 
     private static boolean isRunning;
 
+    private Notificator notificator;
+
     public DialogueIncomingDispatcher() {
         super("DialogueIncomingDispatcher");
     }
@@ -56,7 +58,10 @@ public final class DialogueIncomingDispatcher extends IntentService{
     public void onHandleIntent(Intent intent) {
         if (intent.getAction() == ACTION_RECEIVE_MESSAGE) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
+            notificator= new Notificator(getApplicationContext());
+            notificator.update(message);
             DefaultDialogData.getInstance().addMessageToConversation(message);
+
             isRunning=true;
         }
         //ignore when receiving other commands
