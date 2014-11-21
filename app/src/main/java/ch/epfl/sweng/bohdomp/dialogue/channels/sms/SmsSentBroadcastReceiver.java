@@ -8,7 +8,6 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
