@@ -117,6 +117,14 @@ public final class DefaultDialogData implements DialogueData {
         }
     }
 
+    /*
+    See DialogData.getConversation
+    */
+    public void removeAllConversations() {
+        mConversations.clear();
+        notifyListeners();
+    }
+
     @Override
     public void addMessageToConversation(DialogueMessage message) {
         if (message == null) {

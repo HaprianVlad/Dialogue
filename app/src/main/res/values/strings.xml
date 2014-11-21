@@ -31,7 +31,8 @@
     <string name="message_defaultSent">Default sent</string>
     <string name="message_sent">SMS was sent successfully</string>
     <string name="message_notSent">SMS wasn\'t sent</string>
-
+    <string name="deleteAllDialog_title">Delete all conversations</string>
+    <string name="deleteAllDialog_question">Are you sure?</string>
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>

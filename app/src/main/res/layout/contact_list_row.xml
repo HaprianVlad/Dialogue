@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="15dp"
     android:paddingBottom="15dp"
     android:paddingLeft="15dp"
     android:paddingRight="30dp"
-    android:orientation="horizontal"
     android:weightSum="1"
     >
 
     <RelativeLayout
+        android:id="@+id/userPict"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="center">
@@ -38,11 +38,13 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/userInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:layout_marginLeft="15sp">
+        android:layout_marginLeft="15sp"
+        android:layout_toRightOf="@+id/userPict">
 
         <TextView
             android:id="@+id/contactName"
@@ -67,7 +69,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:layout_marginLeft="15dp">
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/userInfo">
 
         <Button
             android:id="@+id/deleteConversationButton"
@@ -90,4 +93,4 @@
         android:textSize="12sp"
         android:textColor="#999999"/>
 
-</LinearLayout>
+</RelativeLayout>

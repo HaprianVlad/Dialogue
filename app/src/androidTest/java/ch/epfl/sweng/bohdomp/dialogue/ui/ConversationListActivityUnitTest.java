@@ -105,4 +105,6 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
 
         DefaultDialogData.getInstance().removeConversation(conversation.getId());
     }
+
+
 }
