@@ -43,12 +43,10 @@ public class TextMessageBodyTest extends AndroidTestCase {
     }
 
     public void testCorrectMessageBody() {
-
         assertEquals(BODY, mMessageBody.getMessageBody());
     }
 
     public void testDescribeContents() {
-
         assertEquals(0, mMessageBody.describeContents());
     }
 

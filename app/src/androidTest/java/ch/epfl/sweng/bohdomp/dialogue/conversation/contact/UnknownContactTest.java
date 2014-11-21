@@ -43,12 +43,10 @@ public class UnknownContactTest extends AndroidTestCase {
     }
 
     public void testEqualsNull() {
-
         assertFalse(mContact.equals(null));
     }
 
     public void testDescribeContent() {
-
         assertEquals(0, mContact.describeContents());
     }
 
