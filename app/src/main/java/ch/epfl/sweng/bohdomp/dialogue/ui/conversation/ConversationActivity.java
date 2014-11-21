@@ -44,6 +44,7 @@ public class ConversationActivity extends Activity implements ConversationListen
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,11 +165,13 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     }
 
+
     @Override
     protected void onStop() {
         mConversation.removeListener(this);
         super.onStop();
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -176,7 +179,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         // Save the current  state
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
-
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -187,7 +189,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
-
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
+
     }
 }

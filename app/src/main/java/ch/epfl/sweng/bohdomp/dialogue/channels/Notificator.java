@@ -8,10 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 
-import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Class representing a notification creator when receiving messages
@@ -21,20 +20,21 @@ public class Notificator {
     private Context mContext;
 
     public Notificator(Context context) {
-        if (context == null) {
-            throw new NullArgumentException("Context null in notificator");
-        }
+        Contract.throwIfArgNull(context, "context");
+
         this.mContext = context;
     }
 
     public void update(DialogueMessage message) {
+        Contract.throwIfArgNull(message, "message");
 
         Notification.Builder mBuilder = new Notification.Builder(mContext)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("New Message from:"+message.getContact().getPhoneNumbers().iterator().next())
+                .setContentTitle("New Message from:" + message.getContact().getPhoneNumbers().iterator().next())
                 .setContentText(message.getBody().getMessageBody())
                 .setAutoCancel(true)
                 .setSound(Settings.System.DEFAULT_RINGTONE_URI);
+        //This image will be fixed
+        //mBuilder.setSmallIcon(R.drawable.ic_action_search);
 
         Intent resultIntent = new Intent(mContext, ConversationListActivity.class);
 
@@ -43,10 +43,7 @@ public class Notificator {
         stackBuilder.addNextIntent(resultIntent);
 
         PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =

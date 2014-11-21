@@ -11,6 +11,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Dispatches the outgoing message to the channels.
@@ -39,10 +40,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             throw new IllegalArgumentException();
         }
 
-        Log.i("DialogueOutgoingDispatcher", "1");
-
-        DefaultDialogData.getInstance().addMessageToConversation(message);
-
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
         intent.setAction(ACTION_SEND_MESSAGE);
@@ -52,13 +49,11 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
-
-        Log.i("DialogueOutgoingDispatcher", "2");
+        Contract.throwIfArgNull(intent, "intent");
 
         DialogueMessage message = DialogueMessage.extractMessage(intent);
+
+        DefaultDialogData.getInstance().addMessageToConversation(message);
 
         if (canSendSms(message)) {
             sendSms(message);
