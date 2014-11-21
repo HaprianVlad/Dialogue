@@ -1,6 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.ids;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Manages ids.
@@ -25,18 +25,14 @@ public final class IdManager {
     }
 
     public synchronized ConversationId newConversationId() {
-        if (BuildConfig.DEBUG && mPreviousConversationId < 0) {
-            throw new AssertionError("negative mPreviousConversationId");
-        }
+        Contract.assertTrue(mPreviousConversationId >= 0, "mPreviousConversationId must be >= 0");
 
         mPreviousConversationId += 1;
         return  ConversationId.fromLong(mPreviousConversationId);
     }
 
     public synchronized DialogueMessageId newDialogueMessageId() {
-        if (BuildConfig.DEBUG && mPreviousDialogueMessageId < 0) {
-            throw new AssertionError("negative mPreviousDialogueMessageId");
-        }
+        Contract.assertTrue(mPreviousDialogueMessageId >= 0, "mPreviousDialogueMessageId must be >= 0");
 
         mPreviousDialogueMessageId += 1;
 

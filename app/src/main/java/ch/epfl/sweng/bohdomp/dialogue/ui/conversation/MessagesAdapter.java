@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -111,9 +110,7 @@ public class MessagesAdapter extends BaseAdapter {
      * A new MessageViewHolder
      */
     private MessageViewHolder createViewHolder(View convertView) {
-        if (BuildConfig.DEBUG && convertView == null) {
-            throw new AssertionError("null convertView");
-        }
+        Contract.assertNotNull(convertView, "convertView");
 
         MessageViewHolder viewHolder = new MessageViewHolder();
 
@@ -129,12 +126,8 @@ public class MessagesAdapter extends BaseAdapter {
      * @param viewHolder The View Holder containing all view to update
      */
     private void setupView(DialogueMessage msg, MessageViewHolder viewHolder) {
-        if (BuildConfig.DEBUG && msg == null) {
-            throw new AssertionError("null msg");
-        }
-        if (BuildConfig.DEBUG && viewHolder == null) {
-            throw new AssertionError("null viewHolder");
-        }
+        Contract.assertNotNull(msg, "message");
+        Contract.assertNotNull(viewHolder, "viewHolder");
 
         String body = msg.getBody().getMessageBody();
         viewHolder.body.setText(body);

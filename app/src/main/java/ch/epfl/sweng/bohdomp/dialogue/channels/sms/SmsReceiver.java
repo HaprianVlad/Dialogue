@@ -6,8 +6,6 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
-
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
@@ -42,10 +40,8 @@ public final class SmsReceiver extends BroadcastReceiver {
         String messageBody = "";
 
         for (SmsMessage smsMessage : smsMessages) {
-            if (BuildConfig.DEBUG && (smsMessage == null)) {
-                throw new AssertionError("smsMessage == null");
-            }
 
+            Contract.assertNotNull(smsMessage, "smsMessage");
             messageBody += smsMessage.getMessageBody();
         }
 

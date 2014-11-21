@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -264,15 +263,9 @@ public class ContactFactory {
          * @return display name of contact associated with lookupKey
          */
         private static String displayNameFromLookupKey(final String lookupKey, final Context context) {
-            if (BuildConfig.DEBUG && lookupKey == null) {
-                throw new AssertionError("lookupKey is null");
-            }
-            if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
-                throw new AssertionError("lookupKey should never be empty");
-            }
-            if (BuildConfig.DEBUG && context == null) {
-                throw new AssertionError("context is null");
-            }
+            Contract.assertNotNull(lookupKey, "lookupKey");
+            Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
+            Contract.assertNotNull(context, "context");
 
             Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
 
@@ -292,16 +285,9 @@ public class ContactFactory {
         }
 
         private static String contactIdFromLookupKey(final String lookupKey, final Context context) {
-
-            if (BuildConfig.DEBUG && lookupKey == null) {
-                throw new AssertionError("lookupKey is null");
-            }
-            if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
-                throw new AssertionError("lookupKey should never be empty");
-            }
-            if (BuildConfig.DEBUG && context == null) {
-                throw new AssertionError("context is null");
-            }
+            Contract.assertNotNull(lookupKey, "lookupKey");
+            Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
+            Contract.assertNotNull(context, "context");
 
             Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
 
@@ -331,16 +317,9 @@ public class ContactFactory {
          * @return all phone numbers associated to contact with specific lookupKey
          */
         private static Set<PhoneNumber> phoneNumbersFromLookupKey(final String lookupKey, final Context context) {
-
-            if (BuildConfig.DEBUG && lookupKey == null) {
-                throw new AssertionError("lookupKey is null");
-            }
-            if (BuildConfig.DEBUG && lookupKey.isEmpty()) {
-                throw new AssertionError("lookupKey should never be empty");
-            }
-            if (BuildConfig.DEBUG && context == null) {
-                throw new AssertionError("context is null");
-            }
+            Contract.assertNotNull(lookupKey, "lookupKey");
+            Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
+            Contract.assertNotNull(context, "context");
 
             final HashSet<PhoneNumber> result = new HashSet<PhoneNumber>();
 

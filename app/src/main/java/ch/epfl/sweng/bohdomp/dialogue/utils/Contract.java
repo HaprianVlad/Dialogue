@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.utils;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
@@ -25,5 +26,29 @@ public class Contract {
         }
 
         return obj;
+    }
+
+    public static void assertTrue(Boolean condition, final String msg) {
+        throwIfArgNull(msg, "message");
+
+        if (BuildConfig.DEBUG && !condition) {
+            throw new AssertionError(msg);
+        }
+    }
+
+    public static void assertFalse(Boolean condition, final String msg) {
+        throwIfArgNull(msg, "message");
+
+        if (BuildConfig.DEBUG && condition) {
+            throw new AssertionError(msg);
+        }
+    }
+
+    public static <T> void assertNotNull(T obj, final String name) {
+        throwIfArgNull(name, "name");
+
+        if (BuildConfig.DEBUG && obj == null) {
+            throw new AssertionError("argument is null: " + name);
+        }
     }
 }
