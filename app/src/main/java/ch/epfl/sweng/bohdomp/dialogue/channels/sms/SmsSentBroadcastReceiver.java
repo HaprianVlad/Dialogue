@@ -18,6 +18,27 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
     private static final String ACTION_SMS_SENT = "SMS_SENT";
 
+    private int mNParts;
+    private int partsReceived = 0;
+
+    private boolean hasSucceeded = true;
+
+    public SmsSentBroadcastReceiver() {
+        super();
+
+        this.mNParts = 1;
+    }
+
+    public SmsSentBroadcastReceiver(int nParts) {
+        super();
+
+        if (nParts <= 0) {
+            throw new IllegalArgumentException("Need at least 1 part");
+        }
+
+        this.mNParts = nParts;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (context == null) {
@@ -31,24 +52,25 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(ACTION_SMS_SENT)) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
-                    Toast.makeText(context, "SMS was sent successful", Toast.LENGTH_SHORT).show();
                     break;
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                    Toast.makeText(context, "Generic failure", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_NO_SERVICE:
-                    Toast.makeText(context, "No service", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_NULL_PDU:
-                    Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_RADIO_OFF:
-                    Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show();
+                    hasSucceeded = false;
                     break;
                 default:
-                    Toast.makeText(context, "Default sent",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Default sent", Toast.LENGTH_SHORT).show();
                     break;
+            }
+
+            partsReceived += 1;
+            if (partsReceived == mNParts) {
+                if (hasSucceeded) {
+                    Toast.makeText(context, "SMS was sent successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "SMS wasn't sent", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
