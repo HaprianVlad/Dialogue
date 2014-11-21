@@ -38,13 +38,8 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
-
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(intent, "intent");
 
         if (intent.getAction().equals(ACTION_SMS_DELIVERED)) {
             switch (getResultCode()) {
