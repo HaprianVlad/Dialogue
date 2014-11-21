@@ -17,11 +17,13 @@ android {
     buildTypes {
         release {
             runProguard false
+	    testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug{
-           testCoverageEnabled = true
+           //manually enable if needed, currently it breaks all builds.
+	   testCoverageEnabled false
         }
     }
 

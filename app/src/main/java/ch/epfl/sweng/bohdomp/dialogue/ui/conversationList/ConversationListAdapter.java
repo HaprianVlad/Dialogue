@@ -17,7 +17,7 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -56,22 +56,15 @@ public class ConversationListAdapter extends BaseAdapter{
     public ConversationListAdapter(Context context, List<Conversation> items) {
         super();
 
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
+        Contract.throwIfArgNull(context, "context");
 
         this.mContext = context;
-        initItems(items);
+        setItems(items);
     }
 
-    private void initItems(List<Conversation> items) {
-        if (items == null) {
-            throw new NullArgumentException("items");
-        }
-
-        if (items.contains(null)) {
-            throw new IllegalArgumentException("items contains null");
-        }
+    private void setItems(List<Conversation> items) {
+        Contract.throwIfArgNull(items, "items");
+        Contract.throwIfArg(items.contains(null), "items contains null");
 
         this.mConversations = items;
     }
@@ -93,10 +86,7 @@ public class ConversationListAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        if (parent == null) {
-            throw new NullArgumentException("parent");
-        }
+        Contract.throwIfArgNull(parent, "parent");
 
         ContactListViewHolder viewHolder;
 
@@ -128,7 +118,7 @@ public class ConversationListAdapter extends BaseAdapter{
     }
 
     public void update(List<Conversation> items) {
-        initItems(items);
+        setItems(items);
         notifyDataSetChanged();
     }
 
