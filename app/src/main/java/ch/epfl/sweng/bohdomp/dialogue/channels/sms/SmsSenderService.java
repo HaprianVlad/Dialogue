@@ -9,6 +9,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 
@@ -55,8 +56,12 @@ public class SmsSenderService extends IntentService {
 
         Log.i("MessageSender", "SMS is Sent");
 
-        SmsManager.getDefault().sendTextMessage(message.getContact().getPhoneNumbers().iterator().next(), null,
-                message.getBody().getMessageBody(), getSentPendingIntent(), getDeliveryPendingIntent());
+        SmsManager.getDefault().sendTextMessage(
+                message.getContact().getPhoneNumbers(Contact.ChannelType.SMS).iterator().next().number(),
+                null,
+                message.getBody().getMessageBody(),
+                getSentPendingIntent(),
+                getDeliveryPendingIntent());
     }
 
     @Override

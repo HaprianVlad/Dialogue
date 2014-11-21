@@ -8,16 +8,10 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 /**
  * Tests the UnknownContact class
  */
-public class UnknownContactTest extends AndroidTestCase {
+public class UnknownContactParcelTest extends AndroidTestCase {
     public void testParcelRoundTrip() throws InvalidNumberException {
         ContactFactory contactFactory = new ContactFactory(getContext());
         Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
-
-        /*
-         The factory should return an UnknownContact but to
-         be sure we add this assert.
-         */
-        assertEquals(contact.getClass(), UnknownContact.class);
 
 
         Parcel parcel = Parcel.obtain();
@@ -25,7 +19,7 @@ public class UnknownContactTest extends AndroidTestCase {
 
         parcel.setDataPosition(0); // reset parcel for reading
 
-        Contact contactFromParcel = UnknownContact.CREATOR.createFromParcel(parcel);
+        Contact contactFromParcel = contact.getParcelCreator().createFromParcel(parcel);
 
         parcel.recycle();
 

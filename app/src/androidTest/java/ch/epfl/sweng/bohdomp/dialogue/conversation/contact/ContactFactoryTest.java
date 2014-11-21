@@ -74,11 +74,17 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         String expectedName = "unknown: " + validPhoneNumber;
         assertEquals(expectedName, contact.getDisplayName());
 
-        Set<String> phoneNumbersInContact = contact.getPhoneNumbers();
+        Set<Contact.PhoneNumber> phoneNumbersInContact = contact.getPhoneNumbers();
+        Set<String> phoneNumberStrings = new HashSet<String>();
+
+        for (Contact.PhoneNumber num : phoneNumbersInContact) {
+            phoneNumberStrings.add(num.number());
+        }
+
         // phoneNumbersInContact should contain exactly one phone number,
         // which is the one we passed in
         assertEquals(1, phoneNumbersInContact.size());
-        assertTrue(phoneNumbersInContact.contains(validPhoneNumber));
+        assertTrue(phoneNumberStrings.contains(validPhoneNumber));
 
         // we assume that contact is reachable via SMS when there is a phone number
         Set<Contact.ChannelType> contactAvailableChannels = contact.availableChannels();

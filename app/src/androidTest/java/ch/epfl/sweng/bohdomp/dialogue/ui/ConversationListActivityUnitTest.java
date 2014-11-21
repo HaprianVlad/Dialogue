@@ -16,7 +16,6 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
 
@@ -87,7 +86,7 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
 
         assertEquals(mConversationCountAtStart, list.getAdapter().getCount());
 
-        Contact contact = Mockito.mock(UnknownContact.class);
+        Contact contact = Mockito.mock(Contact.class);
         Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
         assertEquals(mConversationCountAtStart + 1, list.getAdapter().getCount());

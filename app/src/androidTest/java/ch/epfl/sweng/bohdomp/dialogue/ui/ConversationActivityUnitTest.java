@@ -19,7 +19,6 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.UnknownContact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
@@ -89,7 +88,7 @@ public class ConversationActivityUnitTest extends ActivityUnitTestCase<Conversat
         Set<String> phoneNumbers= new HashSet<String>();
         phoneNumbers.add(CONTACT_NUMBER);
 
-        mContact = Mockito.mock(UnknownContact.class);
+        mContact = Mockito.mock(Contact.class);
 
         Mockito.doReturn(CONTACT_NAME).when(mContact).getDisplayName();
         Mockito.doReturn(phoneNumbers).when(mContact).getPhoneNumbers();
