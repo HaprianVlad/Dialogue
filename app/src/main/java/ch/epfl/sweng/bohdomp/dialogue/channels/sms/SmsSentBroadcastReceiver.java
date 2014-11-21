@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * The "sms sent" broadcast receiver handles the result code (the message was sent or not) returned
@@ -32,9 +34,7 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
     public SmsSentBroadcastReceiver(int nParts) {
         super();
 
-        if (nParts <= 0) {
-            throw new IllegalArgumentException("Need at least 1 part");
-        }
+        Contract.throwIfArg(nParts <= 0, "Need a least 1 part");
 
         this.mNParts = nParts;
     }
@@ -60,16 +60,17 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
                     hasSucceeded = false;
                     break;
                 default:
-                    Toast.makeText(context, "Default sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_defaultSent, Toast.LENGTH_SHORT).show();
                     break;
             }
 
             partsReceived += 1;
+
             if (partsReceived == mNParts) {
                 if (hasSucceeded) {
-                    Toast.makeText(context, "SMS was sent successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_sent, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "SMS wasn't sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_notSent, Toast.LENGTH_SHORT).show();
                 }
             }
         }

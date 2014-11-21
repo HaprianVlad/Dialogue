@@ -25,6 +25,12 @@
     <string name="two_days_ago">Two days ago</string>
     <string name="newConversationActivityTitle">New Conversation</string>
     <string name="conversationListTitle">All conversations</string>
+    <string name="message_defaultDelivery">Default delivery</string>
+    <string name="message_delivered">SMS was delivered successfully</string>
+    <string name="message_notDelivered">SMS wasn\'t delivered</string>
+    <string name="message_defaultSent">Default sent</string>
+    <string name="message_sent">SMS was sent successfully</string>
+    <string name="message_notSent">SMS wasn\'t sent</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

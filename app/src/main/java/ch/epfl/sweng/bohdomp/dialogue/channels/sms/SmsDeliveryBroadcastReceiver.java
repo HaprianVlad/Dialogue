@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * The "sms delivery" broadcast receiver handles the result code (the message was delivered or not)
@@ -29,9 +31,7 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
     public SmsDeliveryBroadcastReceiver(int nParts) {
         super();
 
-        if (nParts <= 0) {
-            throw new IllegalArgumentException("Need at least 1 part");
-        }
+        Contract.throwIfArg(nParts <= 0, "Need a least 1 part");
 
         this.mNParts = nParts;
     }
@@ -54,16 +54,17 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
                     hasSucceeded = false;
                     break;
                 default:
-                    Toast.makeText(context, "Default delivery", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_defaultDelivery, Toast.LENGTH_SHORT).show();
                     break;
             }
 
             partsReceived += 1;
+
             if (partsReceived == mNParts) {
                 if (hasSucceeded) {
-                    Toast.makeText(context, "SMS was delivered successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_delivered, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "SMS wasn't delivered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_notDelivered, Toast.LENGTH_SHORT).show();
                 }
             }
         }
