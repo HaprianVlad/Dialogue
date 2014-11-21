@@ -8,6 +8,7 @@ import android.telephony.PhoneNumberUtils;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * interface representing a Contact
@@ -36,6 +37,8 @@ public interface Contact extends Parcelable {
         private final Tag mTag;
 
         public PhoneNumber(final String phoneNumber, final Tag tag) {
+            Contract.throwIfArgNull(phoneNumber, "phone number");
+            Contract.throwIfArgNull(tag, "tag");
             this.mPhoneNumber = phoneNumber;
             this.mTag = tag;
         }
@@ -75,6 +78,7 @@ public interface Contact extends Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            Contract.throwIfArgNull(dest, "dest parcel");
             dest.writeString(this.mPhoneNumber);
             dest.writeInt(this.mTag.ordinal());
         }
@@ -95,6 +99,7 @@ public interface Contact extends Parcelable {
         public static final Creator<PhoneNumber> CREATOR = new Creator<PhoneNumber>() {
             @Override
             public PhoneNumber createFromParcel(Parcel source) {
+                Contract.throwIfArgNull(source, "source parcel");
                 return new PhoneNumber(source);
             }
 

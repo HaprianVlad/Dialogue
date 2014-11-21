@@ -18,7 +18,7 @@ import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * factory creating different contacts
@@ -35,10 +35,7 @@ public class ContactFactory {
      * @throws IllegalArgumentException
      */
     public ContactFactory(final Context context) throws IllegalArgumentException {
-        if (context == null) {
-            throw new IllegalArgumentException(
-                    "context passed to ContactFactory constructor must not be null!");
-        }
+        Contract.throwIfArgNull(context, "context");
         this.mContext = context;
     }
 
@@ -52,9 +49,7 @@ public class ContactFactory {
      */
     public Contact contactFromNumber(final String phoneNumber) throws InvalidNumberException {
 
-        if (phoneNumber == null) {
-            throw new NullArgumentException("phoneNumber");
-        }
+        Contract.throwIfArgNull(phoneNumber, "phone number");
         if (!verifyPhoneNumber(phoneNumber)) {
             throw new InvalidNumberException(" is not a valid phone number");
         }
@@ -130,7 +125,7 @@ public class ContactFactory {
      * @param phoneNumber to test
      * @return if phoneNumber is a valid
      */
-    private boolean verifyPhoneNumber(final CharSequence phoneNumber) {
+    private static boolean verifyPhoneNumber(final CharSequence phoneNumber) {
         if (phoneNumber == null || TextUtils.isEmpty(phoneNumber)) {
             return false;
         } else {
@@ -154,6 +149,8 @@ public class ContactFactory {
             ContactsContract.Contacts._ID};
 
         AndroidContact(final String lookupKey, final Context context) {
+            Contract.throwIfArgNull(lookupKey, "lookupKey");
+            Contract.throwIfArgNull(context, "context");
             this.mLookupKey = lookupKey;
             this.mDisplayName = displayNameFromLookupKey(lookupKey, context);
 
@@ -173,7 +170,8 @@ public class ContactFactory {
         }
 
         @Override
-        public Set<PhoneNumber> getPhoneNumbers(ChannelType channel) {
+        public Set<PhoneNumber> getPhoneNumbers(final ChannelType channel) {
+            Contract.throwIfArgNull(channel, "channel");
             if (mPhoneNumberMap.containsKey(channel)) {
                 return mPhoneNumberMap.get(channel);
             } else {
@@ -188,6 +186,7 @@ public class ContactFactory {
 
         @Override
         public Contact updateInfo(final Context context) {
+            Contract.throwIfArgNull(context, "context");
             // since database look-ups are done in constructor we
             // try to recreate this contact from its look-up-key
             // TODO return this if mLookupKey is no longer valid (contact deleted in the meantime)
@@ -265,7 +264,6 @@ public class ContactFactory {
          * @return display name of contact associated with lookupKey
          */
         private static String displayNameFromLookupKey(final String lookupKey, final Context context) {
-
             if (BuildConfig.DEBUG && lookupKey == null) {
                 throw new AssertionError("lookupKey is null");
             }
@@ -285,12 +283,8 @@ public class ContactFactory {
                     null,
                     null);
 
-            final String result;
-            if (cursor.moveToFirst()) {
-                result = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            } else {
-                result = "";
-            }
+            final String result = cursor.moveToFirst()
+                    ? cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)) : "";
 
             cursor.close();
 
@@ -318,15 +312,10 @@ public class ContactFactory {
                     null,
                     null);
 
-            final String result;
+            final String result = cursor.moveToFirst()
+                    //TODO find a way to recover from that condition!
+                    ? cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)) : null;
 
-            if (cursor.moveToFirst()) {
-                result = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-            } else {
-                //this should only happen if a user deletes a contact while the app is in use
-                //TODO find a way to recover from that condition!
-                result = null;
-            }
 
             cursor.close();
 
@@ -355,7 +344,6 @@ public class ContactFactory {
 
             final HashSet<PhoneNumber> result = new HashSet<PhoneNumber>();
 
-            // lookup contact id associated with lookupKey
             final String id = contactIdFromLookupKey(lookupKey, context);
 
             if (id == null) {
@@ -370,7 +358,6 @@ public class ContactFactory {
                 new String[]{id},
                 null);
 
-            // lookup all phoneNumbers associated with contact id
             for (phoneCursor.moveToFirst(); !phoneCursor.isAfterLast(); phoneCursor.moveToNext()) {
                 final String phoneNumber = phoneCursor.getString(
                     phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -406,6 +393,8 @@ public class ContactFactory {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            Contract.throwIfArgNull(dest, "dest parcel");
+
             dest.writeString(this.mLookupKey);
             dest.writeString(this.mDisplayName);
 
@@ -421,8 +410,9 @@ public class ContactFactory {
             this.mPhoneNumberMap = channelMapFromPhoneNumberSet(this.mPhoneNumbers);
         }
 
-        private static final Creator<Contact> CREATOR = new Creator<Contact>() {
+        public static final Creator<Contact> CREATOR = new Creator<Contact>() {
             public AndroidContact createFromParcel(Parcel source) {
+                Contract.throwIfArgNull(source, "source parcel");
                 return new AndroidContact(source);
             }
 
@@ -440,6 +430,7 @@ public class ContactFactory {
         private final String mPhoneNumber;
 
         public UnknownContact(final String phoneNumber) {
+            Contract.throwIfArgNull(phoneNumber, "phone number string");
             this.mPhoneNumber = phoneNumber;
         }
 
@@ -457,6 +448,7 @@ public class ContactFactory {
 
         @Override
         public Set<PhoneNumber> getPhoneNumbers(ChannelType channel) {
+            Contract.throwIfArgNull(channel, "channel");
             switch (channel) {
                 case SMS:
                     return getPhoneNumbers();
@@ -474,6 +466,7 @@ public class ContactFactory {
 
         @Override
         public Contact updateInfo(final Context context) throws InvalidNumberException {
+            Contract.throwIfArgNull(context, "context");
             return new ContactFactory(context).contactFromNumber(mPhoneNumber);
         }
 
@@ -514,6 +507,7 @@ public class ContactFactory {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            Contract.throwIfArgNull(dest, "dest parcel");
             dest.writeString(this.mPhoneNumber);
         }
 
@@ -523,6 +517,7 @@ public class ContactFactory {
 
         public static final Creator<Contact> CREATOR = new Creator<Contact>() {
             public UnknownContact createFromParcel(Parcel source) {
+                Contract.throwIfArgNull(source, "source parcel");
                 return new UnknownContact(source);
             }
 
