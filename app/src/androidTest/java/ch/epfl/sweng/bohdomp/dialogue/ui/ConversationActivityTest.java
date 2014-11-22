@@ -75,7 +75,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
     public void testSetup() {
         assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
         //FIXME: take a look at this test
-        // assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
+        //assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
         assertNotNull(mMessageList);
         assertNotNull(mMessageContent);
         assertNotNull(mSendButton);

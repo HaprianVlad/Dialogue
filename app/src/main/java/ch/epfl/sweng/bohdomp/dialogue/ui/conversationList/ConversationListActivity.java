@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -174,8 +175,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         Bundle b =DefaultDialogData.getInstance().createBundle();
         savedInstanceState.putBundle(APP_DATA, b);
 
-
-        // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -183,7 +182,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
@@ -222,13 +220,15 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Unable to save messages", Toast.LENGTH_LONG).show();
+
         } finally {
             if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Unable to save messages", Toast.LENGTH_LONG).show();
+
                 }
             }
         }
@@ -262,13 +262,15 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             inputStream.read(data);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Unable to retreive old messages", Toast.LENGTH_LONG).show();
+
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Unable to retreive old messages", Toast.LENGTH_LONG)
+                            .show();
                 }
             }
         }

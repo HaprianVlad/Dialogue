@@ -18,11 +18,11 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -32,7 +32,7 @@ public class NewConversationActivity extends Activity {
     private static final String LOG_TAG = "NewMessageActivity";
     private static final String APP_DATA = "APP_DATA";
 
-    private DialogueData mData;
+
     private ContactFactory mContactFactory;
 
     private EditText mToEditText;
@@ -43,7 +43,6 @@ public class NewConversationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
 
-        setDialogueData(DefaultDialogData.getInstance());
         mContactFactory = new ContactFactory(getApplicationContext());
 
         setupActionBar();
@@ -61,16 +60,6 @@ public class NewConversationActivity extends Activity {
         }
     }
 
-    /*
-     * Set DialogueData
-     */
-    private void setDialogueData(DialogueData data) {
-        if (data == null) {
-            throw new IllegalStateException("DialogueData is null");
-        }
-
-        mData = data;
-    }
 
     /*
      * Set all view elements
@@ -98,6 +87,8 @@ public class NewConversationActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Contract.throwIfArgNull(editable, "editable");
+
                 if (editable.length() != 0 && Patterns.PHONE.matcher(editable).matches()) {
                     mSendButton.setEnabled(true);
 
@@ -109,15 +100,17 @@ public class NewConversationActivity extends Activity {
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ConversationActivity.class);
+            public void onClick(View view) {
+                Contract.throwIfArgNull(view, "view");
 
-                Contact contact = null;
+                Intent intent = new Intent(view.getContext(), ConversationActivity.class);
 
                 try {
-                    contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
-                    Conversation conversation = mData.createOrGetConversation(contact);
+                    Contact contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
+                    Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
+
                     intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
+
                     startActivity(intent);
                 } catch (InvalidNumberException e) {
                     mSendButton.setEnabled(false);
@@ -130,16 +123,17 @@ public class NewConversationActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the current  state
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
 
-        // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Always call the superclass so it can restore the view hierarchy
+        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
+
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -34,10 +35,8 @@ public class Notificator {
                 .setContentTitle("New Message from:" + message.getContact().getPhoneNumbers().iterator().next())
                 .setContentText(message.getBody().getMessageBody())
                 .setAutoCancel(true)
-                .setSound(Settings.System.DEFAULT_RINGTONE_URI);
-        //This image will be fixed
-        //mBuilder.setSmallIcon(R.drawable.ic_action_search);
-
+                .setSound(Settings.System.DEFAULT_RINGTONE_URI)
+                .setSmallIcon(R.drawable.ic_notification);
 
         Intent resultIntent = new Intent(mContext, ConversationListActivity.class);
 

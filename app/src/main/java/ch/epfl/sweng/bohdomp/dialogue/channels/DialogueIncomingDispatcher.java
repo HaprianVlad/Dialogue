@@ -8,6 +8,7 @@ import android.content.Intent;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Handles the incoming messages.
@@ -15,7 +16,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 public final class DialogueIncomingDispatcher extends IntentService{
     public static final String ACTION_RECEIVE_MESSAGE = "ACTION_RECEIVE_MESSAGE";
 
-    private static boolean isRunning;
+    private static boolean sIsRunning;
 
 
     private Notificator mNotificator;
@@ -52,14 +53,13 @@ public final class DialogueIncomingDispatcher extends IntentService{
     }
 
     public static boolean isRunning() {
-        return isRunning;
+        return sIsRunning;
     }
 
     @Override
     public void onHandleIntent(Intent intent) {
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+
+        Contract.throwIfArgNull(intent, "intent");
 
         if (intent.getAction() == ACTION_RECEIVE_MESSAGE) {
 
@@ -70,7 +70,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
 
-            isRunning=true;
+            sIsRunning=true;
         }
         //ignore when receiving other commands
     }
@@ -78,7 +78,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isRunning=false;
+        sIsRunning=false;
 
     }
 
