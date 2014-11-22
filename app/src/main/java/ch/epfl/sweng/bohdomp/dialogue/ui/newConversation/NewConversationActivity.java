@@ -40,8 +40,6 @@ public class NewConversationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
 

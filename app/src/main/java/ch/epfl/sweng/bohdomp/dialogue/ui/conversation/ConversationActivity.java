@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
@@ -23,8 +22,8 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -47,8 +46,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
@@ -82,10 +79,6 @@ public class ConversationActivity extends Activity implements ConversationListen
      */
     public void initData(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "conversationId");
-
-        if (BuildConfig.DEBUG && mConversation == null) {
-            throw new AssertionError("null mConversation");
-        }
 
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
         mConversation.addListener(this);

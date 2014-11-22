@@ -139,7 +139,7 @@ public class ConversationActivityUnitTest extends ActivityUnitTestCase<Conversat
         try {
             mActivity.onConversationChanged(IdManager.getInstance().newConversationId());
             fail("Exception should have been thrown");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
         }
     }
 
