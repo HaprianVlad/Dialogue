@@ -7,7 +7,8 @@ import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * The "sms sent" broadcast receiver handles the result code (the message was sent or not) returned
@@ -18,37 +19,62 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
     private static final String ACTION_SMS_SENT = "SMS_SENT";
 
+    private int mNParts;
+    private int partsReceived = 0;
+
+    private boolean hasSucceeded = true;
+
+    /**
+     * Constructor for a message that can be
+     * sent in one part.
+     */
+    public SmsSentBroadcastReceiver() {
+        super();
+
+        this.mNParts = 1;
+    }
+
+    /**
+     * Constructor for a message that needs
+     * to be sent un multiple parts.
+     * @param nParts to be acknowledged.
+     */
+    public SmsSentBroadcastReceiver(int nParts) {
+        super();
+
+        Contract.throwIfArg(nParts <= 0, "Need a least 1 part");
+
+        this.mNParts = nParts;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
-
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(intent, "intent");
 
         if (intent.getAction().equals(ACTION_SMS_SENT)) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
-                    Toast.makeText(context, "SMS was sent successful", Toast.LENGTH_SHORT).show();
                     break;
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                    Toast.makeText(context, "Generic failure", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_NO_SERVICE:
-                    Toast.makeText(context, "No service", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_NULL_PDU:
-                    Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show();
-                    break;
                 case SmsManager.RESULT_ERROR_RADIO_OFF:
-                    Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show();
+                    hasSucceeded = false;
                     break;
                 default:
-                    Toast.makeText(context, "Default sent",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_defaultSent, Toast.LENGTH_SHORT).show();
                     break;
+            }
+
+            partsReceived += 1;
+
+            if (partsReceived == mNParts) {
+                if (hasSucceeded) {
+                    Toast.makeText(context, R.string.message_sent, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.message_notSent, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

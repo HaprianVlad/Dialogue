@@ -6,12 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
-import android.util.Log;
+import android.telephony.SmsMessage;
+
+import java.util.ArrayList;
 
 import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * The sms sender service sends the message passed to it via the intent and handles the different errors
@@ -24,6 +26,8 @@ public class SmsSenderService extends IntentService {
 
     private BroadcastReceiver mSentBroadcastReceiver = new SmsSentBroadcastReceiver();
     private BroadcastReceiver mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
+
+    private SmsManager mSmsManager = SmsManager.getDefault();
 
     public SmsSenderService() {
         super("SmsSenderService");
@@ -40,9 +44,6 @@ public class SmsSenderService extends IntentService {
             throw new AssertionError("intent == null");
         }
 
-        Log.i("MessageSender", "SMS Message is being sent");
-
-
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
             sendMessage(message);
@@ -54,14 +55,40 @@ public class SmsSenderService extends IntentService {
             throw new AssertionError("message == null");
         }
 
-        Log.i("MessageSender", "SMS is Sent");
+        if (!needsPartitioning(message)) {
+            mSentBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
+            mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
 
-        SmsManager.getDefault().sendTextMessage(
-                message.getContact().getPhoneNumbers(Contact.ChannelType.SMS).iterator().next().number(),
-                null,
-                message.getBody().getMessageBody(),
-                getSentPendingIntent(),
-                getDeliveryPendingIntent());
+            sendMonoPartMessage(message);
+        } else {
+            ArrayList<String> messages = mSmsManager.divideMessage(message.getBody().getMessageBody());
+
+            mSentBroadcastReceiver = new SmsSentBroadcastReceiver(messages.size());
+            mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver(messages.size());
+
+            Contact contact = message.getContact();
+            sendMultiPartMessage(messages, contact);
+        }
+    }
+
+    private void sendMultiPartMessage(ArrayList<String> messages, Contact contact) {
+        String phoneNumber = contact.getPhoneNumbers().iterator().next().number();
+
+        mSmsManager.sendMultipartTextMessage(phoneNumber, null, messages,
+                getSentPendingIntentList(messages.size()),
+                getDeliveredPendingIntentList(messages.size()));
+    }
+
+    private void sendMonoPartMessage(DialogueMessage message) {
+        String phoneNumber = message.getContact().getPhoneNumbers().iterator().next().number();
+        String messageBody = message.getBody().getMessageBody();
+
+        mSmsManager.sendTextMessage(phoneNumber, null, messageBody,
+                getSentPendingIntent(), getDeliveryPendingIntent());
+    }
+
+    private boolean needsPartitioning(DialogueMessage message) {
+        return message.getBody().getMessageBody().getBytes().length <= SmsMessage.MAX_USER_DATA_BYTES;
     }
 
     @Override
@@ -114,5 +141,29 @@ public class SmsSenderService extends IntentService {
         registerReceiver(mDeliveryBroadcastReceiver, new IntentFilter(ACTION_SMS_DELIVERED));
 
         return deliveryPendingIntent;
+    }
+
+    private ArrayList<PendingIntent> getSentPendingIntentList(int copies) {
+        Contract.throwIfArg(copies <= 0, "Copies should be at least 1");
+
+        ArrayList<PendingIntent> list = new ArrayList<PendingIntent>();
+
+        for (int i = 0; i < copies; i++) {
+            list.add(getSentPendingIntent());
+        }
+
+        return list;
+    }
+
+    private ArrayList<PendingIntent> getDeliveredPendingIntentList(int copies) {
+        Contract.throwIfArg(copies <= 0, "Copies should be at least 1");
+
+        ArrayList<PendingIntent> list = new ArrayList<PendingIntent>();
+
+        for (int i = 0; i < copies; i++) {
+            list.add(getDeliveryPendingIntent());
+        }
+
+        return list;
     }
 }

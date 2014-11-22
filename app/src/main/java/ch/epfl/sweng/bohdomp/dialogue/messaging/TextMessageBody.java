@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.telephony.SmsMessage;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 
 /**
@@ -15,12 +15,7 @@ public final class TextMessageBody implements MessageBody{
     private final String mBody;
 
     public TextMessageBody(String body) {
-        if (body == null) {
-            throw new NullArgumentException("body");
-        }
-        if (body.getBytes().length > MAX_MESSAGE_SIZE) {
-            throw new IllegalArgumentException("Too big message body!");
-        }
+        Contract.throwIfArgNull(body, "body");
 
         this.mBody = body;
     }

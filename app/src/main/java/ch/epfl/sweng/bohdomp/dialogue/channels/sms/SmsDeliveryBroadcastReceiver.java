@@ -6,7 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * The "sms delivery" broadcast receiver handles the result code (the message was delivered or not)
@@ -15,32 +16,59 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
+    private int mNParts;
+    private int partsReceived = 0;
+
+    private boolean hasSucceeded = true;
+
+    /**
+     * Constructor for a message that can be
+     * sent in one part.
+     */
+    public SmsDeliveryBroadcastReceiver() {
+        super();
+
+        this.mNParts = 1;
+    }
+
+    /**
+     * Constructor for a message that needs
+     * to be sent un multiple parts.
+     * @param nParts to be acknowledged.
+     */
+    public SmsDeliveryBroadcastReceiver(int nParts) {
+        super();
+
+        Contract.throwIfArg(nParts <= 0, "Need a least 1 part");
+
+        this.mNParts = nParts;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
-
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(intent, "intent");
 
         if (intent.getAction().equals(ACTION_SMS_DELIVERED)) {
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
-                    Toast.makeText(context, "SMS delivered",
-                            Toast.LENGTH_SHORT).show();
                     break;
-
                 case Activity.RESULT_CANCELED:
-                    Toast.makeText(context, "SMS not delivered",
-                            Toast.LENGTH_SHORT).show();
+                    hasSucceeded = false;
                     break;
-
                 default:
-                    Toast.makeText(context, "Default delivery",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_defaultDelivery, Toast.LENGTH_SHORT).show();
                     break;
+            }
+
+            partsReceived += 1;
+
+            if (partsReceived == mNParts) {
+                if (hasSucceeded) {
+                    Toast.makeText(context, R.string.message_delivered, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, R.string.message_notDelivered, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
