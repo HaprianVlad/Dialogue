@@ -229,6 +229,9 @@ public final class DialogueConversation implements Conversation {
             throw new NullArgumentException("listener == null !");
         }
 
+        if (mListeners == null) {
+            mListeners = new ArrayList<ConversationListener>();
+        }
         mListeners.add(listener);
     }
 
@@ -266,9 +269,13 @@ public final class DialogueConversation implements Conversation {
 
     //Method that notifies listeners when a change in conversation occurs
     private void notifyListeners() {
-        for (ConversationListener listener : mListeners) {
-            listener.onConversationChanged(mId);
+        if (mListeners != null) {
+            for (ConversationListener listener : mListeners) {
+                listener.onConversationChanged(mId);
+            }
+
         }
+
     }
 
 
@@ -294,10 +301,11 @@ public final class DialogueConversation implements Conversation {
 
     @SuppressWarnings("unchecked") // we cannot solve this unchecked problem!
     private DialogueConversation(Parcel in, SystemTimeProvider timeProvider) {
+
         this.mTimeProvider = timeProvider;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
-        this.mContacts = new ArrayList<Contact>(in.readArrayList(getClass().getClassLoader()));
-        this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(getClass().getClassLoader()));
+        this.mContacts = new ArrayList<Contact>(in.readArrayList(Contact.class.getClassLoader()));
+        this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(DialogueMessage.class.getClassLoader()));
         this.mLastActivityTime = new Timestamp(in.readLong());
         this.mMessageCount = in.readInt();
         this.mHasUnread = in.readByte() != 0;

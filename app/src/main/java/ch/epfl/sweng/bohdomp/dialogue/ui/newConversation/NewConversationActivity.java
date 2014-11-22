@@ -125,10 +125,8 @@ public class NewConversationActivity extends Activity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        // Save the current  state
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
 
-        // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -136,7 +134,6 @@ public class NewConversationActivity extends Activity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));

@@ -121,7 +121,7 @@ public final class DefaultDialogData implements DialogueData {
             throw new NullArgumentException("message");
         }
 
-        Conversation c = DefaultDialogData.getInstance().createOrGetConversation(message.getContact());
+        Conversation c = this.createOrGetConversation(message.getContact());
         c.addMessage(message);
         //Listeners are notified by the listener of the conversation
     }
@@ -151,7 +151,7 @@ public final class DefaultDialogData implements DialogueData {
         if (savedData == null) {
             throw new NullArgumentException("savedData");
         }
-
+        savedData.setClassLoader(getClass().getClassLoader());
         List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
 

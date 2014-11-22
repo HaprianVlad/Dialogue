@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
@@ -43,6 +44,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,12 @@ public class ConversationActivity extends Activity implements ConversationListen
         Contract.throwIfArgNull(conversationId, "conversationId");
 
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
+
+        if (BuildConfig.DEBUG && mConversation == null) {
+            throw new AssertionError("null mConversation");
+        }
+
+
         mConversation.addListener(this);
 
         mMessages = mConversation.getMessages();
@@ -90,7 +98,7 @@ public class ConversationActivity extends Activity implements ConversationListen
     @Override
     public void onConversationChanged(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "id");
-        Contract.throwIfArg(mConversation.getId() != conversationId, "Wrong listener");
+        Contract.throwIfArg(mConversation.getId().getLong() != conversationId.getLong(), "Wrong listener");
 
         this.runOnUiThread(new Runnable() {
             @Override
@@ -164,20 +172,20 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     }
 
+
     @Override
     protected void onStop() {
         mConversation.removeListener(this);
         super.onStop();
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        // Save the current  state
         savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
 
-        // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -185,9 +193,9 @@ public class ConversationActivity extends Activity implements ConversationListen
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
+
     }
 }
