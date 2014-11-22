@@ -5,6 +5,9 @@ import android.test.AndroidTestCase;
 
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
+/**
+ * Tests the SmsDeliveryBroadcastReceiver class.
+ */
 public class SmsDeliveryBroadcastReceiverTest extends AndroidTestCase {
     private SmsDeliveryBroadcastReceiver mReceiver = new SmsDeliveryBroadcastReceiver();
 
@@ -29,7 +32,7 @@ public class SmsDeliveryBroadcastReceiverTest extends AndroidTestCase {
         try {
             mReceiver.onReceive(getContext(), null);
             fail();
-        } catch(NullArgumentException e) {
+        } catch (NullArgumentException e) {
             // OK
         }
     }
@@ -40,7 +43,7 @@ public class SmsDeliveryBroadcastReceiverTest extends AndroidTestCase {
         try {
             mReceiver.onReceive(null, intent);
             fail();
-        } catch(NullArgumentException e) {
+        } catch (NullArgumentException e) {
             // OK
         }
     }
