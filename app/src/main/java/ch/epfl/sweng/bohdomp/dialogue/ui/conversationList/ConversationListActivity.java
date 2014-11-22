@@ -1,12 +1,12 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
