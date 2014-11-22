@@ -24,12 +24,21 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
     private boolean hasSucceeded = true;
 
+    /**
+     * Constructor for a message that can be
+     * sent in one part.
+     */
     public SmsSentBroadcastReceiver() {
         super();
 
         this.mNParts = 1;
     }
 
+    /**
+     * Constructor for a message that needs
+     * to be sent un multiple parts.
+     * @param nParts to be acknowledged.
+     */
     public SmsSentBroadcastReceiver(int nParts) {
         super();
 
