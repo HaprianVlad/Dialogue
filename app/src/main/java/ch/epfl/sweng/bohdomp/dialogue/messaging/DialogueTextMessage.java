@@ -19,15 +19,16 @@ public final class DialogueTextMessage extends DialogueMessage {
         return new TextMessageBody(body);
     }
 
-    public static final Parcelable.Creator<DialogueMessage> CREATOR=new Parcelable.Creator<DialogueMessage>() {
-        public DialogueTextMessage createFromParcel(Parcel source) {
-            return new DialogueTextMessage(source);
-        }
+    public static final Parcelable.Creator<DialogueTextMessage> CREATOR =
+        new Parcelable.Creator<DialogueTextMessage>() {
+            public DialogueTextMessage createFromParcel(Parcel source) {
+                return new DialogueTextMessage(source);
+            }
 
-        public DialogueTextMessage[] newArray(int size) {
-            return new DialogueTextMessage[size];
-        }
-    };
+            public DialogueTextMessage[] newArray(int size) {
+                return new DialogueTextMessage[size];
+            }
+        };
 
     private DialogueTextMessage(Parcel source) {
         super(source);

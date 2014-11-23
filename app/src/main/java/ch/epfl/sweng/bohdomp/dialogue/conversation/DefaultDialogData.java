@@ -36,9 +36,14 @@ public final class DefaultDialogData implements DialogueData {
     private static final String CONVERSATION_ID = "CONVERSATION_ID";
     private static final String CONVERSATION = "CONVERSATION";
 
-    private Map<ConversationId, Conversation> mConversations = new HashMap<ConversationId, Conversation>();
+    private final Map<ConversationId, Conversation> mConversations;
 
-    private final List<DialogueDataListener> mListeners = new ArrayList<DialogueDataListener>();
+    private final List<DialogueDataListener> mListeners;
+
+    private DefaultDialogData() {
+        mConversations = new HashMap<ConversationId, Conversation>();
+        mListeners = new ArrayList<DialogueDataListener>();
+    }
 
     /**
      * Gets the singleton instance
@@ -52,9 +57,6 @@ public final class DefaultDialogData implements DialogueData {
         See DialogData.getConversations
      */
     public List<Conversation> getConversations() {
-        if (mConversations == null) {
-            return null;
-        }
 
         List<Conversation> dialogueConversations = new ArrayList<Conversation>(mConversations.values());
 
