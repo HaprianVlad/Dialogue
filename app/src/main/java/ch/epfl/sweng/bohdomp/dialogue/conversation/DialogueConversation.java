@@ -20,7 +20,6 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
-import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
 
 /**
  * Class representing a Dialogue conversation. This class is mutable
@@ -131,7 +130,6 @@ public final class DialogueConversation implements Conversation {
         return new ArrayList<DialogueMessage>(mMessages);
     }
 
-
     @Override
     public Timestamp getLastActivityTime() {
         return mLastActivityTime;
@@ -190,6 +188,18 @@ public final class DialogueConversation implements Conversation {
         return mMessageCount;
     }
 
+    @Override
+    public void setMessageStatus(DialogueMessage message, DialogueMessage.MessageStatus status) {
+        Contract.throwIfArgNull(message, "message");
+        Contract.throwIfArgNull(status, "status");
+
+        for (int i = 0; i < mMessages.size(); i++) {
+            if (mMessages.get(i).equals(message)) {
+                mMessages.get(i).setStatus(status);
+            }
+        }
+    }
+
 
     @Override
     public boolean hasUnread() {
@@ -225,7 +235,7 @@ public final class DialogueConversation implements Conversation {
             throw new NullArgumentException("message == null !");
         }
 
-        if (message.getStatus() == MessageStatus.INCOMING) {
+        if (message.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             mHasUnread = true;
         }
 

@@ -33,7 +33,7 @@ public class StorageManagerTest extends MockTestCase {
         mStorageManager = new StorageManager(mContext);
 
         mContact = new ContactFactory(mContext).contactFromNumber(CONTACT_NUMBER);
-        mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
+        mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY, DialogueMessage.MessageDirection.INCOMING);
         mConversation = mData.createOrGetConversation(mContact);
         mConversation.addMessage(mMessage);
         nbOfConversations = mData.getConversations().size();

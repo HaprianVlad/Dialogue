@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 
 import org.mockito.Mockito;
@@ -24,8 +25,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
-import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
-
+import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
 /**
  * Created by BohDomp! on 08.11.14.
  */
@@ -146,6 +146,49 @@ public class DialogueConversationTest extends MockTestCase {
         assertEquals(false, mConversation.hasUnread());
     }
 
+    public void testSetMessageStatusNullMessageValidStatus() {
+        try {
+            mConversation.setMessageStatus(null, DialogueMessage.MessageStatus.SENT);
+            fail("Should throw NullArgumentException");
+        } catch (NullArgumentException e) {
+            // OK
+        }
+    }
+
+    public void testSetMessageStatusValidMessageNullStatus() {
+        DialogueMessage message = new DialogueTextMessage(mContact, null, null, "body", MessageDirection.OUTGOING);
+
+        mConversation.addMessage(message);
+
+        try {
+            mConversation.setMessageStatus(message, null);
+            fail("Should throw NullArgumentException");
+        } catch (NullArgumentException e) {
+            // OK
+        }
+    }
+
+    public void testSetMessageStatusValidMessageValidStatus() {
+        DialogueMessage message1 = new DialogueTextMessage(mContact, null, null, "body1", MessageDirection.OUTGOING);
+        DialogueMessage message2 = new DialogueTextMessage(mContact, null, null, "body2", MessageDirection.OUTGOING);
+
+        mConversation.addMessage(message1);
+        mConversation.addMessage(message2);
+
+        Intent intent = new Intent();
+        intent.putExtra(DialogueMessage.MESSAGE, message2);
+        DialogueMessage message2FromIntent = DialogueTextMessage.extractMessage(intent);
+
+        try {
+            mConversation.setMessageStatus(message2FromIntent, DialogueMessage.MessageStatus.SENT);
+        } catch (NullArgumentException e) {
+            fail("Should not throw NullArgumentException");
+        }
+
+        assertEquals(DialogueMessage.MessageStatus.SENT, mConversation.getMessages().get(1).getStatus());
+        assertEquals(MessageDirection.OUTGOING, mConversation.getMessages().get(0).getDirection());
+    }
+
     public void testAddNullContact() {
 
         try {
@@ -236,7 +279,8 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testAddOutgoingMessage() {
         DialogueMessage message = new DialogueTextMessage(mContact, mChannel, mNumber,
-                "Test message 1", MessageStatus.OUTGOING);
+                "Test message 1", MessageDirection.OUTGOING);
+
         mConversation.addMessage(message);
         mMessages.add(message);
 
@@ -246,7 +290,8 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testAddIncomingMessage() {
         DialogueMessage message = new DialogueTextMessage(mContact, null, null,
-                "Test message 1", MessageStatus.INCOMING);
+                "Test message 1", MessageDirection.INCOMING);
+
         mConversation.addMessage(message);
         mMessages.add(message);
 
@@ -256,7 +301,8 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testSetAllMessagesAsRead() {
         DialogueMessage message = new DialogueTextMessage(mContact, null, null,
-                "Test message 1", MessageStatus.INCOMING);
+                "Test message 1", MessageDirection.INCOMING);
+
         mConversation.addMessage(message);
 
         assertTrue(mConversation.hasUnread());
@@ -284,7 +330,8 @@ public class DialogueConversationTest extends MockTestCase {
         };
 
         DialogueMessage message1 = new DialogueTextMessage(mContact, mChannel, mNumber,
-                "Test message 1", MessageStatus.OUTGOING);
+                "Test message 1", MessageDirection.OUTGOING);
+
         mConversation.addMessage(message1);
 
         assertFalse(mHasBeenCalled);
@@ -292,7 +339,8 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation.addListener(listener);
 
         DialogueMessage message2 = new DialogueTextMessage(mContact, mChannel , mNumber,
-                "Test message 2", MessageStatus.OUTGOING);
+                "Test message 2", MessageDirection.OUTGOING);
+
         mConversation.addMessage(message2);
 
         assertTrue(mHasBeenCalled);
@@ -320,7 +368,8 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation.removeListener(listener);
 
         DialogueMessage message1 = new DialogueTextMessage(mContact, mChannel, mNumber,
-                "Test message 1", MessageStatus.OUTGOING);
+                "Test message 1", MessageDirection.OUTGOING);
+
         mConversation.addMessage(message1);
 
         assertFalse(mHasBeenCalled);
@@ -465,7 +514,8 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
         DialogueMessage message = new DialogueTextMessage(mContact, mChannel, mNumber,
-                "Test message 1", MessageStatus.OUTGOING);
+                "Test message 1", MessageDirection.OUTGOING);
+
         mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();
@@ -511,7 +561,8 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
         DialogueMessage message = new DialogueTextMessage(mContact, null, null,
-                "Test message 1", MessageStatus.INCOMING);
+                "Test message 1", MessageDirection.INCOMING);
+
         mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();

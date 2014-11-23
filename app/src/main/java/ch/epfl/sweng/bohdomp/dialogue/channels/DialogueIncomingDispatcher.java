@@ -40,7 +40,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
         }
 
         //An outgoing message should not arrive here
-        if (message.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+        if (message.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             throw new IllegalArgumentException();
         }
 

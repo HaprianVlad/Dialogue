@@ -34,7 +34,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         if (message == null) {
             throw new NullArgumentException("message");
         }
-        if (message.getStatus() == DialogueMessage.MessageStatus.INCOMING) {
+        if (message.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             throw new IllegalArgumentException();
         }
 

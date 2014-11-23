@@ -22,14 +22,14 @@ public class DialogueTextMessageTest extends MockTestCase {
     private static final String TEXT = "Hello world!";
     private static final int ARRAY_SIZE = 6;
 
-    private final DialogueMessage.MessageStatus mStatus = DialogueMessage.MessageStatus.INCOMING;
+    private final DialogueMessage.MessageDirection mDirection = DialogueMessage.MessageDirection.INCOMING;
     private Contact mContact;
     private DialogueTextMessage mMessage;
 
     protected void setUp() throws Exception {
         super.setUp();
         this.mContact = Mockito.mock(Contact.class);
-        this.mMessage = new DialogueTextMessage(mContact, null, null, TEXT, mStatus);
+        this.mMessage = new DialogueTextMessage(mContact, null, null, TEXT, mDirection);
     }
 
     public void testParcelRoundTrip() throws InvalidNumberException {
@@ -40,7 +40,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
         Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
 
-        DialogueMessage message = new DialogueTextMessage(contact, null, null, TEXT, mStatus);
+        DialogueMessage message = new DialogueTextMessage(contact, null, null, TEXT, mDirection);
 
         Parcel parcel = Parcel.obtain();
         message.writeToParcel(parcel, 0);
@@ -64,7 +64,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullContactArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(null, null, null, TEXT, mStatus);
+            this.mMessage = new DialogueTextMessage(null, null, null, TEXT, mDirection);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
@@ -73,7 +73,8 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullTextArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(mContact, null, null, null, mStatus);
+            this.mMessage = new DialogueTextMessage(mContact, null, null, null, mDirection);
+
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
@@ -102,11 +103,9 @@ public class DialogueTextMessageTest extends MockTestCase {
     }
 
     public void testGetMessageStatus() {
-        assertTrue(mMessage.getStatus() != null);
-        assertEquals(mStatus, mMessage.getStatus());
-
+        assertTrue(mMessage.getDirection() != null);
+        assertEquals(mDirection, mMessage.getDirection());
     }
-
 
     public void testGetMessageId() {
         DialogueMessageId afterId = IdManager.getInstance().newDialogueMessageId();
@@ -131,4 +130,23 @@ public class DialogueTextMessageTest extends MockTestCase {
         assertEquals(ARRAY_SIZE, newArray.length);
     }
 
+    public void testSetStatusNullArg() {
+        try {
+            mMessage.setStatus(null);
+            fail();
+        } catch (NullArgumentException e) {
+            // OK
+        }
+    }
+
+    public void testSetStatusValidArg() {
+        try {
+            mMessage.setStatus(DialogueMessage.MessageStatus.DELIVERED);
+            // OK
+        } catch (NullArgumentException e) {
+            fail();
+        }
+
+        assertEquals(DialogueMessage.MessageStatus.DELIVERED, mMessage.getStatus());
+    }
 }

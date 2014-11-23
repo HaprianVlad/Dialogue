@@ -142,15 +142,15 @@ public class MessagesAdapter extends BaseAdapter {
         String timeStamp = msg.getTimeStamp().toString();
         viewHolder.timeStamp.setText(timeStamp);
 
-        if (msg.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+        if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.status.setVisibility(View.VISIBLE);
         }
 
-        if (msg.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+        if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_right);
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
             viewHolder.wrapper.setGravity(Gravity.RIGHT);
-        } else if (msg.getStatus() == DialogueMessage.MessageStatus.INCOMING) {
+        } else if (msg.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_left);
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
             viewHolder.wrapper.setGravity(Gravity.LEFT);

@@ -19,7 +19,6 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  * Class creating a Tester for a Dialogue Incoming Dispatcher
  */
 public final class DialogueIncomingDispatcherTest extends ServiceTestCase<DialogueIncomingDispatcher> {
-
     private DialogueMessage mMessage;
     private DialogueMessage mMessageOutgoing;
     private Conversation mConversation;
@@ -44,9 +43,10 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         Contact.ChannelType channel = Contact.ChannelType.SMS;
 
         String body = "Hello";
-        mMessage = new DialogueTextMessage(contact, null, null, body, DialogueMessage.MessageStatus.INCOMING);
+
+        mMessage = new DialogueTextMessage(contact, null, null, body, DialogueMessage.MessageDirection.INCOMING);
         mMessageOutgoing = new DialogueTextMessage(contact, channel, number,
-                body, DialogueMessage.MessageStatus.OUTGOING);
+                body, DialogueMessage.MessageDirection.OUTGOING);
 
         mIntent = new Intent();
         mIntent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);
@@ -135,5 +135,4 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
         assertEquals(initialNbOfMessages, afterNbOfMessages);
     }
-
 }
