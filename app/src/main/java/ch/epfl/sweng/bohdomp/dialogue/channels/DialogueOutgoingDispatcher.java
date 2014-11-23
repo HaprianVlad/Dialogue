@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -63,9 +62,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     }
 
     private void sendSms(DialogueMessage message) {
-        if (BuildConfig.DEBUG && (message == null)) {
-            throw new AssertionError("message == null");
-        }
+        Contract.assertNotNull(message, "message");
 
         Log.i("DialogueOutgoingDispatcher", "3");
 
@@ -78,27 +75,19 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     }
 
     private void sendMms(DialogueMessage message) {
-        if (BuildConfig.DEBUG && (message == null)) {
-            throw new AssertionError("message == null");
-        }
+        Contract.assertNotNull(message, "message");
 
         /* Create intent */
         /* Send intent to service */
     }
 
     private boolean canSendSms(DialogueMessage message) {
-        if (BuildConfig.DEBUG && (message == null)) {
-            throw new AssertionError("message == null");
-        }
-
+        Contract.assertNotNull(message, "message");
         return message.getContact().availableChannels().contains(Contact.ChannelType.SMS);
     }
 
     private boolean canSendMms(DialogueMessage message) {
-        if (BuildConfig.DEBUG && (message == null)) {
-            throw new AssertionError("message == null");
-        }
-
+        Contract.assertNotNull(message, "message");
         return message.getContact().availableChannels().contains(Contact.ChannelType.MMS);
     }
 }
