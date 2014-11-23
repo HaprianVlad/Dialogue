@@ -304,8 +304,8 @@ public final class DialogueConversation implements Conversation {
 
         this.mTimeProvider = timeProvider;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
-        this.mContacts = new ArrayList<Contact>(in.readArrayList(Contact.class.getClassLoader()));
-        this.mMessages =  new ArrayList<DialogueMessage>(in.readArrayList(DialogueMessage.class.getClassLoader()));
+        this.mContacts = in.readArrayList(Contact.class.getClassLoader());
+        this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
         this.mLastActivityTime = new Timestamp(in.readLong());
         this.mMessageCount = in.readInt();
         this.mHasUnread = in.readByte() != 0;

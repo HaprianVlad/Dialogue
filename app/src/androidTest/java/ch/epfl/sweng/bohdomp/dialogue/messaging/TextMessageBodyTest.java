@@ -10,11 +10,16 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
  */
 public class TextMessageBodyTest extends AndroidTestCase {
 
-    private  MessageBody mMessageBody;
     private static final String BODY = "Hello world!";
+    private static final int ARRAY_SIZE = 6;
+
+    private  MessageBody mMessageBody;
+
+    public void setUp() {
+        mMessageBody = new TextMessageBody(BODY);
+    }
 
     public void testParcelRoundTrip() {
-        mMessageBody = new TextMessageBody(BODY);
 
         Parcel parcel = Parcel.obtain();
         mMessageBody.writeToParcel(parcel, 0);
@@ -38,7 +43,18 @@ public class TextMessageBodyTest extends AndroidTestCase {
     }
 
     public void testCorrectMessageBody() {
-        this.mMessageBody = new TextMessageBody(BODY);
+
         assertEquals(BODY, mMessageBody.getMessageBody());
+    }
+
+    public void testDescribeContents() {
+
+        assertEquals(0, mMessageBody.describeContents());
+    }
+
+    public void testNewArray() {
+        TextMessageBody[] newArray = TextMessageBody.CREATOR.newArray(ARRAY_SIZE);
+
+        assertEquals(ARRAY_SIZE, newArray.length);
     }
 }
