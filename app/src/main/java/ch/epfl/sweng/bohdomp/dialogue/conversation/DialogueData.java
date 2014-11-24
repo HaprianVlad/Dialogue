@@ -43,6 +43,11 @@ public interface DialogueData {
     void removeConversation(ConversationId id);
 
     /**
+     * Delete all conversations
+     */
+    void removeAllConversations();
+
+    /**
      * Adds the message to the correct conversation.
      * @param message to be added.
      */
@@ -72,5 +77,4 @@ public interface DialogueData {
      * @return bundle representing the state of the application
      */
     Bundle createBundle();
-
 }

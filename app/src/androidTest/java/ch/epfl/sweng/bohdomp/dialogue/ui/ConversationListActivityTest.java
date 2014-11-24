@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.ui;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ListView;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
@@ -19,6 +20,8 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
     private ConversationListActivity mActivity;
     private Instrumentation mInstrumentation;
 
+    private ListView mContactListView;
+
     private int mConversationCountAtStart;
 
     public ConversationListActivityTest() {
@@ -33,13 +36,16 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
         mInstrumentation = getInstrumentation();
 
         mActivity = getActivity();
+        mContactListView = (ListView) mActivity.findViewById(R.id.listConversationsView);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
+        assertEquals("Not reset", mConversationCountAtStart,
+                DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
+
 
     public void testNewConversationClick() {
         Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
@@ -49,19 +55,17 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
             @Override
             public void run() {
                 mActivity.openOptionsMenu();
-                mActivity.findViewById(R.id.action_addConversation).performClick();
+                assertTrue(mActivity.findViewById(R.id.action_addConversation).isClickable());
+                mActivity.findViewById(R.id.action_addConversation).callOnClick();
             }
         });
 
-        mInstrumentation.waitForIdleSync();
-
         Activity activity = getInstrumentation().waitForMonitorWithTimeout(monitor, TIMEOUT);
+        activity.finish();
 
         // Check if send to right activity
         assertNotNull(activity);
         assertEquals(activity.getClass(), NewConversationActivity.class);
         assertTrue(getInstrumentation().checkMonitorHit(monitor, 1));
-
-        activity.finish();
     }
 }

@@ -2,6 +2,8 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.provider.Telephony;
@@ -23,6 +25,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
@@ -41,7 +44,11 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private LinearLayout mDefaultAppWarningLayout;
     private Button mChangeDefaultAppButton;
 
+    private AlertDialog mDialog;
+
     private String myPackageName;
+
+    private DialogueData mData;
 
     private List<Conversation> mConversationList;
     private ConversationListAdapter mConversationItemListAdapter;
@@ -56,11 +63,12 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_contact_list);
-        DefaultDialogData.getInstance().addListener(this);
 
         initData();
         setViewElements();
         setupListener();
+
+        mData.addListener(this);
     }
 
     /*
@@ -68,7 +76,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
      */
     private void initData() {
         myPackageName = getPackageName();
-        mConversationList = DefaultDialogData.getInstance().getConversations();
+        mData = DefaultDialogData.getInstance();
+        mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
         retreiveDataFromFile();
 
@@ -77,8 +86,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     public void onDialogueDataChanged() {
 
-        mConversationList = DefaultDialogData.getInstance().getConversations();
-
+        mConversationList = mData.getConversations();
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -98,6 +106,37 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         mChangeDefaultAppButton = (Button) findViewById(R.id.setDefaultAppButton);
         mContactListView = (ListView) findViewById(R.id.listConversationsView);
         mContactListView.setAdapter(mConversationItemListAdapter);
+
+        setDialogDeleteAll();
+    }
+
+    private void setDialogDeleteAll() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        mData.removeAllConversations();
+                        dialog.cancel();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.cancel();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        builder.setTitle(getString(R.string.deleteAllDialog_title));
+        builder.setMessage(getString(R.string.deleteAllDialog_question));
+        builder.setPositiveButton("Yes", dialogClickListener);
+        builder.setNegativeButton("No", dialogClickListener);
+
+        mDialog = builder.create();
     }
 
     /**
@@ -146,7 +185,25 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onResume() {
         checkDefaultApp();
+
+        mData = DefaultDialogData.getInstance();
+        mConversationList = mData.getConversations();
+        mData.addListener(this);
+
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mData.removeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        mData.removeListener(this);
+        saveDataToFile();
+        super.onStop();
     }
 
     @Override
@@ -161,18 +218,23 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_deleteAll:
+                mDialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
 
-        Bundle b =DefaultDialogData.getInstance().createBundle();
+        Bundle b = DefaultDialogData.getInstance().createBundle();
         savedInstanceState.putBundle(APP_DATA, b);
 
         super.onSaveInstanceState(savedInstanceState);
@@ -185,14 +247,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-    }
-
-
-    @Override
-    protected void onStop() {
-        DefaultDialogData.getInstance().removeListener(this);
-        saveDataToFile();
-        super.onStop();
     }
 
     /**
