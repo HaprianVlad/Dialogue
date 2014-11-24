@@ -3,8 +3,11 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import android.os.Bundle;
 import android.test.InstrumentationTestCase;
 
+import org.mockito.Mockito;
+
 import java.util.ArrayList;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 
@@ -21,6 +24,11 @@ public class DialogueDataNotListenerTest extends InstrumentationTestCase {
 
     public void setUp() {
         mDialogueData = DefaultDialogData.getInstance();
+        hackMockito();
+    }
+
+    private void hackMockito() {
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
     }
 
     public void testGetNullConversation() {
@@ -104,4 +112,18 @@ public class DialogueDataNotListenerTest extends InstrumentationTestCase {
     }
 
     // TODO public void testRestoreFromBundle()
+
+    public void testDeleteAll() {
+        Contact contact1 = Mockito.mock(Contact.class);
+        Contact contact2 = Mockito.mock(Contact.class);
+
+        mDialogueData.createOrGetConversation(contact1);
+        mDialogueData.createOrGetConversation(contact2);
+
+        assertFalse(0 == mDialogueData.getConversations().size());
+
+        mDialogueData.removeAllConversations();
+
+        assertTrue(0 == mDialogueData.getConversations().size());
+    }
 }
