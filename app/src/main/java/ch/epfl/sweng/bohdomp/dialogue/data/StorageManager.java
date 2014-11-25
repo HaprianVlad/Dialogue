@@ -38,7 +38,6 @@ public class StorageManager {
             outputStream = mContext.openFileOutput(mSaveFileName, mContext.MODE_PRIVATE);
             outputStream.write(parcel.marshall());
 
-
         } catch (IOException e) {
             Toast.makeText(mContext, "Unable to save messages", Toast.LENGTH_LONG).show();
 
