@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -269,7 +270,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         parcel.setDataPosition(0);
 
         try {
-            outputStream = openFileOutput(saveFileName, getApplicationContext().MODE_PRIVATE);
+            outputStream = openFileOutput(saveFileName, Context.MODE_PRIVATE);
             outputStream.write(parcel.marshall());
 
 
