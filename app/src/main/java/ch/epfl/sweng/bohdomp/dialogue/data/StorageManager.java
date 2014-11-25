@@ -16,7 +16,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class StorageManager {
 
-
     private final String mSaveFileName ="saveFile";
     private final Context mContext;
 
@@ -26,10 +25,7 @@ public class StorageManager {
         this.mContext = context;
     }
 
-
-
     public void saveData() {
-
         FileOutputStream outputStream = null;
 
         Bundle bundle = DefaultDialogData.getInstance().createBundle();
@@ -37,7 +33,6 @@ public class StorageManager {
         Parcel parcel = Parcel.obtain();
         bundle.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
-
 
         try {
             outputStream = mContext.openFileOutput(mSaveFileName, mContext.MODE_PRIVATE);
@@ -58,8 +53,6 @@ public class StorageManager {
                 }
             }
         }
-
-
     }
 
     public void retreiveData() {
@@ -72,11 +65,8 @@ public class StorageManager {
             parcel.setDataPosition(0);
 
             DefaultDialogData.getInstance().restoreFromBundle(parcel.readBundle());
-
-
         }
         parcel.recycle();
-
     }
 
     private byte[] readFile() {
