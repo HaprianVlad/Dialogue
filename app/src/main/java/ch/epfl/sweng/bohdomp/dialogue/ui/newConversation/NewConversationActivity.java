@@ -16,10 +16,11 @@ import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -29,14 +30,13 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * Activity enables the user to create a new conversation
  */
 public class NewConversationActivity extends Activity {
-    private static final String LOG_TAG = "NewMessageActivity";
-    private static final String APP_DATA = "APP_DATA";
-
 
     private ContactFactory mContactFactory;
 
     private EditText mToEditText;
     private Button mSendButton;
+
+    private StorageManager mStorageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class NewConversationActivity extends Activity {
         setContentView(R.layout.activity_new_conversation);
 
         mContactFactory = new ContactFactory(getApplicationContext());
+        mStorageManager = new StorageManager(getApplicationContext());
 
         setupActionBar();
         setViewElement();
@@ -121,21 +122,9 @@ public class NewConversationActivity extends Activity {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
-
-        super.onSaveInstanceState(savedInstanceState);
+    protected void onResume() {
+        mStorageManager.saveData();
+        super.onResume();
     }
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        super.onRestoreInstanceState(savedInstanceState);
-
-        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-    }
 }

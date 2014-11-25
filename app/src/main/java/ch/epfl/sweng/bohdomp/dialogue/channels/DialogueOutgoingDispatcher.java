@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;

@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;

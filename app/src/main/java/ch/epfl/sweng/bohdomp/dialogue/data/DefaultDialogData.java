@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.conversation;
+package ch.epfl.sweng.bohdomp.dialogue.data;
 
 import android.os.Bundle;
 
@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -142,7 +145,10 @@ public final class DefaultDialogData implements DialogueData {
             throw new NullArgumentException("listener == null !");
         }
 
-        mListeners.add(listener);
+        if (!mListeners.contains(listener)) {
+            mListeners.add(listener);
+        }
+
     }
 
     @Override

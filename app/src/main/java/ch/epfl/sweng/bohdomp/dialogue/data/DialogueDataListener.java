@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.conversation;
+package ch.epfl.sweng.bohdomp.dialogue.data;
 
 /**
  * Class representing a listener for the Dialogue Data

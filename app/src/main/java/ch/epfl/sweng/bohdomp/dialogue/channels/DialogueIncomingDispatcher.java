@@ -5,7 +5,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;

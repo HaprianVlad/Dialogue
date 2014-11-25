@@ -7,7 +7,7 @@ import android.test.ServiceTestCase;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
