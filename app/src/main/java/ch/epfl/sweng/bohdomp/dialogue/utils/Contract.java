@@ -29,26 +29,32 @@ public class Contract {
     }
 
     public static void assertTrue(Boolean condition, final String msg) {
-        throwIfArgNull(msg, "message");
+        if (BuildConfig.DEBUG) {
+            throwIfArgNull(msg, "message");
 
-        if (BuildConfig.DEBUG && !condition) {
-            throw new AssertionError(msg);
+            if (!condition) {
+                throw new AssertionError(msg);
+            }
         }
     }
 
     public static void assertFalse(Boolean condition, final String msg) {
-        throwIfArgNull(msg, "message");
+        if (BuildConfig.DEBUG) {
+            throwIfArgNull(msg, "message");
 
-        if (BuildConfig.DEBUG && condition) {
-            throw new AssertionError(msg);
+            if (condition) {
+                throw new AssertionError(msg);
+            }
         }
     }
 
     public static <T> void assertNotNull(T obj, final String name) {
-        throwIfArgNull(name, "name");
+        if (BuildConfig.DEBUG) {
+            throwIfArgNull(name, "name");
 
-        if (BuildConfig.DEBUG && obj == null) {
-            throw new AssertionError("argument is null: " + name);
+            if (obj == null) {
+                throw new AssertionError("argument is null: " + name);
+            }
         }
     }
 }
