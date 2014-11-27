@@ -50,15 +50,18 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Contract.throwIfArgNull(intent, "intent");
 
-        DialogueMessage message = DialogueMessage.extractMessage(intent);
+        if (intent.getAction() == ACTION_SEND_MESSAGE) {
+            DialogueMessage message = DialogueMessage.extractMessage(intent);
 
-        DefaultDialogData.getInstance().addMessageToConversation(message);
+            DefaultDialogData.getInstance().addMessageToConversation(message);
 
-        if (canSendSms(message)) {
-            sendSms(message);
-        } else if (canSendMms(message)) {
-            sendMms(message);
+            if (canSendSms(message)) {
+                sendSms(message);
+            } else if (canSendMms(message)) {
+                sendMms(message);
+            }
         }
+
     }
 
     private void sendSms(DialogueMessage message) {
