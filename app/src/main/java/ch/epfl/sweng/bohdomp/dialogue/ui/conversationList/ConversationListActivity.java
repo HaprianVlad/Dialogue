@@ -31,6 +31,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+import de.timroes.android.listview.EnhancedListView;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -41,23 +42,16 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private final static String APP_DATA = "APP_DATA";
     private final String saveFileName ="fileName";
 
-    private ListView mContactListView;
+    private EnhancedListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
     private Button mChangeDefaultAppButton;
-
     private AlertDialog mDialog;
 
     private String myPackageName;
 
     private DialogueData mData;
-
     private List<Conversation> mConversationList;
     private ConversationListAdapter mConversationItemListAdapter;
-
-    private Bundle mSavedInstance;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +74,11 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         mData = DefaultDialogData.getInstance();
         mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
-        retreiveDataFromFile();
-
+        retrieveDataFromFile();
     }
 
     @Override
     public void onDialogueDataChanged() {
-
         mConversationList = mData.getConversations();
         this.runOnUiThread(new Runnable() {
             @Override
@@ -105,8 +97,36 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         checkDefaultApp();
 
         mChangeDefaultAppButton = (Button) findViewById(R.id.setDefaultAppButton);
-        mContactListView = (ListView) findViewById(R.id.listConversationsView);
+        mContactListView = (EnhancedListView) findViewById(R.id.listConversationsView);
         mContactListView.setAdapter(mConversationItemListAdapter);
+        mContactListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+
+            @Override public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+
+                final Conversation item = (Conversation) mConversationItemListAdapter.getItem(position);
+                mConversationItemListAdapter.remove(position);
+
+                return new EnhancedListView.Undoable() {
+                    @Override
+                    public void undo() {
+                        mConversationItemListAdapter.insert(position, item);
+                    }
+
+                    @Override
+                    public void discard() {
+                        mData.removeConversation(item.getId());
+                    }
+                };
+            }
+        });
+
+        mContactListView.enableSwipeToDismiss();
+        mContactListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
+        mContactListView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
+
+        mContactListView.setSwipingLayout(R.id.swiping_layout);
+
+        setDialogDeleteAll();
 
         setDialogDeleteAll();
     }
@@ -203,8 +223,18 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onStop() {
         mData.removeListener(this);
+        mContactListView.discardUndo();
         saveDataToFile();
         super.onStop();
+    }
+
+    /**
+     * Method called when the new conversation is clicked
+     * Start the "new message activity"
+     */
+    public void newConversationClicked(MenuItem item) {
+        Intent intent = new Intent(this, NewConversationActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -221,8 +251,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         // as you specify a parent activity in AndroidManifest.xml.
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
             case R.id.action_deleteAll:
                 mDialog.show();
                 return true;
@@ -248,15 +276,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onRestoreInstanceState(savedInstanceState);
 
         DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-    }
-
-    /**
-     * Method called when the new conversation is clicked
-     * Start the "new message activity"
-     */
-    public void newConversationClicked(MenuItem item) {
-        Intent intent = new Intent(this, NewConversationActivity.class);
-        startActivity(intent);
     }
 
     private void saveDataToFile() {
@@ -291,7 +310,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
     }
 
-    private void retreiveDataFromFile() {
+    private void retrieveDataFromFile() {
         Parcel parcel = Parcel.obtain();
 
         byte [] data = readFile();

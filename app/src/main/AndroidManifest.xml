@@ -118,7 +118,8 @@
         <activity
             android:name=".ui.newConversation.NewConversationActivity"
             android:label="@string/title_activity_new_conversation"
-            android:parentActivityName=".ui.conversationList.ConversationListActivity">
+            android:parentActivityName=".ui.conversationList.ConversationListActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>
     </application>
 

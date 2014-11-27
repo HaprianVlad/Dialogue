@@ -23,7 +23,7 @@ android {
 
         debug{
            //manually enable if needed, currently it breaks all builds.
-	   testCoverageEnabled false
+	        testCoverageEnabled true
         }
     }
 
@@ -62,6 +62,8 @@ dependencies {
     androidTestCompile('com.jakewharton.espresso:espresso:1.1-r3') {
   		exclude group: 'org.hamcrest'
     }
+
+    compile 'de.timroes.android:EnhancedListView:0.3.4'
 
     //androidTestCompile('org.powermock:powermock-mockito-release-full:1.4.9')
 

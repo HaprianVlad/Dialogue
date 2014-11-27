@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <ListView
+    <de.timroes.android.listview.EnhancedListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/notDefaultWarning"

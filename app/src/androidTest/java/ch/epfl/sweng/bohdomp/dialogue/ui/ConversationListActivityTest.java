@@ -22,8 +22,6 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
 
     private ListView mContactListView;
 
-    private int mConversationCountAtStart;
-
     public ConversationListActivityTest() {
         super(ConversationListActivity.class);
     }
@@ -31,7 +29,6 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mConversationCountAtStart = DefaultDialogData.getInstance().getConversations().size();
 
         mInstrumentation = getInstrumentation();
 
@@ -39,16 +36,8 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
         mContactListView = (ListView) mActivity.findViewById(R.id.listConversationsView);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        assertEquals("Not reset", mConversationCountAtStart,
-                DefaultDialogData.getInstance().getConversations().size());
-        super.tearDown();
-    }
-
-
     public void testNewConversationClick() {
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
+        Instrumentation.ActivityMonitor monitor = mInstrumentation.addMonitor(
                 NewConversationActivity.class.getName(), null, false);
 
         mActivity.runOnUiThread(new Runnable() {
@@ -60,12 +49,11 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
             }
         });
 
-        Activity activity = getInstrumentation().waitForMonitorWithTimeout(monitor, TIMEOUT);
+        Activity activity = mInstrumentation.waitForMonitorWithTimeout(monitor, TIMEOUT);
         activity.finish();
 
-        // Check if send to right activity
         assertNotNull(activity);
         assertEquals(activity.getClass(), NewConversationActivity.class);
-        assertTrue(getInstrumentation().checkMonitorHit(monitor, 1));
+        assertTrue(mInstrumentation.checkMonitorHit(monitor, 1));
     }
 }
