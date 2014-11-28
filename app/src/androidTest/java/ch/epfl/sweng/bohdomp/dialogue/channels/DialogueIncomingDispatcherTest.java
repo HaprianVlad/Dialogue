@@ -20,11 +20,11 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  */
 public final class DialogueIncomingDispatcherTest extends ServiceTestCase<DialogueIncomingDispatcher> {
 
-    private DialogueMessage message;
-    private DialogueMessage messageOutgoing;
-    private Conversation conversation;
-    private Intent intent;
-    private Intent badIntent;
+    private DialogueMessage mMessage;
+    private DialogueMessage mMessageOutgoing;
+    private Conversation mConversation;
+    private Intent mIntent;
+    private Intent mBadIntent;
 
     public DialogueIncomingDispatcherTest() {
         super(DialogueIncomingDispatcher.class);
@@ -38,24 +38,24 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         ContactFactory contactFactory = new ContactFactory(getSystemContext());
 
         Contact contact = contactFactory.contactFromNumber("0762677108");
-        conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
+        mConversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
         String body = "Hello";
-        message = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.INCOMING);
-        messageOutgoing = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.OUTGOING);
+        mMessage = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.INCOMING);
+        mMessageOutgoing = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.OUTGOING);
 
-        intent = new Intent();
-        intent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);
-        intent.putExtra(DialogueMessage.MESSAGE, message);
+        mIntent = new Intent();
+        mIntent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);
+        mIntent.putExtra(DialogueMessage.MESSAGE, mMessage);
 
-        badIntent = new Intent();
-        badIntent.setAction("");
-        badIntent.putExtra(DialogueMessage.MESSAGE, message);
+        mBadIntent = new Intent();
+        mBadIntent.setAction("");
+        mBadIntent.putExtra(DialogueMessage.MESSAGE, mMessage);
     }
 
     public void testReceiveNullContext() {
         try {
-            DialogueIncomingDispatcher.receiveMessage(null, message);
+            DialogueIncomingDispatcher.receiveMessage(null, mMessage);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //ok
@@ -73,7 +73,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveOutgoingMessage() {
         try {
-            DialogueIncomingDispatcher.receiveMessage(mContext, messageOutgoing);
+            DialogueIncomingDispatcher.receiveMessage(mContext, mMessageOutgoing);
             fail("Exception should have been thrown");
         } catch (IllegalArgumentException e) {
             //ok
@@ -83,7 +83,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
     public void testServiceStartedCorrectlyViaIntent() throws Exception {
         assertTrue(getService() == null);
 
-        startService(intent);
+        startService(mIntent);
 
         assertTrue(getService() != null);
     }
@@ -93,10 +93,10 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
         assertTrue(getService() != null);
 
-        getService().onHandleIntent(intent);
+        getService().onHandleIntent(mIntent);
 
         List<DialogueMessage> messages = DefaultDialogData.getInstance().
-                getConversation(conversation.getId()).getMessages();
+                getConversation(mConversation.getId()).getMessages();
 
         assertTrue(messages.size() > 0);
 
@@ -104,13 +104,13 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
         assertTrue(message1 != null);
 
-        assertEquals(message.getId(), message1.getId());
-        assertEquals(message.getContact(), message1.getContact());
-        assertEquals(message.getBody(), message1.getBody());
-        assertEquals(message.getIsDataMessage(), message1.getIsDataMessage());
-        assertEquals(message.getIsReadStatus(), message1.getIsReadStatus());
-        assertEquals(message.getStatus(), message1.getStatus());
-        assertEquals(message.getTimeStamp(), message1.getTimeStamp());
+        assertEquals(mMessage.getId(), message1.getId());
+        assertEquals(mMessage.getContact(), message1.getContact());
+        assertEquals(mMessage.getBody(), message1.getBody());
+        assertEquals(mMessage.getIsDataMessage(), message1.getIsDataMessage());
+        assertEquals(mMessage.getIsReadStatus(), message1.getIsReadStatus());
+        assertEquals(mMessage.getStatus(), message1.getStatus());
+        assertEquals(mMessage.getTimeStamp(), message1.getTimeStamp());
 
     }
 
@@ -121,12 +121,12 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         assertTrue(getService() != null);
 
         int initialNbOfMessages =  DefaultDialogData.getInstance().
-                getConversation(conversation.getId()).getMessages().size();
+                getConversation(mConversation.getId()).getMessages().size();
 
-        getService().onHandleIntent(badIntent);
+        getService().onHandleIntent(mBadIntent);
 
         int afterNbOfMessages =  DefaultDialogData.getInstance().
-                getConversation(conversation.getId()).getMessages().size();
+                getConversation(mConversation.getId()).getMessages().size();
 
 
         assertEquals(initialNbOfMessages, afterNbOfMessages);
