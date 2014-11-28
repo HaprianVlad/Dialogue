@@ -122,6 +122,13 @@
             android:parentActivityName=".ui.conversationList.ConversationListActivity"
             android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>
+
+        <activity
+            android:name=".ui.conversation.ConversationSettingsActivity"
+            android:label="@string/title_activity_conversation_settings_activity"
+            android:parentActivityName=".ui.conversation.ConversationActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
+        </activity>
     </application>
 
 </manifest>

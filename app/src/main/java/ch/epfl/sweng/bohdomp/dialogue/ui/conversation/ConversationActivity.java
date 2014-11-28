@@ -9,6 +9,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,19 +102,6 @@ public class ConversationActivity extends Activity implements ConversationListen
         mMessageItemListAdapter = new MessagesAdapter(this, mMessages);
     }
 
-    @Override
-    public void onConversationChanged(ConversationId conversationId) {
-        Contract.throwIfArgNull(conversationId, "id");
-        Contract.throwIfArg(mConversation.getId().getLong() != conversationId.getLong(), "Wrong listener");
-
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMessageItemListAdapter.updateData(mConversation.getMessages());
-            }
-        });
-    }
-
     /*
      * Set all view elements
      */
@@ -177,6 +166,18 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     }
 
+    @Override
+    public void onConversationChanged(ConversationId conversationId) {
+        Contract.throwIfArgNull(conversationId, "id");
+        Contract.throwIfArg(mConversation.getId().getLong() != conversationId.getLong(), "Wrong listener");
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMessageItemListAdapter.updateData(mConversation.getMessages());
+            }
+        });
+    }
 
     protected void onPause() {
         mStorageManager.saveData();
@@ -187,6 +188,30 @@ public class ConversationActivity extends Activity implements ConversationListen
     protected void onStop() {
         mConversation.removeListener(this);
         super.onStop();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present
+        getMenuInflater().inflate(R.menu.conversation, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, ConversationSettingsActivity.class);
+                intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
