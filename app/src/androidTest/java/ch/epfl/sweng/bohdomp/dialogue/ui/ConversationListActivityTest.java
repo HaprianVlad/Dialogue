@@ -3,10 +3,8 @@ package ch.epfl.sweng.bohdomp.dialogue.ui;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.ListView;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 
@@ -20,8 +18,6 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
     private ConversationListActivity mActivity;
     private Instrumentation mInstrumentation;
 
-    private ListView mContactListView;
-
     public ConversationListActivityTest() {
         super(ConversationListActivity.class);
     }
@@ -33,7 +29,6 @@ public class ConversationListActivityTest extends ActivityInstrumentationTestCas
         mInstrumentation = getInstrumentation();
 
         mActivity = getActivity();
-        mContactListView = (ListView) mActivity.findViewById(R.id.listConversationsView);
     }
 
     public void testNewConversationClick() {
