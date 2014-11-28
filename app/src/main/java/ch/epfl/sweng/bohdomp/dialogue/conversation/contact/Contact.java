@@ -24,8 +24,32 @@ public interface Contact extends Parcelable {
     /**
      * enumeration for channel types
      */
-    public static enum ChannelType {
+    public static enum ChannelType implements Parcelable {
         SMS, MMS;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            Contract.throwIfArgNull(dest, "destination parcel");
+            dest.writeInt(ordinal());
+        }
+
+        public static final Creator<ChannelType> CREATOR = new Creator<ChannelType>() {
+            @Override
+            public ChannelType createFromParcel(Parcel source) {
+                Contract.throwIfArgNull(source, "source parcel");
+                return ChannelType.values()[source.readInt()];
+            }
+
+            @Override
+            public ChannelType[] newArray(int size) {
+                return new ChannelType[size];
+            }
+        };
     }
 
     /**
