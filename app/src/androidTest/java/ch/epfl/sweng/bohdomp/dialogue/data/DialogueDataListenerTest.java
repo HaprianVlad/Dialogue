@@ -1,8 +1,9 @@
-package ch.epfl.sweng.bohdomp.dialogue.conversation;
+package ch.epfl.sweng.bohdomp.dialogue.data;
 
 import android.content.Context;
 import android.os.Bundle;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;

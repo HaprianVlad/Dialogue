@@ -16,18 +16,20 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 
 
 /**
- * Class creating a Tester for a Dialogue Incoming Dispatcher
+ * Class creating a Tester for a Dialogue Outgoing Dispatcher
  */
-public final class DialogueIncomingDispatcherTest extends ServiceTestCase<DialogueIncomingDispatcher> {
+public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<DialogueOutgoingDispatcher> {
+
+    private final static String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
 
     private DialogueMessage mMessage;
-    private DialogueMessage mMessageOutgoing;
+    private DialogueMessage mMessageIncoming;
     private Conversation mConversation;
     private Intent mIntent;
     private Intent mBadIntent;
 
-    public DialogueIncomingDispatcherTest() {
-        super(DialogueIncomingDispatcher.class);
+    public DialogueOutgoingDispatcherTest() {
+        super(DialogueOutgoingDispatcher.class);
 
     }
 
@@ -41,11 +43,11 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
         String body = "Hello";
-        mMessage = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.INCOMING);
-        mMessageOutgoing = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.OUTGOING);
+        mMessage = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.OUTGOING);
+        mMessageIncoming = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.INCOMING);
 
         mIntent = new Intent();
-        mIntent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);
+        mIntent.setAction(ACTION_SEND_MESSAGE);
         mIntent.putExtra(DialogueMessage.MESSAGE, mMessage);
 
         mBadIntent = new Intent();
@@ -55,7 +57,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveNullContext() {
         try {
-            DialogueIncomingDispatcher.receiveMessage(null, mMessage);
+            DialogueOutgoingDispatcher.sendMessage(null, mMessage);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //ok
@@ -64,7 +66,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveNullMessage() {
         try {
-            DialogueIncomingDispatcher.receiveMessage(mContext, null);
+            DialogueOutgoingDispatcher.sendMessage(mContext, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //ok
@@ -73,7 +75,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveOutgoingMessage() {
         try {
-            DialogueIncomingDispatcher.receiveMessage(mContext, mMessageOutgoing);
+            DialogueOutgoingDispatcher.sendMessage(mContext, mMessageIncoming);
             fail("Exception should have been thrown");
         } catch (IllegalArgumentException e) {
             //ok
@@ -88,7 +90,7 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         assertNotNull(getService());
     }
 
-    public void testOnHandleIntent() throws Exception {
+    public void testOnHandleGoodIntent() throws Exception {
         setupService();
 
         assertNotNull(getService());
@@ -111,7 +113,6 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         assertEquals(mMessage.getIsReadStatus(), message1.getIsReadStatus());
         assertEquals(mMessage.getStatus(), message1.getStatus());
         assertEquals(mMessage.getTimeStamp(), message1.getTimeStamp());
-
     }
 
 

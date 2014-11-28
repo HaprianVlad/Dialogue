@@ -21,9 +21,10 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
@@ -35,7 +36,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class ConversationActivity extends Activity implements ConversationListener {
     private static final String LOG_TAG = "ConversationActivity";
-    private static final String APP_DATA = "APP_DATA";
 
     private ListView mMessageList;
     private EditText mNewMessageText;
@@ -45,6 +45,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
     private Conversation mConversation;
     private List<DialogueMessage> mMessages;
+
+    private StorageManager mStorageManager;
 
 
     @Override
@@ -82,6 +84,8 @@ public class ConversationActivity extends Activity implements ConversationListen
      */
     public void initData(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "conversationId");
+
+        mStorageManager = new StorageManager(getApplicationContext());
 
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
@@ -174,30 +178,15 @@ public class ConversationActivity extends Activity implements ConversationListen
     }
 
 
+    protected void onPause() {
+        mStorageManager.saveData();
+        super.onPause();
+    }
+
     @Override
     protected void onStop() {
         mConversation.removeListener(this);
         super.onStop();
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        savedInstanceState.putBundle(APP_DATA, DefaultDialogData.getInstance().createBundle());
-
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        super.onRestoreInstanceState(savedInstanceState);
-
-        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-
     }
 
     @Override

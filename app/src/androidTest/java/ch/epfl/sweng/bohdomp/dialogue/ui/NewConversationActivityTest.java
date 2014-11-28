@@ -3,7 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.ui;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 

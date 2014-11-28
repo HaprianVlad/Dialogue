@@ -1,12 +1,10 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,19 +13,16 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueData;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueDataListener;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DialogueData;
+import ch.epfl.sweng.bohdomp.dialogue.data.DialogueDataListener;
+import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -38,9 +33,6 @@ import de.timroes.android.listview.EnhancedListView;
  * Activity displaying the set of conversation
  */
 public class ConversationListActivity extends Activity implements DialogueDataListener{
-    private final static String LOG_TAG = "ConversationListActivity";
-    private final static String APP_DATA = "APP_DATA";
-    private final String saveFileName ="fileName";
 
     private EnhancedListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
@@ -52,6 +44,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private DialogueData mData;
     private List<Conversation> mConversationList;
     private ConversationListAdapter mConversationItemListAdapter;
+    private StorageManager mStorageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +55,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         initData();
         setViewElements();
         setupListener();
-
-        mData.addListener(this);
     }
 
     /*
@@ -72,9 +63,11 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private void initData() {
         myPackageName = getPackageName();
         mData = DefaultDialogData.getInstance();
+        mData.addListener(this);
         mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
-        retrieveDataFromFile();
+        mStorageManager = new StorageManager(getApplicationContext());
+        mStorageManager.retreiveData();
     }
 
     @Override
@@ -207,16 +200,14 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     protected void onResume() {
         checkDefaultApp();
 
-        mData = DefaultDialogData.getInstance();
-        mConversationList = mData.getConversations();
-        mData.addListener(this);
+
 
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        mData.removeListener(this);
+        mStorageManager.saveData();
         super.onPause();
     }
 
@@ -224,7 +215,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     protected void onStop() {
         mData.removeListener(this);
         mContactListView.discardUndo();
-        saveDataToFile();
         super.onStop();
     }
 
@@ -259,97 +249,5 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        Bundle b = DefaultDialogData.getInstance().createBundle();
-        savedInstanceState.putBundle(APP_DATA, b);
-
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Contract.throwIfArgNull(savedInstanceState, "savedInstanceState");
-
-        super.onRestoreInstanceState(savedInstanceState);
-
-        DefaultDialogData.getInstance().restoreFromBundle(savedInstanceState.getBundle(APP_DATA));
-    }
-
-    private void saveDataToFile() {
-
-        FileOutputStream outputStream = null;
-
-        Bundle bundle = DefaultDialogData.getInstance().createBundle();
-
-        Parcel parcel = Parcel.obtain();
-        bundle.writeToParcel(parcel, 0);
-        parcel.setDataPosition(0);
-
-        try {
-            outputStream = openFileOutput(saveFileName, Context.MODE_PRIVATE);
-            outputStream.write(parcel.marshall());
-
-
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Unable to save messages", Toast.LENGTH_LONG).show();
-
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    Toast.makeText(getApplicationContext(), "Unable to save messages", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        }
-
-
-    }
-
-    private void retrieveDataFromFile() {
-        Parcel parcel = Parcel.obtain();
-
-        byte [] data = readFile();
-        if (data != null) {
-            parcel.unmarshall(data, 0, data.length);
-
-            parcel.setDataPosition(0);
-
-            DefaultDialogData.getInstance().restoreFromBundle(parcel.readBundle());
-
-
-        }
-        parcel.recycle();
-
-    }
-
-    private byte[] readFile() {
-        byte[] data = null;
-        FileInputStream inputStream = null;
-        try {
-            inputStream =openFileInput(saveFileName);
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
-
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Unable to retreive old messages", Toast.LENGTH_LONG).show();
-
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    Toast.makeText(getApplicationContext(), "Unable to retreive old messages", Toast.LENGTH_LONG)
-                            .show();
-                }
-            }
-        }
-
-        return data;
-    }
 
 }
