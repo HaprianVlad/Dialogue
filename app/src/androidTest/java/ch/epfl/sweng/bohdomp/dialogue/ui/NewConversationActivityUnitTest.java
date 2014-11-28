@@ -26,6 +26,8 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
 
     private EditText mEditText;
     private Button mSendButton;
+    private Button mSelectContact;
+
 
     private ConversationId mId;
 
@@ -44,6 +46,8 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         mActivity = getActivity();
         mEditText = (EditText) mActivity.findViewById(R.id.message_to);
         mSendButton = (Button) mActivity.findViewById(R.id.create_conversation_button);
+        mSelectContact = (Button) mActivity.findViewById(R.id.selectContact);
+
 
         mId = null;
     }
@@ -92,7 +96,7 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         assertFalse(mSendButton.isEnabled());
     }
 
-    public void testIntent() {
+    public void testIntentCreate() {
         phoneNumber = "12345";
 
         assertFalse(mSendButton.isEnabled());
@@ -111,5 +115,12 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         mId = (ConversationId) b.get(DialogueConversation.CONVERSATION_ID);
 
         assertNotNull(mId);
+    }
+
+    public void testIntentSelect() {
+        assertTrue(mSelectContact.isEnabled());
+        mSelectContact.performClick();
+        Intent intent = getStartedActivityIntent();
+        assertNotNull(intent);
     }
 }
