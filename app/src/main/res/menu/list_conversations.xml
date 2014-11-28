@@ -3,9 +3,6 @@
     tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity" >
 
     <!--  Items should appear in the dropdown menu  -->
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:showAsAction="never" />
     <item android:id="@+id/action_deleteAll"
         android:title="@string/action_deleteAll"
         android:showAsAction="never" />

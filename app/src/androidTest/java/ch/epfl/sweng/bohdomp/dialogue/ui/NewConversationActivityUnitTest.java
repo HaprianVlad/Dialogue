@@ -29,8 +29,6 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
 
     private ConversationId mId;
 
-    private int mConversationCountAtStart;
-
     public NewConversationActivityUnitTest() {
         super(NewConversationActivity.class);
     }
@@ -38,7 +36,6 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mConversationCountAtStart = DefaultDialogData.getInstance().getConversations().size();
 
         mInstrumentation = getInstrumentation();
 
@@ -56,7 +53,6 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         super.tearDown();
         mEditText.setText("");
         DefaultDialogData.getInstance().removeConversation(mId);
-        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
     }
 
     public void testTitle() {

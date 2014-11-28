@@ -30,8 +30,6 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
     private ListView mContactListView;
     private Button mChangeDefaultAppButton;
 
-    private int mConversationCountAtStart;
-
     public ConversationListActivityUnitTest() {
         super(ConversationListActivity.class);
     }
@@ -39,8 +37,6 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mConversationCountAtStart = DefaultDialogData.getInstance().getConversations().size();
-
         mInstrumentation = getInstrumentation();
         hackMockito();
 
@@ -57,7 +53,6 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
 
     @Override
     protected void tearDown() throws Exception {
-        assertEquals("Not reset", mConversationCountAtStart, DefaultDialogData.getInstance().getConversations().size());
         super.tearDown();
     }
 
@@ -70,7 +65,7 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
         assertNotNull(mContactListView);
     }
 
-    public void testConDialogueDataChangedNotifyAdapter() {
+    public void testonDialogueDataChangedNotifyAdapter() {
         DataSetObserver observer = Mockito.mock(DataSetObserver.class);
 
         Adapter adapter = mContactListView.getAdapter();
@@ -84,12 +79,8 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
     public void testClickOnConversation() {
         ListView list = (ListView) mActivity.findViewById(R.id.listConversationsView);
 
-        assertEquals(mConversationCountAtStart, list.getAdapter().getCount());
-
         Contact contact = Mockito.mock(Contact.class);
         Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
-
-        assertEquals(mConversationCountAtStart + 1, list.getAdapter().getCount());
 
         list.performItemClick(list, 0, 0);
 
@@ -106,5 +97,10 @@ public class ConversationListActivityUnitTest extends ActivityUnitTestCase<Conve
         DefaultDialogData.getInstance().removeConversation(conversation.getId());
     }
 
-
+    public void testChangeDefault() {
+        assertTrue(mChangeDefaultAppButton.isEnabled());
+        mChangeDefaultAppButton.performClick();
+        Intent intent = getStartedActivityIntent();
+        assertNotNull(intent);
+    }
 }

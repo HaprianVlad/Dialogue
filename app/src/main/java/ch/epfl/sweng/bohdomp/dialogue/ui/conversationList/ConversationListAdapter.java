@@ -1,21 +1,17 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.bohdomp.dialogue.R;
-
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -44,7 +40,6 @@ public class ConversationListAdapter extends BaseAdapter{
         protected TextView contactChannels;
         protected TextView lastMessage;
         protected TextView unRead;
-        protected Button deleteConversation;
     }
 
     /**
@@ -66,6 +61,21 @@ public class ConversationListAdapter extends BaseAdapter{
         Contract.throwIfArg(items.contains(null), "items contains null");
 
         this.mConversations = items;
+    }
+
+    public void remove(int position) {
+        Contract.throwIfArg(position < 0, "Invalid position");
+
+        mConversations.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void insert(int position, Conversation item) {
+        Contract.throwIfArgNull(item, "Item");
+        Contract.throwIfArg(position < 0, "Invalid position");
+
+        mConversations.add(position, item);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -104,15 +114,6 @@ public class ConversationListAdapter extends BaseAdapter{
 
         setupView(c, viewHolder);
 
-        viewHolder.deleteConversation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DefaultDialogData.getInstance().removeConversation(c.getId());
-                Log.i(LOG_TAG, "Delete Conversation with ID");
-                notifyDataSetChanged();
-            }
-        });
-
         return convertView;
     }
 
@@ -137,9 +138,6 @@ public class ConversationListAdapter extends BaseAdapter{
         viewHolder.contactChannels = (TextView) convertView.findViewById(R.id.contactChannels);
         viewHolder.lastMessage = (TextView) convertView.findViewById(R.id.contactLastMessage);
         viewHolder.unRead = (TextView) convertView.findViewById(R.id.unReadDot);
-
-        //FIXME SHOULD BE REPLACED BY A SWIPE TO DELETE
-        viewHolder.deleteConversation = (Button) convertView.findViewById(R.id.deleteConversationButton);
 
         return viewHolder;
     }

@@ -36,8 +36,12 @@ public class MessagesAdapter extends BaseAdapter {
      * It is used to implement the view holder pattern
      */
     private static class MessageViewHolder {
+        protected LinearLayout wrapperParent;
+        protected LinearLayout wrapper;
+
         protected TextView body;
         protected TextView timeStamp;
+        protected TextView status;
     }
 
     /**
@@ -53,7 +57,6 @@ public class MessagesAdapter extends BaseAdapter {
 
         this.mContext = context;
         updateData(items);
-
     }
 
     @Override
@@ -114,8 +117,12 @@ public class MessagesAdapter extends BaseAdapter {
 
         MessageViewHolder viewHolder = new MessageViewHolder();
 
+        viewHolder.wrapperParent = (LinearLayout) convertView.findViewById(R.id.wrapperParent);
+        viewHolder.wrapper = (LinearLayout) convertView.findViewById(R.id.wrapper);
+
         viewHolder.body = (TextView) convertView.findViewById(R.id.body);
         viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.timeStamp);
+        viewHolder.status = (TextView) convertView.findViewById(R.id.messageStatus);
 
         return viewHolder;
     }
@@ -135,11 +142,18 @@ public class MessagesAdapter extends BaseAdapter {
         String timeStamp = msg.getTimeStamp().toString();
         viewHolder.timeStamp.setText(timeStamp);
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewHolder.body.getLayoutParams();
         if (msg.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
-            lp.gravity = Gravity.RIGHT;
+            viewHolder.status.setVisibility(View.VISIBLE);
+        }
+
+        if (msg.getStatus() == DialogueMessage.MessageStatus.OUTGOING) {
+            viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_right);
+            viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
+            viewHolder.wrapper.setGravity(Gravity.RIGHT);
         } else if (msg.getStatus() == DialogueMessage.MessageStatus.INCOMING) {
-            lp.gravity = Gravity.LEFT;
+            viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_left);
+            viewHolder.wrapperParent.setGravity(Gravity.LEFT);
+            viewHolder.wrapper.setGravity(Gravity.LEFT);
         }
     }
 }
