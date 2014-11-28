@@ -83,17 +83,17 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
     }
 
     public void testServiceStartedCorrectlyViaIntent() throws Exception {
-        assertTrue(getService() == null);
+        assertNull(getService());
 
         startService(mIntent);
 
-        assertTrue(getService() != null);
+        assertNotNull(getService());
     }
 
     public void testOnHandleGoodIntent() throws Exception {
         setupService();
 
-        assertTrue(getService() != null);
+        assertNotNull(getService());
 
         getService().onHandleIntent(mIntent);
 
@@ -104,7 +104,7 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
 
         DialogueMessage message1 = messages.get(messages.size() - 1);
 
-        assertTrue(message1 != null);
+        assertNotNull(message1);
 
         assertEquals(mMessage.getId(), message1.getId());
         assertEquals(mMessage.getContact(), message1.getContact());
@@ -119,7 +119,7 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
     public void testOnHandleBadIntent() throws Exception {
         setupService();
 
-        assertTrue(getService() != null);
+        assertNotNull(getService());
 
         int initialNbOfMessages =  DefaultDialogData.getInstance().
                 getConversation(mConversation.getId()).getMessages().size();
