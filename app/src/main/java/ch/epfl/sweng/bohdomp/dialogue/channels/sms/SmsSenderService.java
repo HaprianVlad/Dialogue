@@ -91,8 +91,14 @@ public class SmsSenderService extends IntentService {
         Contract.assertNotNull(mSentBroadcastReceiver, "mSentBroadcastReceiver");
         Contract.assertNotNull(mDeliveryBroadcastReceiver, "mDeliveryBroadcastReceiver");
 
-        unregisterReceiver(mSentBroadcastReceiver);
-        unregisterReceiver(mDeliveryBroadcastReceiver);
+        try {
+            unregisterReceiver(mSentBroadcastReceiver);
+            unregisterReceiver(mDeliveryBroadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            //It can happen only during testing
+        }
+
 
         super.onDestroy();
     }

@@ -78,4 +78,8 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
             }
         }
     }
+
+    public int getPartsReceived() {
+        return  partsReceived;
+    }
 }

@@ -26,15 +26,13 @@ import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
-
+import de.timroes.android.listview.EnhancedListView;
 
 /**
  * @author swengTeam 2013 BohDomp
  * Activity displaying the set of conversation
  */
 public class ConversationListActivity extends Activity implements DialogueDataListener{
-    private final static String APP_DATA = "APP_DATA";
-    private final String saveFileName ="fileName";
 
     private EnhancedListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
@@ -57,8 +55,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         initData();
         setViewElements();
         setupListener();
-
-        mData.addListener(this);
     }
 
     /*
