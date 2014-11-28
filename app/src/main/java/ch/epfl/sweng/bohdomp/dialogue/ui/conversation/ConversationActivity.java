@@ -167,6 +167,22 @@ public class ConversationActivity extends Activity implements ConversationListen
     }
 
     @Override
+    protected void onResume(){
+        if(mConversation.getChannel() == null || mConversation.getPhoneNumber() == null){
+            Intent intent = new Intent(this, ConversationSettingsActivity.class);
+            intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
+            startActivity(intent);
+        }
+
+        super.onResume();
+    }
+    @Override
+    protected void onStop() {
+        mConversation.removeListener(this);
+        super.onStop();
+    }
+
+    @Override
     public void onConversationChanged(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "id");
         Contract.throwIfArg(mConversation.getId().getLong() != conversationId.getLong(), "Wrong listener");
@@ -182,12 +198,6 @@ public class ConversationActivity extends Activity implements ConversationListen
     protected void onPause() {
         mStorageManager.saveData();
         super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        mConversation.removeListener(this);
-        super.onStop();
     }
 
     @Override

@@ -4,14 +4,12 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DefaultDialogData;
@@ -51,7 +49,6 @@ public class ConversationSettingsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        setViewElements();
     }
 
     private void initData(ConversationId conversationId) {
@@ -59,20 +56,24 @@ public class ConversationSettingsActivity extends Activity {
 
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
-        if (BuildConfig.DEBUG && mConversation == null) {
-            throw new AssertionError("null mConversation");
-        }
+        Contract.assertNotNull(mConversation, "conversation");
 
         mContact = mConversation.getContacts();
     }
 
     private void setViewElements() {
         mGroup = (RadioGroup) this.findViewById(R.id.radioGroup);
+
+        Contract.assertNotNull(mGroup, "radioGroup");
+
         mGroup.removeAllViews();
 
         Contact contact = mContact.get(0);
 
         Set<Contact.ChannelType> channels = contact.availableChannels();
+
+        Contact.ChannelType convChannel = mConversation.getChannel();
+        Contact.PhoneNumber convNumber = mConversation.getPhoneNumber();
 
         for (Contact.ChannelType channel : channels) {
 
@@ -80,6 +81,11 @@ public class ConversationSettingsActivity extends Activity {
 
             for (Contact.PhoneNumber number :numbers) {
                 RadioButton btn = new RadioButton(this);
+
+                if (convNumber != null && convNumber.number() == number.number() && convChannel == channel) {
+                    btn.setChecked(true);
+                }
+
                 btn.setText(channel.toString() + " / " + number.number());
                 btn.setTag(R.id.id_channel, channel);
                 btn.setTag(R.id.id_phoneNumber, number);
@@ -98,7 +104,10 @@ public class ConversationSettingsActivity extends Activity {
                 Contact.ChannelType channel = (Contact.ChannelType) btn.getTag(R.id.id_channel);
                 Contact.PhoneNumber number = (Contact.PhoneNumber) btn.getTag(R.id.id_phoneNumber);
 
-                // FIXME Should update the info where to send
+                mConversation.setChannel(channel);
+                mConversation.setPhoneNumber(number);
+
+                DefaultDialogData.getInstance().updateConversation(mConversation);
 
                 finish();
             }

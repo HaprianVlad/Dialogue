@@ -17,6 +17,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
@@ -116,6 +117,15 @@ public final class DefaultDialogData implements DialogueData {
     public void removeConversation(ConversationId id) {
         if (mConversations.containsKey(id)) {
             mConversations.remove(id);
+            notifyListeners();
+        }
+    }
+
+    public void updateConversation(Conversation conversation) {
+        Contract.throwIfArgNull(conversation, "conversation");
+
+        if(mConversations.containsKey(conversation.getId())){
+            mConversations.put(conversation.getId(), conversation);
             notifyListeners();
         }
     }

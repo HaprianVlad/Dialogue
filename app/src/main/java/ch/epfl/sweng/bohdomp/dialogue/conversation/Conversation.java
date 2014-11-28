@@ -35,6 +35,12 @@ public interface Conversation extends Parcelable {
 
     List<Contact> getContacts();
 
+    void setChannel(Contact.ChannelType channel);
+    Contact.ChannelType getChannel();
+
+    void setPhoneNumber(Contact.PhoneNumber phone);
+    Contact.PhoneNumber getPhoneNumber();
+
 
     /**
      * Getter for the messages list of the conversation
