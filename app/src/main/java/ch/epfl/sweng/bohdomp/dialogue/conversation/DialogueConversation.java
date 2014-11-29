@@ -306,8 +306,7 @@ public final class DialogueConversation implements Conversation {
 
         dest.writeParcelable(this.mId, flags);
         dest.writeList(mContact);
-        //FIXME
-        //dest.writeParcelable(mChannel, flags);
+        dest.writeParcelable(mChannel, flags);
         dest.writeParcelable(mPhoneNumber, flags);
         dest.writeList(mMessages);
         dest.writeLong(this.mLastActivityTime.getTime());
@@ -320,10 +319,9 @@ public final class DialogueConversation implements Conversation {
     private DialogueConversation(Parcel in, SystemTimeProvider timeProvider) {
 
         this.mTimeProvider = timeProvider;
-        //FIXME
-        this.mChannel = Contact.ChannelType.SMS;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
         this.mContact = in.readArrayList(Contact.class.getClassLoader());
+        this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
         this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
         this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
         this.mLastActivityTime = new Timestamp(in.readLong());
