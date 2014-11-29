@@ -45,7 +45,8 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
 
         String body = "Hello";
         mMessage = new DialogueTextMessage(contact, null, null, body, DialogueMessage.MessageStatus.INCOMING);
-        mMessageOutgoing = new DialogueTextMessage(contact, channel, number, body, DialogueMessage.MessageStatus.OUTGOING);
+        mMessageOutgoing = new DialogueTextMessage(contact, channel, number,
+                body, DialogueMessage.MessageStatus.OUTGOING);
 
         mIntent = new Intent();
         mIntent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);

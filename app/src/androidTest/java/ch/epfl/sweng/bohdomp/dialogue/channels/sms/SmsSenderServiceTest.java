@@ -33,7 +33,8 @@ public final class SmsSenderServiceTest extends ServiceTestCase<SmsSenderService
         Contact.PhoneNumber number = contact.getPhoneNumbers().iterator().next();
         Contact.ChannelType channel = Contact.ChannelType.SMS;
 
-        DialogueMessage message = new DialogueTextMessage(contact, channel, number, BODY, DialogueMessage.MessageStatus.OUTGOING);
+        DialogueMessage message = new DialogueTextMessage(contact, channel, number,
+                BODY, DialogueMessage.MessageStatus.OUTGOING);
 
         mIntent = new Intent();
         mIntent.setAction(SmsSenderService.ACTION_SEND_SMS);

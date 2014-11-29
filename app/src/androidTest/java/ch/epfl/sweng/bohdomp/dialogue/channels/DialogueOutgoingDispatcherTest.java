@@ -135,5 +135,4 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
 
         assertEquals(initialNbOfMessages, afterNbOfMessages);
     }
-
 }

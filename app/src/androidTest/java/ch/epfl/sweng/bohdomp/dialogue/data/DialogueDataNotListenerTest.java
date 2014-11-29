@@ -127,4 +127,32 @@ public class DialogueDataNotListenerTest extends InstrumentationTestCase {
 
         assertTrue(0 == mDialogueData.getConversations().size());
     }
+
+    public void testUpdateConversationNull() {
+        try {
+            mDialogueData.updateConversation(null);
+            fail();
+        } catch (NullArgumentException e) {
+            //OK
+        }
+    }
+
+    public void testUpdateConversation() {
+        Contact contact1 = Mockito.mock(Contact.class);
+
+        Conversation conversationBefore = mDialogueData.createOrGetConversation(contact1);
+        assertNull(conversationBefore.getChannel());
+
+        conversationBefore.setChannel(Contact.ChannelType.SMS);
+
+        mDialogueData.updateConversation(conversationBefore);
+
+        Conversation conversationAfter = mDialogueData.createOrGetConversation(contact1);
+        assertNotNull(conversationAfter.getChannel());
+        assertEquals(Contact.ChannelType.SMS, conversationAfter.getChannel());
+
+        mDialogueData.removeConversation(conversationBefore.getId());
+        mDialogueData.removeConversation(conversationAfter.getId());
+
+    }
 }

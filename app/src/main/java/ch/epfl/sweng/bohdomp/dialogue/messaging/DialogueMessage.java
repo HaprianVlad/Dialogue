@@ -83,7 +83,7 @@ public abstract class DialogueMessage implements Parcelable {
         return mChannel;
     }
 
-    public Contact.PhoneNumber getPhoneNumber(){
+    public Contact.PhoneNumber getPhoneNumber() {
         return mPhoneNumber;
     }
 

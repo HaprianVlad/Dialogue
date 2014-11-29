@@ -86,23 +86,6 @@ public final class DialogueConversation implements Conversation {
         this.mHasUnread = false;
     }
 
-    public DialogueConversation(Conversation conversation) {
-        if (conversation == null) {
-            throw new NullArgumentException("conversation == null!");
-        }
-
-        this.mId = conversation.getId();
-        this.mContact = new ArrayList<Contact>(conversation.getContacts());
-        this.mChannel = conversation.getChannel();
-        this.mPhoneNumber = conversation.getPhoneNumber();
-        this.mMessages = new ArrayList<DialogueMessage>(conversation.getMessages());
-        this.mListeners = new ArrayList<ConversationListener>(conversation.getListeners());
-        this.mMessageCount = conversation.getMessageCount();
-        this.mTimeProvider = conversation.getSystemTimeProvider();
-        this.mLastActivityTime =conversation.getLastActivityTime();
-        this.mHasUnread = conversation.getHasUnread();
-    }
-
     @Override
     public ConversationId getId() {
         return mId;
