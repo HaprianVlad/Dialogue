@@ -44,7 +44,7 @@ public class MessageAdapterTest extends MockTestCase {
 
         mContact = new ContactFactory(mContext).contactFromNumber(CONTACT_NUMBER);
 
-        mMessage = new DialogueTextMessage(mContact, MSG_BODY,
+        mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY,
                 DialogueMessage.MessageStatus.INCOMING);
 
         mList = new ArrayList<DialogueMessage>();
@@ -76,8 +76,6 @@ public class MessageAdapterTest extends MockTestCase {
     public void testUpdateData() {
         List<DialogueMessage> msgList= new ArrayList<DialogueMessage>();
         msgList.add(mMessage);
-        DialogueMessage msg = new DialogueTextMessage(mContact, MSG_BODY,
-                DialogueMessage.MessageStatus.OUTGOING);
         msgList.add(mMessage);
 
         mAdapter.updateData(msgList);

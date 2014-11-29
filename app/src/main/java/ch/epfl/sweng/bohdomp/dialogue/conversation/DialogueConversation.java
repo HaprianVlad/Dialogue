@@ -18,6 +18,7 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageStatus;
 
@@ -38,12 +39,15 @@ public final class DialogueConversation implements Conversation {
     private final ConversationId mId;
     private final SystemTimeProvider mTimeProvider;
 
-    private final List<Contact> mContacts;
+    private final List<Contact> mContact;
 
     private final List<DialogueMessage> mMessages;
     private List<ConversationListener> mListeners;
 
     private Timestamp mLastActivityTime;
+
+    private Contact.ChannelType mChannel;
+    private Contact.PhoneNumber mPhoneNumber;
 
     private int mMessageCount;
     private boolean mHasUnread;
@@ -71,7 +75,9 @@ public final class DialogueConversation implements Conversation {
         }
 
         this.mId = IdManager.getInstance().newConversationId();
-        this.mContacts = new ArrayList<Contact>(contacts);
+        this.mContact = new ArrayList<Contact>(contacts);
+        this.mChannel = null;
+        this.mPhoneNumber = null;
         this.mMessages = new ArrayList<DialogueMessage>();
         this.mListeners = new ArrayList<ConversationListener>();
         this.mMessageCount = 0;
@@ -80,22 +86,6 @@ public final class DialogueConversation implements Conversation {
         this.mHasUnread = false;
     }
 
-    public DialogueConversation(Conversation conversation) {
-        if (conversation == null) {
-            throw new NullArgumentException("conversation == null!");
-        }
-
-        this.mId = conversation.getId();
-        this.mContacts = new ArrayList<Contact>(conversation.getContacts());
-        this.mMessages = new ArrayList<DialogueMessage>(conversation.getMessages());
-        this.mListeners = new ArrayList<ConversationListener>(conversation.getListeners());
-        this.mMessageCount = conversation.getMessageCount();
-        this.mTimeProvider = conversation.getSystemTimeProvider();
-        this.mLastActivityTime =conversation.getLastActivityTime();
-        this.mHasUnread = conversation.getHasUnread();
-    }
-
-
     @Override
     public ConversationId getId() {
         return mId;
@@ -103,13 +93,37 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public String getName() {
-        return mContacts.get(0).getDisplayName();
+        return mContact.get(0).getDisplayName();
     }
 
 
     @Override
     public List<Contact> getContacts() {
-        return new ArrayList<Contact>(mContacts);
+        return new ArrayList<Contact>(mContact);
+    }
+
+    @Override
+    public void setChannel(Contact.ChannelType channel) {
+        Contract.throwIfArgNull(channel, "channel");
+        this.mChannel = channel;
+        notifyListeners();
+    }
+
+    @Override
+    public Contact.ChannelType getChannel() {
+        return mChannel;
+    }
+
+    @Override
+    public void setPhoneNumber(Contact.PhoneNumber phone) {
+        Contract.throwIfArgNull(phone, "phone number");
+        this.mPhoneNumber = phone;
+        notifyListeners();
+    }
+
+    @Override
+    public Contact.PhoneNumber getPhoneNumber() {
+        return mPhoneNumber;
     }
 
     @Override
@@ -189,7 +203,7 @@ public final class DialogueConversation implements Conversation {
             throw new NullArgumentException("contact == null !");
         }
 
-        mContacts.add(contact);
+        mContact.add(contact);
         notifyListeners();
     }
 
@@ -199,8 +213,8 @@ public final class DialogueConversation implements Conversation {
             throw new NullArgumentException("contact == null !");
         }
 
-        if (mContacts.contains(contact)) {
-            mContacts.remove(contact);
+        if (mContact.contains(contact)) {
+            mContact.remove(contact);
             notifyListeners();
         }
     }
@@ -291,7 +305,9 @@ public final class DialogueConversation implements Conversation {
         }
 
         dest.writeParcelable(this.mId, flags);
-        dest.writeList(mContacts);
+        dest.writeList(mContact);
+        dest.writeParcelable(mChannel, flags);
+        dest.writeParcelable(mPhoneNumber, flags);
         dest.writeList(mMessages);
         dest.writeLong(this.mLastActivityTime.getTime());
         dest.writeInt(this.mMessageCount);
@@ -304,7 +320,9 @@ public final class DialogueConversation implements Conversation {
 
         this.mTimeProvider = timeProvider;
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
-        this.mContacts = in.readArrayList(Contact.class.getClassLoader());
+        this.mContact = in.readArrayList(Contact.class.getClassLoader());
+        this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
+        this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
         this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
         this.mLastActivityTime = new Timestamp(in.readLong());
         this.mMessageCount = in.readInt();

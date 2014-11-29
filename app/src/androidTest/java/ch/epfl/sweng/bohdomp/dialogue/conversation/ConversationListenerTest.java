@@ -42,7 +42,7 @@ public final class ConversationListenerTest extends MockTestCase {
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
         mMessages = new ArrayList<DialogueMessage>();
         String body = "Hello";
-        mMessages.add(new DialogueTextMessage(mContact, body, DialogueMessage.MessageStatus.INCOMING));
+        mMessages.add(new DialogueTextMessage(mContact, null, null, body, DialogueMessage.MessageStatus.INCOMING));
 
         mHasBeenCalled = false;
     }

@@ -43,6 +43,8 @@ public interface DialogueData {
      */
     void removeConversation(ConversationId id);
 
+    void updateConversation(Conversation conversation);
+
     /**
      * Delete all conversations
      */

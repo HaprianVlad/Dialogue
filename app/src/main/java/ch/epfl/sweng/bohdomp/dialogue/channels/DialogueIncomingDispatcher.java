@@ -81,5 +81,4 @@ public final class DialogueIncomingDispatcher extends IntentService{
         sIsRunning=false;
 
     }
-
 }

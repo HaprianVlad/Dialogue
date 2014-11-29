@@ -50,9 +50,12 @@ public class ConversationListAdapterTest extends MockTestCase {
         Contact contact = new ContactFactory(mContext).contactFromNumber(CONTACT_NUMBER);
         mContactList.add(contact);
 
+        Contact.PhoneNumber number = mContactList.get(0).getPhoneNumbers().iterator().next();
+        Contact.ChannelType channel = Contact.ChannelType.SMS;
+
         mConversationList = new ArrayList<Conversation>();
         mConversationList.add(new DialogueConversation(mContactList, new SystemTimeProvider()));
-        mConversationList.get(0).addMessage(new DialogueTextMessage(mContactList.get(0), "HEllO",
+        mConversationList.get(0).addMessage(new DialogueTextMessage(mContactList.get(0), channel, number, "HEllO",
                 DialogueMessage.MessageStatus.OUTGOING));
 
 
