@@ -14,7 +14,6 @@ import android.test.ApplicationTestCase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
@@ -121,18 +120,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
             fail("Exception should not be thrown here!");
         }
         assertTrue(contact.getDisplayName().equals(DISPLAY_NAME_1));
-    }
-
-    public void testKnownContactsContainsAddedContacts() throws Exception {
-        List<Contact> contacts = mContactFactory.knownContacts();
-        Set<String> displayNames = new HashSet<String>();
-        for (final Contact c : contacts) {
-            displayNames.add(c.getDisplayName());
-        }
-
-        for (final String name : ALL_NAMES) {
-            assertTrue(displayNames.contains(name));
-        }
     }
 
     public void testContactFromPhoneNumberReturnsEqualUnknownContactsFromEqualPhoneNumbers()

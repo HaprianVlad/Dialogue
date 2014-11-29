@@ -69,38 +69,6 @@ public class ContactFactory {
     }
 
     /**
-     * @return list of all contacts currently on the phone
-     */
-    public List<Contact> knownContacts() {
-        Cursor cursor = contactListCursor();
-        return contactListFromCursor(cursor);
-    }
-
-    private Cursor contactListCursor() {
-        return mContext.getContentResolver().query(
-                ContactsContract.Contacts.CONTENT_URI,
-                LOOKUPKEY_PROJECTION,
-                null,
-                null,
-                null);
-    }
-
-    private List<Contact> contactListFromCursor(Cursor cursor) {
-        List<Contact> result = new ArrayList<Contact>();
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            try {
-                result.add(new AndroidContact(
-                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)),
-                        mContext));
-            } catch (ContactLookupException e) {
-                // if lookup key is not valid don't add contact to the list
-            }
-        }
-        cursor.close();
-        return result;
-    }
-
-    /**
      * inspired by
      * http://stackoverflow.com/questions/5553867/get-contact-by-phone-number-on-android
      */
