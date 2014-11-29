@@ -40,9 +40,12 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         Contact contact = contactFactory.contactFromNumber("0762677108");
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
+        Contact.PhoneNumber number = contact.getPhoneNumbers().iterator().next();
+        Contact.ChannelType channel = Contact.ChannelType.SMS;
+
         String body = "Hello";
-        mMessage = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.INCOMING);
-        mMessageOutgoing = new DialogueTextMessage(contact, body, DialogueMessage.MessageStatus.OUTGOING);
+        mMessage = new DialogueTextMessage(contact, null, null, body, DialogueMessage.MessageStatus.INCOMING);
+        mMessageOutgoing = new DialogueTextMessage(contact, channel, number, body, DialogueMessage.MessageStatus.OUTGOING);
 
         mIntent = new Intent();
         mIntent.setAction(DialogueIncomingDispatcher.ACTION_RECEIVE_MESSAGE);

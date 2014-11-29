@@ -29,7 +29,7 @@ public class DialogueTextMessageTest extends MockTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         this.mContact = Mockito.mock(Contact.class);
-        this.mMessage = new DialogueTextMessage(mContact, TEXT, mStatus);
+        this.mMessage = new DialogueTextMessage(mContact, null, null, TEXT, mStatus);
     }
 
     public void testParcelRoundTrip() throws InvalidNumberException {
@@ -40,7 +40,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
         Contact contact = contactFactory.contactFromNumber("+41 21 693 11 11");
 
-        DialogueMessage message = new DialogueTextMessage(contact, TEXT, mStatus);
+        DialogueMessage message = new DialogueTextMessage(contact, null, null, TEXT, mStatus);
 
         Parcel parcel = Parcel.obtain();
         message.writeToParcel(parcel, 0);
@@ -64,7 +64,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullContactArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(null, TEXT, mStatus);
+            this.mMessage = new DialogueTextMessage(null, null, null, TEXT, mStatus);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
@@ -73,7 +73,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullTextArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(mContact, null, mStatus);
+            this.mMessage = new DialogueTextMessage(mContact, null, null, null, mStatus);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success
@@ -82,7 +82,7 @@ public class DialogueTextMessageTest extends MockTestCase {
 
     public void testNullStatusArgument() {
         try {
-            this.mMessage = new DialogueTextMessage(mContact, TEXT, null);
+            this.mMessage = new DialogueTextMessage(mContact, null, null, TEXT, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //success

@@ -42,6 +42,8 @@ public class DialogueConversationTest extends MockTestCase {
     private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
+    Contact.PhoneNumber mNumber;
+    Contact.ChannelType mChannel;
     private DialogueConversation mConversation;
     private List<DialogueMessage> mMessages;
     private boolean mHasBeenCalled;
@@ -56,6 +58,10 @@ public class DialogueConversationTest extends MockTestCase {
         mContact = mContactFactory.contactFromNumber("0773207769");
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
+
+
+        mNumber = mContact.getPhoneNumbers().iterator().next();
+        mChannel = Contact.ChannelType.SMS;
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
         mMessages = new ArrayList<DialogueMessage>();
@@ -197,7 +203,7 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testAddOutgoingMessage() {
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        DialogueMessage message = new DialogueTextMessage(mContact, mChannel, mNumber, "Test message 1", MessageStatus.OUTGOING);
         mConversation.addMessage(message);
         mMessages.add(message);
 
@@ -206,7 +212,7 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testAddIncomingMessage() {
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
+        DialogueMessage message = new DialogueTextMessage(mContact,null,null, "Test message 1", MessageStatus.INCOMING);
         mConversation.addMessage(message);
         mMessages.add(message);
 
@@ -215,7 +221,7 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testSetAllMessagesAsRead() {
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
+        DialogueMessage message = new DialogueTextMessage(mContact,null,null, "Test message 1", MessageStatus.INCOMING);
         mConversation.addMessage(message);
 
         assertTrue(mConversation.hasUnread());
@@ -243,14 +249,14 @@ public class DialogueConversationTest extends MockTestCase {
             }
         };
 
-        DialogueMessage message1 = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        DialogueMessage message1 = new DialogueTextMessage(mContact, mChannel, mNumber, "Test message 1", MessageStatus.OUTGOING);
         mConversation.addMessage(message1);
 
         assertFalse(mHasBeenCalled);
 
         mConversation.addListener(listener);
 
-        DialogueMessage message2 = new DialogueTextMessage(mContact, "Test message 2", MessageStatus.OUTGOING);
+        DialogueMessage message2 = new DialogueTextMessage(mContact, mChannel , mNumber, "Test message 2", MessageStatus.OUTGOING);
         mConversation.addMessage(message2);
 
         assertTrue(mHasBeenCalled);
@@ -277,7 +283,7 @@ public class DialogueConversationTest extends MockTestCase {
         mConversation.addListener(listener);
         mConversation.removeListener(listener);
 
-        DialogueMessage message1 = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        DialogueMessage message1 = new DialogueTextMessage(mContact, mChannel, mNumber, "Test message 1", MessageStatus.OUTGOING);
         mConversation.addMessage(message1);
 
         assertFalse(mHasBeenCalled);
@@ -421,7 +427,7 @@ public class DialogueConversationTest extends MockTestCase {
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.OUTGOING);
+        DialogueMessage message = new DialogueTextMessage(mContact, mChannel, mNumber, "Test message 1", MessageStatus.OUTGOING);
         mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();
@@ -466,7 +472,7 @@ public class DialogueConversationTest extends MockTestCase {
 
         mConversation = new DialogueConversation(mContacts, mTimeProvider);
 
-        DialogueMessage message = new DialogueTextMessage(mContact, "Test message 1", MessageStatus.INCOMING);
+        DialogueMessage message = new DialogueTextMessage(mContact, null, null, "Test message 1", MessageStatus.INCOMING);
         mConversation.addMessage(message);
 
         Parcel parcel = Parcel.obtain();

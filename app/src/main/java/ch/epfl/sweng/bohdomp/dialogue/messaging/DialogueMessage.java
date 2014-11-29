@@ -54,9 +54,9 @@ public abstract class DialogueMessage implements Parcelable {
     DialogueMessage(Contact contactParameter, Contact.ChannelType channel, Contact.PhoneNumber phoneNumber,
                     String messageBodyParameter, MessageStatus messageStatusParameter, boolean isDataMessageParameter) {
 
-        Contract.assertNotNull(contactParameter, "contact");
-        Contract.assertNotNull(messageBodyParameter, "message body");
-        Contract.assertNotNull(messageStatusParameter, "message status");
+        Contract.throwIfArgNull(contactParameter, "contact");
+        Contract.throwIfArgNull(messageBodyParameter, "message body");
+        Contract.throwIfArgNull(messageStatusParameter, "message status");
 
         this.mContact = contactParameter;
         this.mChannel = channel;

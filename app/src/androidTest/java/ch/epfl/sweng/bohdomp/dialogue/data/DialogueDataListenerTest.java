@@ -36,7 +36,7 @@ public final class DialogueDataListenerTest extends MockTestCase {
 
 
         String body = "Hello";
-        mMessage = new DialogueTextMessage(mContact1, body, DialogueMessage.MessageStatus.INCOMING);
+        mMessage = new DialogueTextMessage(mContact1,null, null, body, DialogueMessage.MessageStatus.INCOMING);
 
 
         mHasBeenCalled = false;
