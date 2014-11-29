@@ -114,7 +114,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         });
 
         mContactListView.enableSwipeToDismiss();
-        mContactListView.setSwipeDirection(EnhancedListView.SwipeDirection.END);
+        mContactListView.setSwipeDirection(EnhancedListView.SwipeDirection.START);
         mContactListView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
 
         mContactListView.setSwipingLayout(R.id.swiping_layout);
