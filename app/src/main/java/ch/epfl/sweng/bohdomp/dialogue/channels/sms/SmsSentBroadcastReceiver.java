@@ -8,6 +8,8 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -37,6 +39,7 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
     /**
      * Constructor for a message that needs
      * to be sent un multiple parts.
+     *
      * @param nParts to be acknowledged.
      */
     public SmsSentBroadcastReceiver(int nParts) {
@@ -71,6 +74,9 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
             if (partsReceived == mNParts) {
                 if (hasSucceeded) {
+                    DialogueMessage message = DialogueMessage.extractMessage(intent);
+                    DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.SENT);
+
                     Toast.makeText(context, R.string.message_sent, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.message_notSent, Toast.LENGTH_SHORT).show();

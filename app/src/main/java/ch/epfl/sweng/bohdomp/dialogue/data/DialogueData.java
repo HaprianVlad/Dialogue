@@ -57,11 +57,17 @@ public interface DialogueData {
     void addMessageToConversation(DialogueMessage message);
 
     /**
+     * Sets the status of the message.
+     * @param message to be set.
+     * @param status to be changed to.
+     */
+    void setMessageStatus(DialogueMessage message, DialogueMessage.MessageStatus status);
+
+    /**
      * Adds a listener to Dialogue Data
      * @param listener the listener to add
      */
     void addListener(DialogueDataListener listener);
-
 
     /**
      * Removes a listener from Dialogue Data

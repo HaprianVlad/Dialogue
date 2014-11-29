@@ -17,6 +17,8 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 
+import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
+
 /**
  * @author swengTeam 2013 BohDomp
  * Test for the ConversationActivity class
@@ -53,7 +55,8 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
         mConversationCountAtStart = DefaultDialogData.getInstance().getConversations().size();
 
         mContact = new ContactFactory(mInstrumentation.getTargetContext()).contactFromNumber(CONTACT_NUMBER);
-        mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY, DialogueMessage.MessageStatus.INCOMING);
+        mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY, MessageDirection.INCOMING);
+
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(mContact);
 
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ConversationActivity.class);

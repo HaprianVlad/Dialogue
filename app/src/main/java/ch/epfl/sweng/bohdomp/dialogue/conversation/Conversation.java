@@ -86,10 +86,17 @@ public interface Conversation extends Parcelable {
     SystemTimeProvider getSystemTimeProvider();
 
     /**
-     * Getter for the hasUnread paramater of the conversation
-     * @return he hasUnread paramater of the conversation
+     * Getter for the hasUnread parameter of the conversation
+     * @return he hasUnread parameter of the conversation
      */
     boolean getHasUnread();
+
+    /**
+     * Sets the message status.
+     * @param message to be set.
+     * @param status of the message.
+     */
+    void setMessageStatus(DialogueMessage message, DialogueMessage.MessageStatus status);
 
     /**
      * Adds a contact to the conversation

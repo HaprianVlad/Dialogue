@@ -16,11 +16,12 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListAdapter;
 import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
+
+import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
 
 /**
  * @author swengTeam 2013 BohDomp
@@ -56,7 +57,7 @@ public class ConversationListAdapterTest extends MockTestCase {
         mConversationList = new ArrayList<Conversation>();
         mConversationList.add(new DialogueConversation(mContactList, new SystemTimeProvider()));
         mConversationList.get(0).addMessage(new DialogueTextMessage(mContactList.get(0), channel, number, "HEllO",
-                DialogueMessage.MessageStatus.OUTGOING));
+                MessageDirection.OUTGOING));
 
 
         mAdapter = new ConversationListAdapter(mContext, mConversationList);
@@ -177,6 +178,6 @@ public class ConversationListAdapterTest extends MockTestCase {
         assertNotNull("Name", contactName);
         assertNotNull("Channels", contactChannels);
         assertNotNull("Last", lastMessage);
-        assertNotNull("Unread", unRead);
+        assertNotNull("Unread", unRead); 
     }
 }

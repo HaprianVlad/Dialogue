@@ -19,9 +19,16 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 public abstract class DialogueMessage implements Parcelable {
 
     /**
-     * Enumeration representing the state of a message
+     * Enumeration representing the state of a message.
      */
     public static enum MessageStatus {
+        SENT, DELIVERED, IN_TRANSIT
+    }
+
+    /**
+     * Enumeration representing the direction of a message.
+     */
+    public static enum MessageDirection {
         INCOMING, OUTGOING
     }
 
@@ -33,7 +40,8 @@ public abstract class DialogueMessage implements Parcelable {
     private final MessageBody mBody;
     private final long mTimestamp;
     private final DialogueMessageId mId;
-    private final MessageStatus mStatus;
+    private MessageStatus mStatus;
+    private MessageDirection mDirection;
 
     private boolean mIsReadStatus;
     private boolean mIsDataMessage;
@@ -51,22 +59,23 @@ public abstract class DialogueMessage implements Parcelable {
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
-    DialogueMessage(Contact contactParameter, Contact.ChannelType channel, Contact.PhoneNumber phoneNumber,
-                    String messageBodyParameter, MessageStatus messageStatusParameter, boolean isDataMessageParameter) {
+    DialogueMessage(Contact contact, Contact.ChannelType channel, Contact.PhoneNumber phoneNumber,
+                    String messageBody, MessageDirection messageDirection, boolean isDataMessage) {
 
-        Contract.throwIfArgNull(contactParameter, "contact");
-        Contract.throwIfArgNull(messageBodyParameter, "message body");
-        Contract.throwIfArgNull(messageStatusParameter, "message status");
+        Contract.throwIfArgNull(contact, "contact");
+        Contract.throwIfArgNull(messageBody, "message body");
+        Contract.throwIfArgNull(messageDirection, "message status");
 
-        this.mContact = contactParameter;
+        this.mContact = contact;
         this.mChannel = channel;
         this.mPhoneNumber = phoneNumber;
-        this.mBody = newBody(messageBodyParameter);
+        this.mBody = newBody(messageBody);
         this.mTimestamp = System.currentTimeMillis();
         this.mId = IdManager.getInstance().newDialogueMessageId();
         this.mIsReadStatus = false;
-        this.mStatus = messageStatusParameter;
-        this.mIsDataMessage = isDataMessageParameter;
+        this.mDirection = messageDirection;
+        this.mStatus = MessageStatus.IN_TRANSIT;
+        this.mIsDataMessage = isDataMessage;
     }
 
 
@@ -113,10 +122,18 @@ public abstract class DialogueMessage implements Parcelable {
 
     /**
      * Getter for the message status
-     * @return the message status. incoming or outgoing
+     * @return the message status.
      */
     public MessageStatus getStatus() {
         return mStatus;
+    }
+
+    /**
+     * Getter for the message direction.
+     * @return the message direction.
+     */
+    public MessageDirection getDirection() {
+        return mDirection;
     }
 
     /**
@@ -139,8 +156,18 @@ public abstract class DialogueMessage implements Parcelable {
      * Method that returns the allowed channels where we can send the message
      * @return the list of allowed channels
      */
-    public  boolean getIsDataMessage() {
+    public boolean getIsDataMessage() {
         return mIsDataMessage;
+    }
+
+    /**
+     * Sets the message status.
+     * @param status to be set to.
+     */
+    public void setStatus(MessageStatus status) {
+        Contract.throwIfArgNull(status, "status");
+
+        this.mStatus = status;
     }
 
     /**
@@ -164,6 +191,7 @@ public abstract class DialogueMessage implements Parcelable {
         dest.writeLong(this.mTimestamp);
         dest.writeParcelable(this.mId, 0);
         dest.writeInt(this.mStatus == null ? -1 : this.mStatus.ordinal());
+        dest.writeInt(this.mDirection == null ? -1 : this.mDirection.ordinal());
         dest.writeByte(mIsReadStatus ? (byte) 1 : (byte) 0);
         dest.writeByte(mIsDataMessage ? (byte) 1 : (byte) 0);
     }
@@ -177,6 +205,8 @@ public abstract class DialogueMessage implements Parcelable {
         this.mId = in.readParcelable(DialogueMessageId.class.getClassLoader());
         int tmpMessageStatus = in.readInt();
         this.mStatus = tmpMessageStatus == -1 ? null : MessageStatus.values()[tmpMessageStatus];
+        int tmpMessageDirection = in.readInt();
+        this.mDirection = tmpMessageDirection == -1 ? null : MessageDirection.values()[tmpMessageDirection];
         this.mIsReadStatus = in.readByte() != 0;
         this.mIsDataMessage = in.readByte() != 0;
     }

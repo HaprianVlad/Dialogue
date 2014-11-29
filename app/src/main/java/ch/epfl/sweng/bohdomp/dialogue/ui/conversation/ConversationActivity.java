@@ -159,7 +159,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
                 for (Contact contact : mConversation.getContacts()) {
                     DialogueMessage message = new DialogueTextMessage(contact, channel, number,
-                            draftText, DialogueMessage.MessageStatus.OUTGOING);
+                            draftText, DialogueMessage.MessageDirection.OUTGOING);
 
                     DialogueOutgoingDispatcher.sendMessage(view.getContext(), message);
                 }

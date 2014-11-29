@@ -46,8 +46,9 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
         Contact.ChannelType channel = Contact.ChannelType.SMS;
 
         String body = "Hello";
-        mMessage = new DialogueTextMessage(contact, channel, number, body, DialogueMessage.MessageStatus.OUTGOING);
-        mMessageIncoming = new DialogueTextMessage(contact, null, null, body, DialogueMessage.MessageStatus.INCOMING);
+        mMessage = new DialogueTextMessage(contact, channel, number, body, DialogueMessage.MessageDirection.OUTGOING);
+        mMessageIncoming = new DialogueTextMessage(contact, null, null,
+                body, DialogueMessage.MessageDirection.INCOMING);
 
         mIntent = new Intent();
         mIntent.setAction(ACTION_SEND_MESSAGE);

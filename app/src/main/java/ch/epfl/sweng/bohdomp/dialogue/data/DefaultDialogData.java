@@ -150,6 +150,28 @@ public final class DefaultDialogData implements DialogueData {
     }
 
     @Override
+    public void setMessageStatus(DialogueMessage message, DialogueMessage.MessageStatus status) {
+        Contract.throwIfArgNull(message, "message");
+        Contract.throwIfArgNull(status, "status");
+
+        Collection<Conversation> conversations = mConversations.values();
+
+        Conversation conversation = null;
+
+        for (Conversation c : conversations) {
+            if (c.getContacts().contains(message.getContact())) {
+                conversation = c;
+            }
+        }
+
+        if (conversation != null && conversation.getMessages().contains(message)) {
+            conversation.setMessageStatus(message, status);
+
+            notifyListeners();
+        }
+    }
+
+    @Override
     public void addListener(DialogueDataListener listener) {
         if (listener == null) {
             throw new NullArgumentException("listener == null !");

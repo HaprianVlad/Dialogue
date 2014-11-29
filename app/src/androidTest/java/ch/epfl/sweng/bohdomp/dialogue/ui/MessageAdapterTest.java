@@ -18,6 +18,8 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter;
 
+import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
+
 /**
  * @author swengTeam 2013 BohDomp
  * Test for {@link ch.epfl.sweng.bohdomp.dialogue.ui.conversation.MessagesAdapter}
@@ -45,7 +47,7 @@ public class MessageAdapterTest extends MockTestCase {
         mContact = new ContactFactory(mContext).contactFromNumber(CONTACT_NUMBER);
 
         mMessage = new DialogueTextMessage(mContact, null, null, MSG_BODY,
-                DialogueMessage.MessageStatus.INCOMING);
+                MessageDirection.INCOMING);
 
         mList = new ArrayList<DialogueMessage>();
         mList.add(mMessage);

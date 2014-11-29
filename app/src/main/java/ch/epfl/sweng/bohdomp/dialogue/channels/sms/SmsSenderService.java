@@ -20,6 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class SmsSenderService extends IntentService {
     public static final String ACTION_SEND_SMS = "SEND_SMS";
+
     private static final String ACTION_SMS_SENT = "SMS_SENT";
     private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
@@ -51,9 +52,6 @@ public class SmsSenderService extends IntentService {
         Contract.assertNotNull(message, "message");
 
         if (!needsPartitioning(message)) {
-            mSentBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
-            mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
-
             sendMonoPartMessage(message);
         } else {
             ArrayList<String> messages = mSmsManager.divideMessage(message.getBody().getMessageBody());
@@ -62,27 +60,32 @@ public class SmsSenderService extends IntentService {
             mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver(messages.size());
 
             Contact.PhoneNumber number = message.getPhoneNumber();
-            sendMultiPartMessage(messages, number);
+            sendMultiPartMessage(message, messages, number);
         }
     }
 
-    private void sendMultiPartMessage(ArrayList<String> messages, Contact.PhoneNumber number) {
+    private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, Contact.PhoneNumber number) {
         Contract.assertNotNull(number, "number");
 
         mSmsManager.sendMultipartTextMessage(number.number(), null, messages,
-                getSentPendingIntentList(messages.size()),
-                getDeliveredPendingIntentList(messages.size()));
+                getSentPendingIntentList(message, messages.size()),
+                getDeliveredPendingIntentList(message, messages.size()));
     }
 
     private void sendMonoPartMessage(DialogueMessage message) {
         String phoneNumber = message.getPhoneNumber().number();
         String messageBody = message.getBody().getMessageBody();
 
+        mSentBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
+        mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
+
         mSmsManager.sendTextMessage(phoneNumber, null, messageBody,
-                getSentPendingIntent(), getDeliveryPendingIntent());
+                getSentPendingIntent(message), getDeliveryPendingIntent(message));
     }
 
     private boolean needsPartitioning(DialogueMessage message) {
+        Contract.throwIfArgNull(message, "message");
+
         return message.getBody().getMessageBody().getBytes().length <= SmsMessage.MAX_USER_DATA_BYTES;
     }
 
@@ -119,6 +122,20 @@ public class SmsSenderService extends IntentService {
         return sentPendingIntent;
     }
 
+    private PendingIntent getSentPendingIntent(DialogueMessage message) {
+        Contract.throwIfArgNull(message, "message");
+
+        Intent intent = new Intent(ACTION_SMS_SENT);
+        intent.putExtra(DialogueMessage.MESSAGE, message);
+
+        PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        registerReceiver(mSentBroadcastReceiver, new IntentFilter(ACTION_SMS_SENT));
+
+        return sentPendingIntent;
+    }
+
     /**
      * Creates a "delivery" pending intent that will be handles by the "delivery" broadcast receiver.
      *
@@ -135,26 +152,54 @@ public class SmsSenderService extends IntentService {
         return deliveryPendingIntent;
     }
 
-    private ArrayList<PendingIntent> getSentPendingIntentList(int copies) {
+    private PendingIntent getDeliveryPendingIntent(DialogueMessage message) {
+        Contract.throwIfArgNull(message, "message");
+
+        Intent intent = new Intent(ACTION_SMS_DELIVERED);
+        intent.putExtra(DialogueMessage.MESSAGE, message);
+
+        PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        registerReceiver(mDeliveryBroadcastReceiver, new IntentFilter(ACTION_SMS_DELIVERED));
+
+        return deliveryPendingIntent;
+    }
+
+    private ArrayList<PendingIntent> getSentPendingIntentList(DialogueMessage message, int copies) {
+        Contract.throwIfArgNull(message, "message");
         Contract.throwIfArg(copies <= 0, "Copies should be at least 1");
 
         ArrayList<PendingIntent> list = new ArrayList<PendingIntent>();
 
-        for (int i = 0; i < copies; i++) {
+        /*
+        In order to know which message has been delivered we pass it
+        with the last pending intent so that the receiver can set the flag.
+         */
+        for (int i = 0; i < copies - 1; i++) {
             list.add(getSentPendingIntent());
         }
+
+        list.add(getSentPendingIntent(message));
 
         return list;
     }
 
-    private ArrayList<PendingIntent> getDeliveredPendingIntentList(int copies) {
+    private ArrayList<PendingIntent> getDeliveredPendingIntentList(DialogueMessage message, int copies) {
+        Contract.throwIfArgNull(message, "message");
         Contract.throwIfArg(copies <= 0, "Copies should be at least 1");
 
         ArrayList<PendingIntent> list = new ArrayList<PendingIntent>();
 
-        for (int i = 0; i < copies; i++) {
+        /*
+        In order to know which message has been delivered we pass it
+        with the last pending intent so that the receiver can set the flag.
+         */
+        for (int i = 0; i < copies - 1; i++) {
             list.add(getDeliveryPendingIntent());
         }
+
+        list.add(getDeliveryPendingIntent(message));
 
         return list;
     }
