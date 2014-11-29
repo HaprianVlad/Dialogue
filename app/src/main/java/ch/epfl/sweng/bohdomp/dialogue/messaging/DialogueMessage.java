@@ -11,6 +11,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Abstract class representing an message. This class is mutable.
@@ -27,6 +28,8 @@ public abstract class DialogueMessage implements Parcelable {
     public static final String MESSAGE = "MESSAGE";
 
     private final Contact mContact;
+    private final Contact.ChannelType mChannel;
+    private final Contact.PhoneNumber mPhoneNumber;
     private final MessageBody mBody;
     private final long mTimestamp;
     private final DialogueMessageId mId;
@@ -48,21 +51,16 @@ public abstract class DialogueMessage implements Parcelable {
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
-    DialogueMessage(Contact contactParameter, String messageBodyParameter,
-                           MessageStatus messageStatusParameter, boolean isDataMessageParameter) {
-        if (contactParameter == null) {
-            throw new NullArgumentException("contactParameter");
-        }
+    DialogueMessage(Contact contactParameter, Contact.ChannelType channel, Contact.PhoneNumber phoneNumber,
+                    String messageBodyParameter, MessageStatus messageStatusParameter, boolean isDataMessageParameter) {
 
-        if (messageBodyParameter == null) {
-            throw new NullArgumentException("messageBodyParameter");
-        }
-
-        if (messageStatusParameter == null) {
-            throw new NullArgumentException("messageStatusParameter");
-        }
+        Contract.assertNotNull(contactParameter, "contact");
+        Contract.assertNotNull(messageBodyParameter, "message body");
+        Contract.assertNotNull(messageStatusParameter, "message status");
 
         this.mContact = contactParameter;
+        this.mChannel = channel;
+        this.mPhoneNumber = phoneNumber;
         this.mBody = newBody(messageBodyParameter);
         this.mTimestamp = System.currentTimeMillis();
         this.mId = IdManager.getInstance().newDialogueMessageId();
@@ -79,6 +77,14 @@ public abstract class DialogueMessage implements Parcelable {
     public Contact getContact() {
         //FIXME:Contact should be immutable
         return mContact;
+    }
+
+    public Contact.ChannelType getChannel() {
+        return mChannel;
+    }
+
+    public Contact.PhoneNumber getPhoneNumber(){
+        return mPhoneNumber;
     }
 
     /**
@@ -152,6 +158,8 @@ public abstract class DialogueMessage implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mContact, 0);
+        dest.writeParcelable(this.mChannel, 0);
+        dest.writeParcelable(this.mPhoneNumber, 0);
         dest.writeParcelable(this.mBody, 0);
         dest.writeLong(this.mTimestamp);
         dest.writeParcelable(this.mId, 0);
@@ -162,6 +170,8 @@ public abstract class DialogueMessage implements Parcelable {
 
     DialogueMessage(Parcel in) {
         this.mContact = in.readParcelable(Contact.class.getClassLoader());
+        this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
+        this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
         this.mBody = in.readParcelable(MessageBody.class.getClassLoader());
         this.mTimestamp = in.readLong();
         this.mId = in.readParcelable(DialogueMessageId.class.getClassLoader());

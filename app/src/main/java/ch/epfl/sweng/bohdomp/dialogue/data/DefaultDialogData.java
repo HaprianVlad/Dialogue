@@ -124,7 +124,7 @@ public final class DefaultDialogData implements DialogueData {
     public void updateConversation(Conversation conversation) {
         Contract.throwIfArgNull(conversation, "conversation");
 
-        if(mConversations.containsKey(conversation.getId())){
+        if (mConversations.containsKey(conversation.getId())) {
             mConversations.put(conversation.getId(), conversation);
             notifyListeners();
         }

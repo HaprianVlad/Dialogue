@@ -70,6 +70,6 @@ public final class SmsReceiver extends BroadcastReceiver {
 
         Contact contact = mContactFactory.contactFromNumber(phoneNumber);
 
-        return new DialogueTextMessage(contact, messageBody, DialogueMessage.MessageStatus.INCOMING);
+        return new DialogueTextMessage(contact, null, null, messageBody, DialogueMessage.MessageStatus.INCOMING);
     }
 }

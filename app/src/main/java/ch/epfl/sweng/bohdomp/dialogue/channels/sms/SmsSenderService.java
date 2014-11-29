@@ -61,21 +61,21 @@ public class SmsSenderService extends IntentService {
             mSentBroadcastReceiver = new SmsSentBroadcastReceiver(messages.size());
             mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver(messages.size());
 
-            Contact contact = message.getContact();
-            sendMultiPartMessage(messages, contact);
+            Contact.PhoneNumber number = message.getPhoneNumber();
+            sendMultiPartMessage(messages, number);
         }
     }
 
-    private void sendMultiPartMessage(ArrayList<String> messages, Contact contact) {
-        String phoneNumber = contact.getPhoneNumbers().iterator().next().number();
+    private void sendMultiPartMessage(ArrayList<String> messages, Contact.PhoneNumber number) {
+        Contract.assertNotNull(number, "number");
 
-        mSmsManager.sendMultipartTextMessage(phoneNumber, null, messages,
+        mSmsManager.sendMultipartTextMessage(number.number(), null, messages,
                 getSentPendingIntentList(messages.size()),
                 getDeliveredPendingIntentList(messages.size()));
     }
 
     private void sendMonoPartMessage(DialogueMessage message) {
-        String phoneNumber = message.getContact().getPhoneNumbers().iterator().next().number();
+        String phoneNumber = message.getPhoneNumber().number();
         String messageBody = message.getBody().getMessageBody();
 
         mSmsManager.sendTextMessage(phoneNumber, null, messageBody,

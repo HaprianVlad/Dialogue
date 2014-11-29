@@ -152,9 +152,15 @@ public class ConversationActivity extends Activity implements ConversationListen
 
                 String draftText = mNewMessageText.getText().toString();
 
+                Contact.ChannelType channel = mConversation.getChannel();
+                Contact.PhoneNumber number = mConversation.getPhoneNumber();
+
+                Contract.assertNotNull(channel, "channel");
+                Contract.assertNotNull(number, "number");
+
                 for (Contact contact : mConversation.getContacts()) {
-                    DialogueMessage message = new DialogueTextMessage(contact, draftText,
-                            DialogueMessage.MessageStatus.OUTGOING);
+                    DialogueMessage message = new DialogueTextMessage(contact, channel, number,
+                            draftText, DialogueMessage.MessageStatus.OUTGOING);
 
                     DialogueOutgoingDispatcher.sendMessage(view.getContext(), message);
                 }
@@ -167,8 +173,8 @@ public class ConversationActivity extends Activity implements ConversationListen
     }
 
     @Override
-    protected void onResume(){
-        if(mConversation.getChannel() == null || mConversation.getPhoneNumber() == null){
+    protected void onResume() {
+        if (mConversation.getChannel() == null || mConversation.getPhoneNumber() == null) {
             Intent intent = new Intent(this, ConversationSettingsActivity.class);
             intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
             startActivity(intent);

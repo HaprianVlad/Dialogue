@@ -55,10 +55,12 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
 
-            if (canSendSms(message)) {
-                sendSms(message);
-            } else if (canSendMms(message)) {
-                sendMms(message);
+            switch (message.getChannel()){
+                case SMS:
+                    sendSms(message);
+                    break;
+                default:
+                    throw new IllegalStateException("not valid channel");
             }
         }
 
@@ -82,16 +84,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
         /* Create intent */
         /* Send intent to service */
-    }
-
-    private boolean canSendSms(DialogueMessage message) {
-        Contract.assertNotNull(message, "message");
-        return message.getContact().availableChannels().contains(Contact.ChannelType.SMS);
-    }
-
-    private boolean canSendMms(DialogueMessage message) {
-        Contract.assertNotNull(message, "message");
-        return message.getContact().availableChannels().contains(Contact.ChannelType.MMS);
     }
 }
 
