@@ -40,12 +40,26 @@ public class ContactFactory {
     }
 
     /**
+     *
+     * @param lookupKey opaque value for contact look ups
+     *                  see:
+     *                  http://developer.android.com/reference/android/provider/ContactsContract.Contacts.html
+     * @return a Contact for this lookup key
+     * @throws ContactLookupException when given lookupKey is invalid
+     */
+    public Contact contactFromLookupKey(final String lookupKey) throws ContactLookupException {
+        Contract.throwIfArgNull(lookupKey, "lookupKey");
+        return new AndroidContact(lookupKey, mContext);
+    }
+
+    /**
      * create contact from given phone number
      * tries to fill in missing information in case the number is associated with a known
      * contact
      *
      * @param phoneNumber
      * @return a Contact for this number
+     * @throws InvalidNumberException when given phone number is not valid
      */
     public Contact contactFromNumber(final String phoneNumber)
         throws InvalidNumberException {

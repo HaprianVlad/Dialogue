@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
  *  junit test class for ContactFactory class
@@ -35,6 +37,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     private static final String PHONE_3 = "234 567 89 01";
 
     private static final String[] ALL_NAMES = {DISPLAY_NAME_1, DISPLAY_NAME_2, DISPLAY_NAME_3};
+
+    private static final String[] LOOKUPKEY_PROJECTION =
+            new String[] {ContactsContract.Contacts.LOOKUP_KEY };
 
     public ContactFactoryTest() {
         super(Application.class);
@@ -195,6 +200,44 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         }
     }
 
+    public void testContactFromLookupKeyNullKey() throws ContactLookupException {
+        try {
+            mContactFactory.contactFromLookupKey(null);
+            fail("expected to throw NullArgumentException");
+        } catch (NullArgumentException e) {
+            // everything ok
+        }
+    }
+
+    public void testContactFromLookupKeyEmptyKey() throws ContactLookupException {
+        try {
+            mContactFactory.contactFromLookupKey("");
+            fail("expected to throw AssertionError");
+        } catch (Throwable e) {
+            // this hack is needed since checkstyle doesn't like catching AssertionError
+            if (!(e instanceof AssertionError)) {
+                fail("expected AssertionError but threw: " + e.getClass());
+            }
+        }
+    }
+
+    public void testContactFromLookupKeyInvalidKey() {
+        try {
+            mContactFactory.contactFromLookupKey("invalidKey");
+            fail("expected to throw ContactLookupException");
+        } catch (ContactLookupException e) {
+            // everything ok
+        }
+    }
+
+    public void testContactFromLookupKeyValidKey() throws InvalidNumberException, ContactLookupException {
+        final Contact contactFromNumber = mContactFactory.contactFromNumber(PHONE_1);
+        final String lookupKey = lookupKeyFromPhoneNumber(PHONE_1);
+        final Contact contactFromLookupKey = mContactFactory.contactFromLookupKey(lookupKey);
+
+        contactEqualityCheck(contactFromNumber, contactFromLookupKey);
+    }
+
     private static void contactEqualityCheck(final Contact c1, final Contact c2) {
         assertTrue(c1.equals(c2));
         assertTrue(c2.equals(c1));
@@ -255,6 +298,34 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
             Uri deletionUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookUpKey);
             resolver.delete(deletionUri, null, null);
         }
+    }
+
+    /*
+     * inspired by
+     * http://stackoverflow.com/questions/5553867/get-contact-by-phone-number-on-android
+     */
+    private String lookupKeyFromPhoneNumber(final String phoneNumber) {
+        Uri uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(phoneNumber));
+        Cursor lookupKeyCursor = mContext.getContentResolver().query(
+                uri,
+                LOOKUPKEY_PROJECTION,
+                null,
+                null,
+                null);
+
+        final String result;
+        if (lookupKeyCursor.moveToFirst()) {
+            result = lookupKeyCursor.getString(
+                    lookupKeyCursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+        } else {
+            result = null;
+        }
+
+        lookupKeyCursor.close();
+
+        return result;
     }
 
 }
