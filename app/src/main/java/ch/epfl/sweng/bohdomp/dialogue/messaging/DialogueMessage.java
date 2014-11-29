@@ -1,22 +1,29 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Abstract class representing an message. This class is mutable.
  */
 public abstract class DialogueMessage implements Parcelable {
+
 
     /**
      * Enumeration representing the state of a message.
@@ -33,6 +40,10 @@ public abstract class DialogueMessage implements Parcelable {
     }
 
     public static final String MESSAGE = "MESSAGE";
+
+    private static final long MILLIS_IN_DAY = 86400000;
+
+    private static SystemTimeProvider msSystemTimeProvider = new SystemTimeProvider();
 
     private final Contact mContact;
     private final Contact.ChannelType mChannel;
@@ -70,7 +81,7 @@ public abstract class DialogueMessage implements Parcelable {
         this.mChannel = channel;
         this.mPhoneNumber = phoneNumber;
         this.mBody = newBody(messageBody);
-        this.mTimestamp = System.currentTimeMillis();
+        this.mTimestamp = msSystemTimeProvider.currentTimeMillis();
         this.mId = IdManager.getInstance().newDialogueMessageId();
         this.mIsReadStatus = false;
         this.mDirection = messageDirection;
@@ -90,6 +101,10 @@ public abstract class DialogueMessage implements Parcelable {
 
     public Contact.ChannelType getChannel() {
         return mChannel;
+    }
+
+    public static void setTimeProvider(SystemTimeProvider systemTimeProvider) {
+        msSystemTimeProvider = systemTimeProvider;
     }
 
     public Contact.PhoneNumber getPhoneNumber() {
@@ -118,6 +133,45 @@ public abstract class DialogueMessage implements Parcelable {
      */
     public Timestamp getTimeStamp() {
         return new Timestamp(mTimestamp);
+    }
+
+    /**
+     * Give a nice presentation to display the TimeStamp of the message
+     * @return String holding a nice presentation of the TimeStamp accordingly to the current time.
+     */
+    public String prettyTimeStamp(Context context) {
+        Contract.throwIfArgNull(context, "context");
+
+        long currentTime = msSystemTimeProvider.currentTimeMillis();
+        long elapsedTime = currentTime - mTimestamp;
+        long millisElapsedToday = currentTime % MILLIS_IN_DAY;
+
+        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
+        if (elapsedTime <= millisElapsedToday) {
+            return onlyHoursAndMin.format(mTimestamp);
+        }
+
+        if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
+            return context.getString(R.string.yesterday) + ": " + onlyHoursAndMin.format(mTimestamp);
+        }
+
+        if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
+            return context.getString(R.string.two_days_ago) + ": " + onlyHoursAndMin.format(mTimestamp);
+        }
+
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        Date currentDate = new Date(currentTime);
+
+        if (!year.format(currentDate).equals(year.format(mTimestamp))) {
+            SimpleDateFormat dayMonthYear = new SimpleDateFormat("dd/MM/yy: HH:mm", Locale.ENGLISH);
+
+            return dayMonthYear.format(mTimestamp);
+        }
+
+        SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM: HH:mm", Locale.ENGLISH);
+
+        return onlyDayMonth.format(mTimestamp);
     }
 
     /**
