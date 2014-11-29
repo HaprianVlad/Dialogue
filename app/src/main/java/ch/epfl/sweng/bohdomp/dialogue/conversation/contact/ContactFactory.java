@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -46,7 +47,8 @@ public class ContactFactory {
      * @param phoneNumber
      * @return a Contact for this number
      */
-    public Contact contactFromNumber(final String phoneNumber) throws InvalidNumberException {
+    public Contact contactFromNumber(final String phoneNumber)
+        throws InvalidNumberException {
 
         Contract.throwIfArgNull(phoneNumber, "phone number");
         if (!verifyPhoneNumber(phoneNumber)) {
@@ -58,7 +60,11 @@ public class ContactFactory {
         if (lookupKey == null) {
             return new UnknownContact(phoneNumber);
         } else {
-            return new AndroidContact(lookupKey, mContext);
+            try {
+                return new AndroidContact(lookupKey, mContext);
+            } catch (ContactLookupException e) {
+                return new UnknownContact(phoneNumber);
+            }
         }
     }
 
@@ -82,9 +88,13 @@ public class ContactFactory {
     private List<Contact> contactListFromCursor(Cursor cursor) {
         List<Contact> result = new ArrayList<Contact>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            result.add(new AndroidContact(
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)),
-                    mContext));
+            try {
+                result.add(new AndroidContact(
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)),
+                        mContext));
+            } catch (ContactLookupException e) {
+                // if lookup key is not valid don't add contact to the list
+            }
         }
         cursor.close();
         return result;
@@ -147,7 +157,7 @@ public class ContactFactory {
         private static final String[] ID_PROJECTION = new String[]{
             ContactsContract.Contacts._ID};
 
-        AndroidContact(final String lookupKey, final Context context) {
+        AndroidContact(final String lookupKey, final Context context) throws ContactLookupException {
             Contract.throwIfArgNull(lookupKey, "lookupKey");
             Contract.throwIfArgNull(context, "context");
             this.mLookupKey = lookupKey;
@@ -188,8 +198,12 @@ public class ContactFactory {
             Contract.throwIfArgNull(context, "context");
             // since database look-ups are done in constructor we
             // try to recreate this contact from its look-up-key
-            // TODO return this if mLookupKey is no longer valid (contact deleted in the meantime)
-            return new AndroidContact(this.mLookupKey, context);
+            try {
+                return new AndroidContact(this.mLookupKey, context);
+            } catch (ContactLookupException e) {
+                // contact has been deleted in the mean-time
+                return this;
+            }
         }
 
         @Override
@@ -262,7 +276,9 @@ public class ContactFactory {
          * @param context application context, will use its ContentResolver to lookup displayName
          * @return display name of contact associated with lookupKey
          */
-        private static String displayNameFromLookupKey(final String lookupKey, final Context context) {
+        private static String displayNameFromLookupKey(final String lookupKey, final Context context)
+            throws ContactLookupException {
+
             Contract.assertNotNull(lookupKey, "lookupKey");
             Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
             Contract.assertNotNull(context, "context");
@@ -276,15 +292,25 @@ public class ContactFactory {
                     null,
                     null);
 
-            final String result = cursor.moveToFirst()
-                    ? cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)) : "";
+            if (cursor == null) {
+                throw new ContactLookupException("no lookup cursor");
+            }
+
+            if (!cursor.moveToFirst()) {
+                throw new ContactLookupException("no data in cursor");
+            }
+
+            final String result =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
             cursor.close();
 
             return result;
         }
 
-        private static String contactIdFromLookupKey(final String lookupKey, final Context context) {
+        private static String contactIdFromLookupKey(final String lookupKey, final Context context)
+            throws ContactLookupException {
+
             Contract.assertNotNull(lookupKey, "lookupKey");
             Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
             Contract.assertNotNull(context, "context");
@@ -298,10 +324,15 @@ public class ContactFactory {
                     null,
                     null);
 
-            final String result = cursor.moveToFirst()
-                    //TODO find a way to recover from that condition!
-                    ? cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)) : null;
+            if (cursor == null) {
+                throw new ContactLookupException("no lookup cursor");
+            }
 
+            if (!cursor.moveToFirst()) {
+                throw new ContactLookupException("no data in cursor");
+            }
+
+            final String result = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
             cursor.close();
 
@@ -316,7 +347,9 @@ public class ContactFactory {
          * @param context application context, will use its ContentResolver to lookup displayName
          * @return all phone numbers associated to contact with specific lookupKey
          */
-        private static Set<PhoneNumber> phoneNumbersFromLookupKey(final String lookupKey, final Context context) {
+        private static Set<PhoneNumber> phoneNumbersFromLookupKey(final String lookupKey, final Context context)
+            throws ContactLookupException {
+
             Contract.assertNotNull(lookupKey, "lookupKey");
             Contract.assertTrue(!lookupKey.isEmpty(), "lookupKey is empty string");
             Contract.assertNotNull(context, "context");
@@ -326,8 +359,7 @@ public class ContactFactory {
             final String id = contactIdFromLookupKey(lookupKey, context);
 
             if (id == null) {
-                //TODO recover or crash instead of silently returning empty set
-                return result;
+                throw new ContactLookupException("got invalid id");
             }
 
             Cursor phoneCursor = context.getContentResolver().query(
