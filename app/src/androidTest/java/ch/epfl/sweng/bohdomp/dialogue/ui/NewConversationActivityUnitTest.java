@@ -28,7 +28,6 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
     private Button mSendButton;
     private Button mSelectContact;
 
-
     private ConversationId mId;
 
     public NewConversationActivityUnitTest() {
@@ -47,7 +46,6 @@ public class NewConversationActivityUnitTest extends ActivityUnitTestCase<NewCon
         mEditText = (EditText) mActivity.findViewById(R.id.message_to);
         mSendButton = (Button) mActivity.findViewById(R.id.create_conversation_button);
         mSelectContact = (Button) mActivity.findViewById(R.id.selectContact);
-
 
         mId = null;
     }
