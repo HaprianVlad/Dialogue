@@ -23,6 +23,7 @@ import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDi
 public class DialogueMessageTest extends MockTestCase {
 
     private static final long MILLIS_IN_DAY = 86400000;
+    private static final long MILLIS_IN_10MIN = 100000;
     private static final int NB_YEAR_DAY = 366;
     private static final int NB_MONTH_DAY = 31;
     private static final long MAGIC_MONDAY = 1415628854000L;
@@ -62,9 +63,27 @@ public class DialogueMessageTest extends MockTestCase {
         }
     }
 
+    public void testPrettyTimeStampNow() {
+        String expectedDisplay = mContext.getString(R.string.now);
+
+        String toDisplay = mMessage.prettyTimeStamp(mContext);
+
+        assertEquals(expectedDisplay, toDisplay);
+    }
+
     public void testPrettyTimeStampSameDay() {
+        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
+        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
+
+        DialogueMessage.setTimeProvider(mTimeProvider);
+        mMessage = new DialogueTextMessage(mContact, mChannel, mNumber, MESSAGE_BODY, INCOMING);
+
+
+        Mockito.doReturn(timeSinceMagicMonday(MILLIS_IN_10MIN)).when(mTimeProvider).currentTimeMillis();
+
         Timestamp lastActivity = mMessage.getTimeStamp();
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
         String expectedDisplay = onlyHoursAndMin.format(lastActivity);
 
         String toDisplay = mMessage.prettyTimeStamp(mContext);
@@ -78,7 +97,6 @@ public class DialogueMessageTest extends MockTestCase {
 
         DialogueMessage.setTimeProvider(mTimeProvider);
         mMessage = new DialogueTextMessage(mContact, mChannel, mNumber, MESSAGE_BODY, INCOMING);
-
 
         Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
 
@@ -151,5 +169,10 @@ public class DialogueMessageTest extends MockTestCase {
     private long timeSinceMagicMonday(int nbDaysToAdd) {
 
         return MAGIC_MONDAY + nbDaysToAdd * MILLIS_IN_DAY;
+    }
+
+    private long timeSinceMagicMonday(long millisToAdd) {
+
+        return MAGIC_MONDAY + millisToAdd;
     }
 }

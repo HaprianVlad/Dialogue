@@ -42,6 +42,7 @@ public abstract class DialogueMessage implements Parcelable {
     public static final String MESSAGE = "MESSAGE";
 
     private static final long MILLIS_IN_DAY = 86400000;
+    private static final long MILLIS_IN_MIN = 1000;
 
     private static SystemTimeProvider msSystemTimeProvider = new SystemTimeProvider();
 
@@ -147,6 +148,10 @@ public abstract class DialogueMessage implements Parcelable {
         long millisElapsedToday = currentTime % MILLIS_IN_DAY;
 
         SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
+        if (elapsedTime <= MILLIS_IN_MIN) {
+            return context.getString(R.string.now);
+        }
 
         if (elapsedTime <= millisElapsedToday) {
             return onlyHoursAndMin.format(mTimestamp);

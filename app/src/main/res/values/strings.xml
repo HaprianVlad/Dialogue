@@ -21,6 +21,7 @@
     <string name="title_activity_new_conversation">newConversationActivity</string>
     <string name="to_hint">To</string>
     <string name="create_conversation_button">Create</string>
+    <string name="now">Now</string>
     <string name="yesterday">Yesterday</string>
     <string name="two_days_ago">Two days ago</string>
     <string name="newConversationActivityTitle">New Conversation</string>
