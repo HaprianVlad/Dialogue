@@ -40,12 +40,26 @@ public class ContactFactory {
     }
 
     /**
+     *
+     * @param lookupKey opaque value for contact look ups
+     *                  see:
+     *                  http://developer.android.com/reference/android/provider/ContactsContract.Contacts.html
+     * @return a Contact for this lookup key
+     * @throws ContactLookupException when given lookupKey is invalid
+     */
+    public Contact contactFromLookupKey(final String lookupKey) throws ContactLookupException {
+        Contract.throwIfArgNull(lookupKey, "lookupKey");
+        return new AndroidContact(lookupKey, mContext);
+    }
+
+    /**
      * create contact from given phone number
      * tries to fill in missing information in case the number is associated with a known
      * contact
      *
      * @param phoneNumber
      * @return a Contact for this number
+     * @throws InvalidNumberException when given phone number is not valid
      */
     public Contact contactFromNumber(final String phoneNumber)
         throws InvalidNumberException {
@@ -66,38 +80,6 @@ public class ContactFactory {
                 return new UnknownContact(phoneNumber);
             }
         }
-    }
-
-    /**
-     * @return list of all contacts currently on the phone
-     */
-    public List<Contact> knownContacts() {
-        Cursor cursor = contactListCursor();
-        return contactListFromCursor(cursor);
-    }
-
-    private Cursor contactListCursor() {
-        return mContext.getContentResolver().query(
-                ContactsContract.Contacts.CONTENT_URI,
-                LOOKUPKEY_PROJECTION,
-                null,
-                null,
-                null);
-    }
-
-    private List<Contact> contactListFromCursor(Cursor cursor) {
-        List<Contact> result = new ArrayList<Contact>();
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            try {
-                result.add(new AndroidContact(
-                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)),
-                        mContext));
-            } catch (ContactLookupException e) {
-                // if lookup key is not valid don't add contact to the list
-            }
-        }
-        cursor.close();
-        return result;
     }
 
     /**
