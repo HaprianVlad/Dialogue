@@ -106,6 +106,7 @@ public class NewConversationActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Contract.throwIfArgNull(view, "view");
+                
                 try {
                     Contact contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
                     goToConversation(contact);
