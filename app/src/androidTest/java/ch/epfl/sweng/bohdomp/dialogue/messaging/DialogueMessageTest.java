@@ -98,7 +98,6 @@ public class DialogueMessageTest extends MockTestCase {
         DialogueMessage.setTimeProvider(mTimeProvider);
         mMessage = new DialogueTextMessage(mContact, mChannel, mNumber, MESSAGE_BODY, INCOMING);
 
-
         Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
 
         Timestamp lastActivity = mMessage.getTimeStamp();
