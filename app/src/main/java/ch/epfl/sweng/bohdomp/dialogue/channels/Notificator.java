@@ -35,7 +35,7 @@ public class Notificator {
                 .setContentTitle("New Message from:" + message.getContact().getPhoneNumbers().iterator().next())
                 .setContentText(message.getBody().getMessageBody())
                 .setAutoCancel(true)
-                .setSound(Settings.System.DEFAULT_RINGTONE_URI)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setSmallIcon(R.drawable.ic_notification);
 
         Intent resultIntent = new Intent(mContext, ConversationListActivity.class);
