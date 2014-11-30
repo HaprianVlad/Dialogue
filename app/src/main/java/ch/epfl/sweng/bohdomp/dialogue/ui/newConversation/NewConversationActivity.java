@@ -134,11 +134,13 @@ public class NewConversationActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Cursor s = getContentResolver().query(ContactsContract.
-                    CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+
+            Uri contactData = data.getData();
+            Cursor s = getContentResolver().query(contactData, null, null, null, null);
 
             if (s.moveToFirst()) {
-                String key = s.getString(s.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY));
+                int index = s.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY);
+                String key = s.getString(index);
 
                 try {
                     Contact contact = mContactFactory.contactFromLookupKey(key);
