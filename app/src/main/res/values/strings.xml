@@ -35,6 +35,7 @@
     <string name="deleteAllDialog_question">Are you sure?</string>
     <string name="wasteBin">Waste Bin</string>
     <string name="title_activity_conversation_settings_activity">Select Channel</string>
+    <string name="selectButton">select</string>
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>

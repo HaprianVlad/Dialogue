@@ -3,7 +3,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.newConversation;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -19,6 +21,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -33,6 +36,7 @@ public class NewConversationActivity extends Activity {
 
     private EditText mToEditText;
     private Button mSendButton;
+    private Button mSelectContact;
 
     private StorageManager mStorageManager;
 
@@ -68,6 +72,7 @@ public class NewConversationActivity extends Activity {
         mToEditText = (EditText) findViewById(R.id.message_to);
         mSendButton = (Button) findViewById(R.id.create_conversation_button);
         mSendButton.setEnabled(false);
+        mSelectContact = (Button) findViewById(R.id.selectContact);
     }
 
 
@@ -101,23 +106,58 @@ public class NewConversationActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Contract.throwIfArgNull(view, "view");
-
-                Intent intent = new Intent(view.getContext(), ConversationActivity.class);
-
+                
                 try {
                     Contact contact = mContactFactory.contactFromNumber(mToEditText.getText().toString());
-                    Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
-
-                    intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
-
-                    startActivity(intent);
+                    goToConversation(contact);
                 } catch (InvalidNumberException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "This is not valid phone number, "
+                            + "please retry!", Toast.LENGTH_LONG).show();
                     mSendButton.setEnabled(false);
-                    Toast.makeText(getApplicationContext(), "This is not a valid input for phone number, please retry!",
-                            Toast.LENGTH_LONG).show();
                 }
             }
         });
+
+        mSelectContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            Cursor s = getContentResolver().query(ContactsContract.
+                    CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+
+            if (s.moveToFirst()) {
+                String key = s.getString(s.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY));
+
+                try {
+                    Contact contact = mContactFactory.contactFromLookupKey(key);
+                    goToConversation(contact);
+                } catch (ContactLookupException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "This is not a valid contact, "
+                            + "please retry!", Toast.LENGTH_LONG).show();
+                    mSendButton.setEnabled(false);
+                }
+            }
+        }
+    }
+
+    private void goToConversation(Contact contact) {
+        Conversation conversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
+        startActivity(intent);
     }
 
     protected void onResume() {
