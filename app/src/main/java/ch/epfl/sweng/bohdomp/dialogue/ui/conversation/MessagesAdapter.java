@@ -139,8 +139,7 @@ public class MessagesAdapter extends BaseAdapter {
         String body = msg.getBody().getMessageBody();
         viewHolder.body.setText(body);
 
-        String timeStamp = msg.getTimeStamp().toString();
-        viewHolder.timeStamp.setText(timeStamp);
+        viewHolder.timeStamp.setText(msg.prettyTimeStamp(mContext));
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.status.setVisibility(View.VISIBLE);

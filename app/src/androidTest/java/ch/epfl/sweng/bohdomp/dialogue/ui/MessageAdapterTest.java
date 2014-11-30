@@ -185,15 +185,8 @@ public class MessageAdapterTest extends MockTestCase {
         assertNotNull("Timestamp", timeStamp);
 
         assertEquals("Body not equals", body.getText().toString(), MSG_BODY);
-        assertEquals("TimeStamp not equals", timeStamp.getText().toString(),
-                mMessage.getTimeStamp().toString());
-
-        assertNotNull("Body", body);
-        assertNotNull("Timestamp", timeStamp);
-
-        assertEquals("Body not equals", body.getText().toString(), MSG_BODY);
-        assertEquals("TimeStamp not equals", timeStamp.getText().toString(),
-                mMessage.getTimeStamp().toString());
+        assertEquals("TimeStamp not equals", timeStamp.getText(),
+                mMessage.prettyTimeStamp(mContext));
 
     }
 }
