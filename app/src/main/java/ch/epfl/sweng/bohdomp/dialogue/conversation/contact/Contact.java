@@ -28,6 +28,18 @@ public interface Contact extends Parcelable {
         SMS, MMS;
 
         @Override
+        public String toString() {
+            switch (this) {
+                case SMS:
+                    return "SMS";
+                case MMS:
+                    return "MMS";
+                default :
+                    return this.name();
+            }
+        }
+
+        @Override
         public int describeContents() {
             return 0;
         }
@@ -118,6 +130,24 @@ public interface Contact extends Parcelable {
          */
         public static enum Tag {
             MOBILE, HOME, WORK, WORK_MOBILE, OTHER;
+
+            @Override
+            public String toString() {
+                switch (this) {
+                    case MOBILE:
+                        return "mobile";
+                    case HOME:
+                        return "home";
+                    case WORK_MOBILE:
+                        return "mobile work";
+                    case OTHER:
+                        return "other";
+                    default :
+                        return this.name();
+                }
+            }
+
+
         }
 
         public static final Creator<PhoneNumber> CREATOR = new Creator<PhoneNumber>() {
