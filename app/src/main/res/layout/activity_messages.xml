@@ -39,9 +39,13 @@
         android:layout_height="0dip"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/new_message_bar"
+        android:focusable="false"
         android:clickable="false"
         android:divider="@null"
-        android:dividerHeight="0dp">
+        android:dividerHeight="0dp"
+        android:transcriptMode="alwaysScroll"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent">
     </ListView>
 
 </RelativeLayout>
