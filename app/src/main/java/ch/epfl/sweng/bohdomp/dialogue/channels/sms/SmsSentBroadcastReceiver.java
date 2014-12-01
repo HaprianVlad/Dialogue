@@ -2,8 +2,10 @@ package ch.epfl.sweng.bohdomp.dialogue.channels.sms;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
@@ -77,11 +79,22 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
                     DialogueMessage message = DialogueMessage.extractMessage(intent);
                     DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.SENT);
 
+                    writeToSmsProvider(context, message);
+
                     Toast.makeText(context, R.string.message_sent, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.message_notSent, Toast.LENGTH_SHORT).show();
                 }
             }
         }
+    }
+
+    private void writeToSmsProvider(Context context, DialogueMessage message) {
+        ContentValues values = new ContentValues();
+
+        values.put("address", message.getPhoneNumber().number());
+        values.put("body", message.getBody().getMessageBody());
+
+        context.getContentResolver().insert(Telephony.Sms.Sent.CONTENT_URI, values);
     }
 }
