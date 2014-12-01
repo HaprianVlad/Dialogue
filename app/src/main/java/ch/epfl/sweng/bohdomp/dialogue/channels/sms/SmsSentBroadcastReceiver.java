@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
@@ -92,8 +92,9 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
     private void writeToSmsProvider(Context context, DialogueMessage message) {
         ContentValues values = new ContentValues();
 
-        values.put("address", message.getContact().getPhoneNumbers().iterator().next().number());
+        values.put("address", message.getPhoneNumber().number());
         values.put("body", message.getBody().getMessageBody());
-        context.getContentResolver().insert(Uri.parse("content://sms/sent"), values);
+
+        context.getContentResolver().insert(Telephony.Sms.Sent.CONTENT_URI, values);
     }
 }
