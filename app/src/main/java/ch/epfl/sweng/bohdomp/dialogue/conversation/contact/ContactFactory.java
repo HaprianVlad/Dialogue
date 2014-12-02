@@ -245,7 +245,7 @@ public class ContactFactory {
             final Set<PhoneNumber> result = new HashSet<PhoneNumber>();
 
             for (PhoneNumber number : phoneNumbers) {
-                if (PhoneNumberUtils.isWellFormedSmsAddress(number.number())) {
+                if (PhoneNumberUtils.isWellFormedSmsAddress(number.getNumber())) {
                     result.add(number);
                 }
             }

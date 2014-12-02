@@ -82,7 +82,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         Set<String> phoneNumberStrings = new HashSet<String>();
 
         for (Contact.PhoneNumber num : phoneNumbersInContact) {
-            phoneNumberStrings.add(num.number());
+            phoneNumberStrings.add(num.getNumber());
         }
 
         // phoneNumbersInContact should contain exactly one phone number,
