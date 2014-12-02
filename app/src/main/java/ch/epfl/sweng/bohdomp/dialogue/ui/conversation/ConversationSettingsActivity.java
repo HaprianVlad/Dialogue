@@ -82,11 +82,11 @@ public class ConversationSettingsActivity extends Activity {
             for (Contact.PhoneNumber number :numbers) {
                 RadioButton btn = new RadioButton(this);
 
-                if (convNumber != null && convNumber.number().equals(number.number()) && convChannel == channel) {
+                if (convNumber != null && convNumber.getNumber().equals(number.getNumber()) && convChannel == channel) {
                     btn.setChecked(true);
                 }
 
-                btn.setText(channel.toString() + " / " + number.number());
+                btn.setText(channel.toString() + " / " + number.getNumber());
                 btn.setTag(R.id.id_channel, channel);
                 btn.setTag(R.id.id_phoneNumber, number);
                 mGroup.addView(btn);

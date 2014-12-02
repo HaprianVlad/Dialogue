@@ -82,11 +82,11 @@ public interface Contact extends Parcelable {
             this.mTag = tag;
         }
 
-        public String number() {
+        public String getNumber() {
             return mPhoneNumber;
         }
 
-        public Tag tag() {
+        public Tag getTag() {
             return mTag;
         }
 

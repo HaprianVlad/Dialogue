@@ -92,7 +92,7 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
     private void writeToSmsProvider(Context context, DialogueMessage message) {
         ContentValues values = new ContentValues();
 
-        values.put("address", message.getPhoneNumber().number());
+        values.put("address", message.getPhoneNumber().getNumber());
         values.put("body", message.getBody().getMessageBody());
 
         context.getContentResolver().insert(Telephony.Sms.Sent.CONTENT_URI, values);
