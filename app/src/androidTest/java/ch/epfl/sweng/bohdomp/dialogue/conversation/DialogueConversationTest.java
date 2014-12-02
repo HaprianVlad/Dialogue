@@ -545,7 +545,7 @@ public class DialogueConversationTest extends MockTestCase {
 
         for (int i = 0; i < mMessages.size(); i++) {
             assertEquals("Message list does not contain the same message",
-                    mMessages.get(0).getId(), parcelMessages.get(0).getId());
+                    mMessages.get(i).getId(), parcelMessages.get(i).getId());
         }
 
         assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
