@@ -7,7 +7,6 @@ import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -28,15 +27,10 @@ public final class DialogueOutgoingDispatcher extends IntentService {
      * @param message to be sent.
      */
     public static void sendMessage(Context context, DialogueMessage message) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
-        if (message == null) {
-            throw new NullArgumentException("message");
-        }
-        if (message.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
-            throw new IllegalArgumentException();
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(message, "message");
+        Contract.throwIfArg(message.getDirection() == DialogueMessage.MessageDirection.INCOMING,
+                "Wrong message direction");
 
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
@@ -49,7 +43,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Contract.throwIfArgNull(intent, "intent");
 
-        if (intent.getAction() == ACTION_SEND_MESSAGE) {
+        if (intent.getAction().equals(ACTION_SEND_MESSAGE)) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
             DefaultDialogData.getInstance().addMessageToConversation(message);

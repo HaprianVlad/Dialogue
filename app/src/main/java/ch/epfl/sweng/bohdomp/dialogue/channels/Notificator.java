@@ -22,13 +22,12 @@ public class Notificator {
     private Context mContext;
 
     public Notificator(Context context) {
-
         Contract.throwIfArgNull(context, "context");
+
         this.mContext = context;
     }
 
     public void update(DialogueMessage message) {
-
         Contract.throwIfArgNull(message, "message");
 
         Notification.Builder mBuilder = new Notification.Builder(mContext)
