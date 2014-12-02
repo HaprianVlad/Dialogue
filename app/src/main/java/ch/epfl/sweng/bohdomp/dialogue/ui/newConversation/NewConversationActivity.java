@@ -1,6 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.newConversation;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -51,19 +50,8 @@ public class NewConversationActivity extends Activity {
         mContactFactory = new ContactFactory(getApplicationContext());
         mStorageManager = new StorageManager(getApplicationContext());
 
-        setupActionBar();
         setViewElement();
         setupListener();
-    }
-
-    /*
-     * Setup the action bar
-     */
-    private void setupActionBar() {
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
 

@@ -8,6 +8,11 @@
         android:showAsAction="never" />
 
     <!--  Items should appear as button  -->
+    <item android:id="@+id/action_fingerPrint"
+        android:title="@string/fingerprint"
+        android:showAsAction="ifRoom"
+        android:enabled="true"
+        android:icon="@drawable/ic_action_new_account"/>
     <item android:id="@+id/action_addConversation"
         android:icon="@drawable/ic_action_new"
         android:title="@string/action_addConversation"

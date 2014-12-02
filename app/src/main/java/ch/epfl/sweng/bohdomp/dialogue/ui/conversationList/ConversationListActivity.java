@@ -2,10 +2,19 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.conversationList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Telephony;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -21,6 +31,7 @@ import java.util.List;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueDataListener;
@@ -34,7 +45,8 @@ import de.timroes.android.listview.EnhancedListView;
  * @author swengTeam 2013 BohDomp
  * Activity displaying the set of conversation
  */
-public class ConversationListActivity extends Activity implements DialogueDataListener{
+public class ConversationListActivity extends Activity implements DialogueDataListener {
+
 
     private EnhancedListView mContactListView;
     private LinearLayout mDefaultAppWarningLayout;
@@ -48,6 +60,10 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private ConversationListAdapter mConversationItemListAdapter;
     private StorageManager mStorageManager;
 
+    private NfcAdapter mNfcAdapter;
+    private PendingIntent mNfcPendingIntent;
+    private IntentFilter[] mNDefExchangeFilters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +75,38 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         initData();
         setViewElements();
         setupListener();
+
+
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if (mNfcAdapter != null) {
+            setupNFC();
+        }
+    }
+
+    private void setupNFC() {
+        mNfcPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+
+        try {
+            ndefDetected.addDataType("text/fingerprint");
+        } catch (IntentFilter.MalformedMimeTypeException e) {
+
+        }
+
+        mNDefExchangeFilters = new IntentFilter[] {
+            ndefDetected
+        };
+
+        if (mNfcAdapter != null) {
+            mNfcAdapter.setNdefPushMessage(null, this);
+        }
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            onNewIntent(intent);
+        }
     }
 
     /*
@@ -98,7 +146,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         mContactListView.setAdapter(mConversationItemListAdapter);
         mContactListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 
-            @Override public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+            @Override
+            public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
                 final Conversation deletedConversation = (Conversation) mConversationItemListAdapter.getItem(position);
                 mConversationItemListAdapter.remove(position);
@@ -123,8 +172,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         mContactListView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
 
         mContactListView.setSwipingLayout(R.id.swiping_layout);
-
-        setDialogDeleteAll();
 
         setDialogDeleteAll();
     }
@@ -164,7 +211,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private void checkDefaultApp() {
         if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
             mDefaultAppWarningLayout.setVisibility(View.VISIBLE);
-        }  else {
+        } else {
             mDefaultAppWarningLayout.setVisibility(View.GONE);
         }
     }
@@ -204,6 +251,11 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onResume() {
         checkDefaultApp();
+
+        if (mNfcAdapter != null) {
+            mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mNDefExchangeFilters, null);
+        }
+
         super.onResume();
     }
 
@@ -245,10 +297,106 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             case R.id.action_deleteAll:
                 mDialog.show();
                 return true;
+            case R.id.action_fingerPrint:
+                selectFingerPrint();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void selectFingerPrint() {
+        NfcManager manager = (NfcManager) getApplicationContext().getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+
+        if (adapter != null && adapter.isEnabled()) {
+            Intent intent = new Intent(this, FingerPrintExchangeActivity.class);
+            startActivity(intent);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            dialog.cancel();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+
+            builder.setTitle("Warning");
+            builder.setMessage("NFC is not available or not enable!");
+            builder.setPositiveButton("OK", dialogClickListener);
+
+            builder.create().show();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+            processIntent(intent);
+        }
+    }
+
+    private void processIntent(Intent intent) {
+        Toast.makeText(getApplicationContext(), "DISCOVER NFC", Toast.LENGTH_LONG).show();
+        Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+        NdefMessage inNdefMessage = (NdefMessage) parcelables[0];
+        NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+        NdefRecord nDefRecord = inNdefRecords[0];
+        String inMsg = new String(nDefRecord.getPayload());
+
+        showFingerPrintDialog(inMsg);
+    }
+
+    private void showFingerPrintDialog(String msg) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("FingerPrint for" + "Contact name");
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        setFingerprint(null, null);
+                        Intent intent = new Intent(getApplicationContext(), FingerPrintExchangeActivity.class);
+                        dialog.cancel();
+                        startActivity(intent);
+                        break;
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        setFingerprint(null, null);
+                        dialog.cancel();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.cancel();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        builder.setTitle("Accept finger print");
+        builder.setMessage(getString(R.string.deleteAllDialog_question));
+        builder.setNegativeButton("Cancel", dialogClickListener);
+        builder.setNeutralButton("Yes", dialogClickListener);
+        builder.setPositiveButton("Yes and send mine", dialogClickListener);
+
+        mDialog = builder.create();
+    }
+
+    private void setFingerprint(Contact contact, String fingerprint) {
+        Log.i("hello", "Set Fingerprint");
+
+        contact.
+    }
 
 }
