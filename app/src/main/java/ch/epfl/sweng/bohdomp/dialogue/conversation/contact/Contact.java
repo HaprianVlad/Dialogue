@@ -46,14 +46,16 @@ public interface Contact extends Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            Contract.throwIfArgNull(dest, "destination parcel");
+            Contract.throwIfArgNull(dest, "dest");
+
             dest.writeInt(ordinal());
         }
 
         public static final Creator<ChannelType> CREATOR = new Creator<ChannelType>() {
             @Override
             public ChannelType createFromParcel(Parcel source) {
-                Contract.throwIfArgNull(source, "source parcel");
+                Contract.throwIfArgNull(source, "source");
+
                 return ChannelType.values()[source.readInt()];
             }
 
@@ -73,8 +75,9 @@ public interface Contact extends Parcelable {
         private final Tag mTag;
 
         public PhoneNumber(final String phoneNumber, final Tag tag) {
-            Contract.throwIfArgNull(phoneNumber, "phone number");
+            Contract.throwIfArgNull(phoneNumber, "phoneNumber");
             Contract.throwIfArgNull(tag, "tag");
+
             this.mPhoneNumber = phoneNumber;
             this.mTag = tag;
         }
@@ -114,7 +117,8 @@ public interface Contact extends Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            Contract.throwIfArgNull(dest, "dest parcel");
+            Contract.throwIfArgNull(dest, "dest");
+
             dest.writeString(this.mPhoneNumber);
             dest.writeInt(this.mTag.ordinal());
         }
@@ -153,7 +157,8 @@ public interface Contact extends Parcelable {
         public static final Creator<PhoneNumber> CREATOR = new Creator<PhoneNumber>() {
             @Override
             public PhoneNumber createFromParcel(Parcel source) {
-                Contract.throwIfArgNull(source, "source parcel");
+                Contract.throwIfArgNull(source, "source");
+
                 return new PhoneNumber(source);
             }
 

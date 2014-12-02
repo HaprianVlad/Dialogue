@@ -13,7 +13,6 @@ import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -57,21 +56,10 @@ public final class DialogueConversation implements Conversation {
      * @param systemTimeProvider - will provide us system time
      */
     public DialogueConversation(List<Contact> contacts, SystemTimeProvider systemTimeProvider) {
-        if (contacts == null) {
-            throw new NullArgumentException("contacts");
-        }
-
-        if (contacts.size() == 0) {
-            throw new IllegalArgumentException("Must have at least one contact");
-        }
-
-        if (contacts.contains(null)) {
-            throw new IllegalArgumentException("There is a null contact");
-        }
-
-        if (systemTimeProvider == null) {
-            throw new NullArgumentException("systemTimeProvider");
-        }
+        Contract.throwIfArgNull(contacts, "contacts");
+        Contract.throwIfArg(contacts.size() == 0, "Must have at least one contact");
+        Contract.throwIfArg(contacts.contains(null), "There is a null contact");
+        Contract.throwIfArgNull(systemTimeProvider, "systemTimeProvider");
 
         this.mId = IdManager.getInstance().newConversationId();
         this.mContact = new ArrayList<Contact>(contacts);
@@ -104,6 +92,7 @@ public final class DialogueConversation implements Conversation {
     @Override
     public void setChannel(Contact.ChannelType channel) {
         Contract.throwIfArgNull(channel, "channel");
+
         this.mChannel = channel;
         notifyListeners();
     }
@@ -116,6 +105,7 @@ public final class DialogueConversation implements Conversation {
     @Override
     public void setPhoneNumber(Contact.PhoneNumber phone) {
         Contract.throwIfArgNull(phone, "phone number");
+
         this.mPhoneNumber = phone;
         notifyListeners();
     }
@@ -137,9 +127,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public String getLastConversationActivityString(Context context) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
+        Contract.throwIfArgNull(context, "context");
 
         long currentTime = mTimeProvider.currentTimeMillis();
         long elapsedTime = currentTime - mLastActivityTime.getTime();
@@ -209,9 +197,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void addContact(Contact contact) {
-        if (contact == null) {
-            throw new NullArgumentException("contact == null !");
-        }
+        Contract.throwIfArgNull(contact, "contact");
 
         mContact.add(contact);
         notifyListeners();
@@ -219,9 +205,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void removeContact(Contact contact) {
-        if (contact == null) {
-            throw new NullArgumentException("contact == null !");
-        }
+        Contract.throwIfArgNull(contact, "contact");
 
         if (mContact.contains(contact)) {
             mContact.remove(contact);
@@ -231,9 +215,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void addMessage(DialogueMessage message) {
-        if (message == null) {
-            throw new NullArgumentException("message == null !");
-        }
+        Contract.throwIfArgNull(message, "message");
 
         if (message.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             mHasUnread = true;
@@ -249,9 +231,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void addListener(ConversationListener listener) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
+        Contract.throwIfArgNull(listener, "listener");
 
         if (mListeners == null) {
             mListeners = new ArrayList<ConversationListener>();
@@ -261,9 +241,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void removeListener(ConversationListener listener) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
+        Contract.throwIfArgNull(listener, "listener");
 
         if (mListeners.contains(listener)) {
             mListeners.remove(listener);
@@ -310,9 +288,7 @@ public final class DialogueConversation implements Conversation {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (dest == null) {
-            throw new NullArgumentException("dest == null");
-        }
+        Contract.throwIfArgNull(dest, "dest");
 
         dest.writeParcelable(this.mId, flags);
         dest.writeList(mContact);
@@ -342,9 +318,7 @@ public final class DialogueConversation implements Conversation {
 
     public static final Creator<DialogueConversation> CREATOR = new Creator<DialogueConversation>() {
         public DialogueConversation createFromParcel(Parcel source) {
-            if (source == null) {
-                throw new NullArgumentException("source == null");
-            }
+            Contract.throwIfArgNull(source, "source");
 
             return new DialogueConversation(source, new SystemTimeProvider());
         }

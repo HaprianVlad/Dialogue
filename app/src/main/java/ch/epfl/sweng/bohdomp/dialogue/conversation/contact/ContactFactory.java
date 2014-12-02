@@ -36,6 +36,7 @@ public class ContactFactory {
      */
     public ContactFactory(final Context context) throws IllegalArgumentException {
         Contract.throwIfArgNull(context, "context");
+
         this.mContext = context;
     }
 
@@ -49,6 +50,7 @@ public class ContactFactory {
      */
     public Contact contactFromLookupKey(final String lookupKey) throws ContactLookupException {
         Contract.throwIfArgNull(lookupKey, "lookupKey");
+
         return new AndroidContact(lookupKey, mContext);
     }
 
@@ -142,11 +144,10 @@ public class ContactFactory {
         AndroidContact(final String lookupKey, final Context context) throws ContactLookupException {
             Contract.throwIfArgNull(lookupKey, "lookupKey");
             Contract.throwIfArgNull(context, "context");
+
             this.mLookupKey = lookupKey;
             this.mDisplayName = displayNameFromLookupKey(lookupKey, context);
-
             this.mPhoneNumbers = phoneNumbersFromLookupKey(lookupKey, context);
-
             this.mPhoneNumberMap = channelMapFromPhoneNumberSet(mPhoneNumbers);
         }
 
@@ -163,6 +164,7 @@ public class ContactFactory {
         @Override
         public Set<PhoneNumber> getPhoneNumbers(final ChannelType channel) {
             Contract.throwIfArgNull(channel, "channel");
+
             if (mPhoneNumberMap.containsKey(channel)) {
                 return mPhoneNumberMap.get(channel);
             } else {
@@ -178,6 +180,7 @@ public class ContactFactory {
         @Override
         public Contact updateInfo(final Context context) {
             Contract.throwIfArgNull(context, "context");
+
             // since database look-ups are done in constructor we
             // try to recreate this contact from its look-up-key
             try {
@@ -386,7 +389,7 @@ public class ContactFactory {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            Contract.throwIfArgNull(dest, "dest parcel");
+            Contract.throwIfArgNull(dest, "dest");
 
             dest.writeString(this.mLookupKey);
             dest.writeString(this.mDisplayName);
@@ -405,7 +408,8 @@ public class ContactFactory {
 
         public static final Creator<Contact> CREATOR = new Creator<Contact>() {
             public AndroidContact createFromParcel(Parcel source) {
-                Contract.throwIfArgNull(source, "source parcel");
+                Contract.throwIfArgNull(source, "source");
+
                 return new AndroidContact(source);
             }
 
@@ -424,6 +428,7 @@ public class ContactFactory {
 
         public UnknownContact(final String phoneNumber) {
             Contract.throwIfArgNull(phoneNumber, "phone number string");
+
             this.mPhoneNumber = phoneNumber;
         }
 
@@ -442,6 +447,7 @@ public class ContactFactory {
         @Override
         public Set<PhoneNumber> getPhoneNumbers(ChannelType channel) {
             Contract.throwIfArgNull(channel, "channel");
+
             switch (channel) {
                 case SMS:
                     return getPhoneNumbers();
@@ -460,6 +466,7 @@ public class ContactFactory {
         @Override
         public Contact updateInfo(final Context context) throws InvalidNumberException {
             Contract.throwIfArgNull(context, "context");
+
             return new ContactFactory(context).contactFromNumber(mPhoneNumber);
         }
 
@@ -500,7 +507,8 @@ public class ContactFactory {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            Contract.throwIfArgNull(dest, "dest parcel");
+            Contract.throwIfArgNull(dest, "dest");
+
             dest.writeString(this.mPhoneNumber);
         }
 
@@ -510,7 +518,7 @@ public class ContactFactory {
 
         public static final Creator<Contact> CREATOR = new Creator<Contact>() {
             public UnknownContact createFromParcel(Parcel source) {
-                Contract.throwIfArgNull(source, "source parcel");
+                Contract.throwIfArgNull(source, "source");
                 return new UnknownContact(source);
             }
 
