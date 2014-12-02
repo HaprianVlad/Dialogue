@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 import org.bouncycastle.openpgp.PGPCompressedData;
 import org.bouncycastle.openpgp.PGPEncryptedDataList;
@@ -110,7 +110,6 @@ public abstract class SecretKeyLike {
         }
 
         if (priv == null) {
-            //TODO maybe throw custom exception?
             throw new PGPException("No secret key found that can decrypt this message");
         }
 

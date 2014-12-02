@@ -42,7 +42,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
         CryptoService.startActionEncrypt(mContext, mFingerprint, mMessage, new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Assert.assertEquals(resultCode, CryptoService.RESULT_SUCCESS);
+                Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
                 latch.countDown();
             }
         });
@@ -57,7 +57,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
         CryptoService.startActionDecrypt(mContext, mMessage, new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Assert.assertEquals(resultCode, CryptoService.RESULT_SUCCESS);
+                Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
                 latch.countDown();
             }
         });
@@ -73,7 +73,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
         final ResultReceiver decryptionReceiver = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Assert.assertEquals(resultCode, CryptoService.RESULT_SUCCESS);
+                Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
                 Assert.assertEquals(mMessage, resultData.getString(CryptoService.EXTRA_CLEAR_TEXT));
                 decrypted.countDown();
             }
@@ -82,7 +82,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
         ResultReceiver encryptionReceiver = new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Assert.assertEquals(resultCode, CryptoService.RESULT_SUCCESS);
+                Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
                 CryptoService.startActionDecrypt(mContext, resultData.getString(CryptoService.EXTRA_ENCRYPTED_TEXT),
                         decryptionReceiver);
                 encrypted.countDown();

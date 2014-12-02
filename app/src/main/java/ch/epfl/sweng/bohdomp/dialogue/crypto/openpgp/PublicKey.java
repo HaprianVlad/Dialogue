@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.openpgp.PGPEncryptedDataGenerator;
@@ -28,7 +28,8 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.StreamUtils;
  * (https://github.com/sbt/sbt-pgp)
  */
 public class PublicKey implements Key {
-    private final PGPPublicKey underlying;
+    
+    private final PGPPublicKey mUnderlying;
 
     /**
      * Size of any temporary buffers used in crypto methods
@@ -37,38 +38,35 @@ public class PublicKey implements Key {
 
     PublicKey(PGPPublicKey underlyingKey) {
         Contract.throwIfArgNull(underlyingKey, "underlyingKey");
-        this.underlying = underlyingKey;
+        this.mUnderlying = underlyingKey;
     }
 
-    public long getId() {
-        return underlying.getKeyID();
+    public boolean isMasterKey() {
+        return mUnderlying.isMasterKey();
     }
 
-    /**
-     * The key's fingerprint presented as a string
-     */
-    public String getFingerprintString() {
-        return String.format("0x2", underlying.getFingerprint());
+    public String getFingerprint() {
+        return FingerprintUtils.fromBytes(mUnderlying.getFingerprint());
     }
 
     /**
      * Can this key be used to encrypt messages?
      */
     public boolean isEncryptionKey() {
-        return underlying.isEncryptionKey();
+        return mUnderlying.isEncryptionKey();
     }
 
     /**
      * Create a new pgp encryptor from preferences of this key.
      */
     private PGPEncryptedDataGenerator newEncryptor() {
-        int algorithm = underlying.getAlgorithm();
+        int algorithm = mUnderlying.getAlgorithm();
         SecureRandom rand = new SecureRandom();
         PGPDataEncryptorBuilder encryptorBuilder = new BcPGPDataEncryptorBuilder(algorithm)
                 .setWithIntegrityPacket(true)
                 .setSecureRandom(rand);
         PGPEncryptedDataGenerator encryptor = new PGPEncryptedDataGenerator(encryptorBuilder);
-        encryptor.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(underlying).setSecureRandom(rand));
+        encryptor.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(mUnderlying).setSecureRandom(rand));
         return encryptor;
     }
 

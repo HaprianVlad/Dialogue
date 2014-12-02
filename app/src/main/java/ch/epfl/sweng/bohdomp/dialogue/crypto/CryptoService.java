@@ -31,6 +31,20 @@ public class CryptoService extends IntentService {
 
     public static final int RESULT_SUCCESS = 0;
 
+    private KeyManager mKeyManager;
+
+    public CryptoService() {
+        super("CryptoService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Context context = getApplicationContext();
+        Contract.throwIfArgNull(context, "Cannot create a CryptoService with an empty context.");
+        mKeyManager = new KeyManager(context);
+    }
+
     /**
      * Encrypt a message with the given fingerprint's public key.
      * @param context android context
@@ -71,10 +85,6 @@ public class CryptoService extends IntentService {
         context.startService(intent);
     }
 
-    public CryptoService() {
-        super("CryptoService");
-    }
-
     @Override
     protected void onHandleIntent(Intent intent) {
         Contract.throwIfArgNull(intent, "intent");
@@ -102,6 +112,15 @@ public class CryptoService extends IntentService {
 
         //TODO do actual encryption
         String encrypted = DUMMY_PREFIX + message;
+       /* try {
+            if (mKeyManager.getPublicKeyRing().getEncryptionKeys().size() != 0) {
+                throw new AssertionError("Expected size 0");
+            }
+        } catch (IOException ex) {
+            throw new AssertionError("IOException", ex);
+        } catch (PGPException ex) {
+            throw new AssertionError("PGPException", ex);
+        }*/
 
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_FINGERPRINT, fingerprint);

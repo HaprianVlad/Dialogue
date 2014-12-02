@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPrivateKey;
@@ -16,27 +16,32 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * http://stackoverflow.com/questions/19173181/bouncycastle-pgp-decrypt-and-verify
  */
 public class SecretKey extends SecretKeyLike implements Key {
-    private final PGPSecretKey underlying;
+
+    private final PGPSecretKey mUnderlying;
 
     SecretKey(PGPSecretKey underlyingKey) {
         Contract.throwIfArgNull(underlyingKey, "underlyingKey");
-        this.underlying = underlyingKey;
+        this.mUnderlying = underlyingKey;
     }
 
-    public long getId() {
-        return underlying.getKeyID();
+    public boolean isMasterKey() {
+        return mUnderlying.isMasterKey();
+    }
+
+    public String getFingerprint() {
+        return FingerprintUtils.fromBytes(mUnderlying.getPublicKey().getFingerprint());
     }
 
     @Override
     protected PGPPrivateKey extractPrivateKey(long id, char[] pass) throws PGPException, IncorrectPassphraseException {
-        if (id != underlying.getKeyID()) {
+        if (id != mUnderlying.getKeyID()) {
             return null;
         }
 
         try {
             BcPGPDigestCalculatorProvider provider = new BcPGPDigestCalculatorProvider();
             BcPBESecretKeyDecryptorBuilder builder = new BcPBESecretKeyDecryptorBuilder(provider);
-            return underlying.extractPrivateKey(builder.build(pass));
+            return mUnderlying.extractPrivateKey(builder.build(pass));
         } catch (PGPException ex) {
             if (ex.getMessage().contains("checksum mismatch")) {
                 throw new IncorrectPassphraseException(ex);

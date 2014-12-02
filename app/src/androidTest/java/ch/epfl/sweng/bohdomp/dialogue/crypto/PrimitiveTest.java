@@ -6,6 +6,12 @@ import junit.framework.Assert;
 
 import org.bouncycastle.openpgp.PGPException;
 
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChainBuilder;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyRing;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyChainBuilder;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyRing;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 
@@ -59,8 +65,8 @@ public class PrimitiveTest extends AndroidTestCase {
 
     @Override
     public void setUp() throws Exception {
-        secretKeyRing = new SecretKeyRingBuilder().fromString(TestKeyData.SECRET_KEY_RING);
-        publicKeyRing = new PublicKeyRingBuilder().fromString(TestKeyData.PUBLIC_KEY_RING);
+        secretKeyRing = new SecretKeyChainBuilder().fromString(TestKeyData.SECRET_KEY_RING).getKeyRings().get(0);
+        publicKeyRing = new PublicKeyChainBuilder().fromString(TestKeyData.PUBLIC_KEY_RING).getKeyRings().get(0);
     }
 
     public void testNullDecryption() throws Exception {

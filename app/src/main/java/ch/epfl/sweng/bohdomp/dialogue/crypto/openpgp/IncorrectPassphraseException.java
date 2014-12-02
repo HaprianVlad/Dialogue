@@ -1,9 +1,10 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 /**
  * Thrown when a required password was incorrect.
  */
 public class IncorrectPassphraseException extends Exception {
+    private static final long serialVersionUID = 1L;
 
     IncorrectPassphraseException() {
         super();

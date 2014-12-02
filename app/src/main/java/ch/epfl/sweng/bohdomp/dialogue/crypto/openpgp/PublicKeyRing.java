@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 
 import org.bouncycastle.openpgp.PGPPublicKey;
@@ -15,11 +15,12 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  *  key is exported, it is considered as a keyring (containing one key).
  */
 public class PublicKeyRing implements KeyRing<PublicKey> {
-    private final PGPPublicKeyRing underlying;
+
+    private final PGPPublicKeyRing mUnderlying;
 
     PublicKeyRing(PGPPublicKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");
-        this.underlying = underlyingKeyRing;
+        this.mUnderlying = underlyingKeyRing;
     }
 
     /** Returns a list of any public keys contained in this keyring. */
@@ -27,7 +28,7 @@ public class PublicKeyRing implements KeyRing<PublicKey> {
         ArrayList<PublicKey> keys = new ArrayList<PublicKey>();
 
         @SuppressWarnings("unchecked") // bouncy castle returns a raw iterator
-        Iterator<PGPPublicKey> iterator = underlying.getPublicKeys();
+        Iterator<PGPPublicKey> iterator = mUnderlying.getPublicKeys();
 
         while (iterator.hasNext()) {
             keys.add(new PublicKey(iterator.next()));

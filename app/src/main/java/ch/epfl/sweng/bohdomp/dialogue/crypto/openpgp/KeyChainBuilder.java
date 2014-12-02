@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.crypto;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPUtil;
@@ -13,17 +13,20 @@ import java.nio.charset.StandardCharsets;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
- * Common interface of keyring builders.
- * @param <T> type of keyrings this builder can create
+ * Common interface of key chain builders.
+ * @param <T> type of key chains this builder can create
  */
-public abstract class KeyRingBuilder<T extends KeyRing<?>> {
+public abstract class KeyChainBuilder<T extends KeyChain<?>> {
 
-    /** Build a keyring from the given inputs. */
+    /** Build a key chain from the given inputs. */
     abstract protected T build(InputStream pgpStream, KeyFingerPrintCalculator fingerPrintCalculator)
         throws IOException, PGPException;
 
-    /** Create a keyring from a binary stream. */
-    private T fromStream(InputStream in) throws IOException, PGPException {
+    /** Get an empty chain containing no keys. */
+    abstract public T empty();
+
+    /** Create a key chain from a binary stream. */
+    public T fromStream(InputStream in) throws IOException, PGPException {
         Contract.throwIfArgNull(in, "in");
         KeyFingerPrintCalculator calculator = new BcKeyFingerprintCalculator();
         return build(PGPUtil.getDecoderStream(in), calculator);
@@ -36,7 +39,7 @@ public abstract class KeyRingBuilder<T extends KeyRing<?>> {
         return fromStream(stream);
     }
 
-    /** Create a keyring from an ascii-armored string. */
+    /** Create a key chain from an ascii-armored string. */
     public T fromString(String in) throws PGPException {
         Contract.throwIfArgNull(in, "in");
 
