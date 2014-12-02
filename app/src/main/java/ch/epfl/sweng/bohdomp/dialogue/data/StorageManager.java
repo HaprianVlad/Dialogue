@@ -29,8 +29,7 @@ public class StorageManager {
         try {
             unsafeSaveData();
         } catch (IOException e) {
-            Toast.makeText(mContext, "Unable to save messages while closing the file",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "Unable to save messages", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -45,6 +44,7 @@ public class StorageManager {
 
             DefaultDialogData.getInstance().restoreFromBundle(parcel.readBundle());
         }
+
         parcel.recycle();
     }
 
@@ -61,9 +61,6 @@ public class StorageManager {
             outputStream = mContext.openFileOutput(mSaveFileName, Context.MODE_PRIVATE);
             outputStream.write(parcel.marshall());
 
-        } catch (IOException e) {
-            Toast.makeText(mContext, "Unable to save messages", Toast.LENGTH_LONG).show();
-
         } finally {
             if (outputStream != null) {
                 outputStream.close();
@@ -77,7 +74,7 @@ public class StorageManager {
         try {
             data = unsafeReadFile();
         } catch (IOException e) {
-            Toast.makeText(mContext, "Unable to retreive old messages while closing the file",
+            Toast.makeText(mContext, "Unable to retreive old messages",
                     Toast.LENGTH_LONG).show();
         }
 
@@ -92,8 +89,6 @@ public class StorageManager {
             inputStream = mContext.openFileInput(mSaveFileName);
             data = new byte[inputStream.available()];
             inputStream.read(data);
-        } catch (IOException e) {
-            Toast.makeText(mContext, "Unable to retreive old messages", Toast.LENGTH_LONG).show();
         } finally {
             if (inputStream != null) {
                 inputStream.close();
