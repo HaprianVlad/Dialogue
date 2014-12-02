@@ -34,7 +34,7 @@ public class ContactFactory {
      * @param context context of the application used to look up contact information
      * @throws IllegalArgumentException
      */
-    public ContactFactory(final Context context) throws IllegalArgumentException {
+    public ContactFactory(final Context context) {
         Contract.throwIfArgNull(context, "context");
 
         this.mContext = context;
