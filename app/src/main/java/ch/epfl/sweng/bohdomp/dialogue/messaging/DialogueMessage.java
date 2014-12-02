@@ -13,7 +13,6 @@ import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -64,9 +63,7 @@ public abstract class DialogueMessage implements Parcelable {
      * @return the message contained in the intent.
      */
     public static DialogueMessage extractMessage(Intent intent) {
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+        Contract.throwIfArgNull(intent, "intent");
 
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
@@ -243,6 +240,8 @@ public abstract class DialogueMessage implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        Contract.throwIfArgNull(dest, "dest");
+
         dest.writeParcelable(this.mContact, 0);
         dest.writeParcelable(this.mChannel, 0);
         dest.writeParcelable(this.mPhoneNumber, 0);
@@ -256,6 +255,8 @@ public abstract class DialogueMessage implements Parcelable {
     }
 
     DialogueMessage(Parcel in) {
+        Contract.throwIfArgNull(in, "in");
+
         this.mContact = in.readParcelable(Contact.class.getClassLoader());
         this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
         this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());

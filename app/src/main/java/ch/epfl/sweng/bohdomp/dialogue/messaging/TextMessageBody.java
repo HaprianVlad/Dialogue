@@ -32,6 +32,8 @@ public final class TextMessageBody implements MessageBody{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        Contract.throwIfArgNull(dest, "dest");
+
         dest.writeString(this.mBody);
     }
 
@@ -46,6 +48,8 @@ public final class TextMessageBody implements MessageBody{
     };
 
     private TextMessageBody(Parcel in) {
+        Contract.throwIfArgNull(in, "in");
+
         this.mBody = in.readString();
     }
 }
