@@ -147,7 +147,8 @@ public class NewConversationActivity extends Activity {
                 try {
                     Contact contact = mContactFactory.contactFromLookupKey(key);
                     if (contact.getPhoneNumbers().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "This contact has no phone number!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                "This contact has no phone number!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                         startActivityForResult(intent, PICK_CONTACT);
                     } else {
