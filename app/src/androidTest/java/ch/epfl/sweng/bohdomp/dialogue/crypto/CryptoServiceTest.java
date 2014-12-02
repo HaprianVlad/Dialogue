@@ -1,6 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.test.ServiceTestCase;
