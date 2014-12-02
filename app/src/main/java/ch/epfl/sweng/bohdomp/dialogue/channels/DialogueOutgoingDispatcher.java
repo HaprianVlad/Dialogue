@@ -3,10 +3,15 @@ package ch.epfl.sweng.bohdomp.dialogue.channels;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.ResultReceiver;
+import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.CryptoService;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -47,7 +52,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
 
-            switch (message.getChannel()){
+            switch (message.getChannel()) {
                 case SMS:
                     sendSms(message);
                     break;
@@ -58,15 +63,29 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
     }
 
-    private void sendSms(DialogueMessage message) {
+    private void sendSms(final DialogueMessage message) {
         Contract.assertNotNull(message, "message");
 
-        /* Create intent and send to SmsSenderService */
-        Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
-        intent.setAction(SmsSenderService.ACTION_SEND_SMS);
-        intent.putExtra(DialogueMessage.MESSAGE, message);
-        getApplicationContext().startService(intent);
+        Log.i("DialogueOutgoingDispatcher", "3");
 
+        CryptoService.startActionEncrypt(getApplicationContext(), "", message.getBody().getMessageBody(),
+                new ResultReceiver(null) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                        if (resultCode == CryptoService.RESULT_SUCCESS) {
+                            String encryptedText = resultData.getString(CryptoService.EXTRA_ENCRYPTED_TEXT);
+                            DialogueMessage encryptedMessage = new DialogueTextMessage(message.getContact(),
+                                    message.getChannel(), message.getPhoneNumber(),
+                                    encryptedText, DialogueMessage.MessageDirection.OUTGOING);
+
+                     /* Create intent and send to SmsSenderService */
+                            Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
+                            intent.setAction(SmsSenderService.ACTION_SEND_SMS);
+                            intent.putExtra(DialogueMessage.MESSAGE, encryptedMessage);
+                            getApplicationContext().startService(intent);
+                        }
+                    }
+                });
     }
 
     private void sendMms(DialogueMessage message) {
