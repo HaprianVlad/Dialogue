@@ -37,7 +37,7 @@
                 />
 
             <TextView
-                android:id="@+id/messageStatus"
+                android:id="@+id/messageDirection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
@@ -45,6 +45,14 @@
                 android:visibility="gone"
                 android:paddingLeft="10dp"
                 android:textColor="@color/red"/>
+
+            <TextView
+                android:id="@+id/messageStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                />
 
         </LinearLayout>
 

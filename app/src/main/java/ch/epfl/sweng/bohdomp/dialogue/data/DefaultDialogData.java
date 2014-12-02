@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.data;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -146,6 +147,8 @@ public final class DefaultDialogData implements DialogueData {
 
         Conversation c = this.createOrGetConversation(message.getContact());
         c.addMessage(message);
+
+        Log.d("BLA", "added");
         //Listeners are notified by the listener of the conversation
     }
 
@@ -164,10 +167,8 @@ public final class DefaultDialogData implements DialogueData {
             }
         }
 
-        if (conversation != null && conversation.getMessages().contains(message)) {
+        if (conversation != null) {
             conversation.setMessageStatus(message, status);
-
-            notifyListeners();
         }
     }
 

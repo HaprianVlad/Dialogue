@@ -49,7 +49,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Contract.throwIfArgNull(intent, "intent");
 
-        if (intent.getAction() == ACTION_SEND_MESSAGE) {
+        if (intent.getAction().equals(ACTION_SEND_MESSAGE)) {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
@@ -67,8 +67,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
     private void sendSms(DialogueMessage message) {
         Contract.assertNotNull(message, "message");
-
-        Log.i("DialogueOutgoingDispatcher", "3");
 
         /* Create intent and send to SmsSenderService */
         Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);

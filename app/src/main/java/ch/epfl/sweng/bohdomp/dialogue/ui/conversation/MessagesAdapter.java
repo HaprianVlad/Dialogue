@@ -1,6 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class MessagesAdapter extends BaseAdapter {
     private static final String LOG_TAG = "MessagesAdapter";
+    public static final float HALF_VISIBLE = 0.5f;
+    public static final float VISIBLE = 1.0f;
 
     private final Context mContext;
     private List<DialogueMessage> mMessagesList;
@@ -41,6 +44,7 @@ public class MessagesAdapter extends BaseAdapter {
 
         protected TextView body;
         protected TextView timeStamp;
+        protected TextView direction;
         protected TextView status;
     }
 
@@ -122,6 +126,7 @@ public class MessagesAdapter extends BaseAdapter {
 
         viewHolder.body = (TextView) convertView.findViewById(R.id.body);
         viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.timeStamp);
+        viewHolder.direction = (TextView) convertView.findViewById(R.id.messageDirection);
         viewHolder.status = (TextView) convertView.findViewById(R.id.messageStatus);
 
         return viewHolder;
@@ -142,17 +147,39 @@ public class MessagesAdapter extends BaseAdapter {
         viewHolder.timeStamp.setText(msg.prettyTimeStamp(mContext));
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
-            viewHolder.status.setVisibility(View.VISIBLE);
+            viewHolder.direction.setVisibility(View.VISIBLE);
         }
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_right);
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
             viewHolder.wrapper.setGravity(Gravity.RIGHT);
+            viewHolder.status.setVisibility(View.VISIBLE);
+            viewHolder.wrapper.setAlpha(HALF_VISIBLE);
+
+            switch(msg.getStatus()) {
+                case IN_TRANSIT:
+                    Log.d("Bla", "transit");
+                    viewHolder.status.setText("In transit");
+                    break;
+                case SENT:
+                    Log.d("Bla", "sent");
+                    viewHolder.status.setText("Sent");
+                    viewHolder.wrapper.setAlpha(VISIBLE);
+                    break;
+                case DELIVERED:
+                    Log.d("Bla", "delivered");
+                    viewHolder.status.setText("Delivered");
+                    viewHolder.wrapper.setAlpha(1.0f);
+                    break;
+                default:
+                    break;
+            }
         } else if (msg.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_left);
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
             viewHolder.wrapper.setGravity(Gravity.LEFT);
+            viewHolder.status.setVisibility(View.GONE);
         }
     }
 }

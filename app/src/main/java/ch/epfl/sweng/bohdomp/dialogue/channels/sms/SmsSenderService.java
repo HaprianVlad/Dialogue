@@ -102,7 +102,6 @@ public class SmsSenderService extends IntentService {
             //It can happen only during testing
         }
 
-
         super.onDestroy();
     }
 
@@ -125,7 +124,8 @@ public class SmsSenderService extends IntentService {
     private PendingIntent getSentPendingIntent(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
-        Intent intent = new Intent(ACTION_SMS_SENT);
+        Intent intent = new Intent(getApplicationContext(), SmsSentBroadcastReceiver.class);
+        intent.setAction(SmsSenderService.ACTION_SMS_SENT);
         intent.putExtra(DialogueMessage.MESSAGE, message);
 
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
@@ -155,7 +155,8 @@ public class SmsSenderService extends IntentService {
     private PendingIntent getDeliveryPendingIntent(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
-        Intent intent = new Intent(ACTION_SMS_DELIVERED);
+        Intent intent = new Intent(getApplicationContext(), SmsDeliveryBroadcastReceiver.class);
+        intent.setAction(SmsSenderService.ACTION_SMS_DELIVERED);
         intent.putExtra(DialogueMessage.MESSAGE, message);
 
         PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
