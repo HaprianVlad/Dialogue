@@ -77,7 +77,10 @@
     <module name="HiddenField"/>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <module name="MagicNumber">
+        <!-- The number 255, or 0xff in hexadecimal notation, is not a magic number it is frequently used in operations involving byte manipulation -->
+        <property name="ignoreNumbers" value="-1, 0, 1, 2, 255"/>
+    </module>
     <module name="MissingSwitchDefault"/>
     <!-- <module name="RedundantThrows"> -->
     <!--   <property name="suppressLoadErrors" value="true"/> -->

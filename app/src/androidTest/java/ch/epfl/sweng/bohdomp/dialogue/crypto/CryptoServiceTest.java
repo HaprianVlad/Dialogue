@@ -17,7 +17,6 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
     //timeout in ms for tests
     private static final int TIMEOUT = 1000;
 
-    private String mFingerprint;
     private String mMessage;
 
     private void assertComplete(CountDownLatch latch) throws Exception {
@@ -30,8 +29,6 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
     public CryptoServiceTest() {
         super(CryptoService.class);
 
-        mFingerprint = "0000 0000 0000 0000 0000 0000 0000 0000 0000 0000";
-
         mMessage = "test message";
     }
 
@@ -39,22 +36,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
         setupService();
         final CountDownLatch latch = new CountDownLatch(1);
 
-        CryptoService.startActionEncrypt(mContext, mFingerprint, mMessage, new ResultReceiver(null) {
-            @Override
-            protected void onReceiveResult(int resultCode, Bundle resultData) {
-                Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
-                latch.countDown();
-            }
-        });
-
-        assertComplete(latch);
-    }
-
-    public void testDecryption() throws Exception {
-        setupService();
-        final CountDownLatch latch = new CountDownLatch(1);
-
-        CryptoService.startActionDecrypt(mContext, mMessage, new ResultReceiver(null) {
+        CryptoService.startActionEncrypt(mContext, TestKeyData.FINGERPRINT, mMessage, new ResultReceiver(null) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 Assert.assertEquals(CryptoService.RESULT_SUCCESS, resultCode);
@@ -89,7 +71,7 @@ public final class CryptoServiceTest extends ServiceTestCase<CryptoService> {
             }
         };
 
-        CryptoService.startActionEncrypt(mContext, mFingerprint, mMessage, encryptionReceiver);
+        CryptoService.startActionEncrypt(mContext, TestKeyData.FINGERPRINT, mMessage, encryptionReceiver);
 
         assertComplete(encrypted);
         assertComplete(decrypted);

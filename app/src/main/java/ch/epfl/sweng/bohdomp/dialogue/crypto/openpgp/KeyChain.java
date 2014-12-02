@@ -1,7 +1,5 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
-import android.util.Log;
-
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
+import java.util.Locale;
+
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -31,8 +33,20 @@ public class FingerprintUtils {
         Contract.throwIfArgNull(fingerprint, "fingerprint");
 
         String cleaned = fingerprint.replaceAll("\\s+", "");
-        String upper = cleaned.toUpperCase();
-        return upper.replaceAll("(.{5}?)", "$0 ").trim();
+        String upper = cleaned.toUpperCase(Locale.US);
+        return upper.replaceAll("(.{4}?)", "$0 ").trim();
+    }
+
+    /**
+     * Checks whether a given fingerprint is in a valid format.
+     * This is equivalent to creating a pretty fingerprint and checking
+     * that it is composed of 10 groups of 4 hex digits.
+     */
+    public static boolean isValidFingerPrint(String fingerprint) {
+        Contract.throwIfArgNull(fingerprint, "fingerprint");
+
+        String pretty = fromString(fingerprint);
+        return pretty.matches("([0-9A-F]{4} ){9}[0-9A-F]{4}");
     }
 
 }

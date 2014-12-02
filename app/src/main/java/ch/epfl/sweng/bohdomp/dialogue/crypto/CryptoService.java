@@ -5,7 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 
+import org.bouncycastle.openpgp.PGPException;
+
+import java.io.IOException;
+import java.util.List;
+
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyRing;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyRing;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -26,10 +36,14 @@ public class CryptoService extends IntentService {
             "ch.epfl.sweng.bohdomp.dialogue.crypto.extra.EXTRA_CLEAR_TEXT";
     public static final String EXTRA_ENCRYPTED_TEXT =
             "ch.epfl.sweng.bohdomp.dialogue.crypto.extra.EXTRA_ENCRYPTED_TEXT";
+    public static final String EXTRA_FAILURE_MESSAGE =
+            "ch.epfl.sweng.bohdomp.dialogue.crypto.extra.FAILURE_MESSAGE";
     public static final String EXTRA_RECEIVER =
             "ch.epfl.sweng.bohdomp.dialogue.crypto.extra.RECEIVER";
 
     public static final int RESULT_SUCCESS = 0;
+
+    public static final int RESULT_FAILURE = 1;
 
     private KeyManager mKeyManager;
 
@@ -47,10 +61,11 @@ public class CryptoService extends IntentService {
 
     /**
      * Encrypt a message with the given fingerprint's public key.
-     * @param context android context
+     *
+     * @param context     android context
      * @param fingerprint public key's fingerprint
-     * @param message the message to encrypt
-     * @param receiver a receiver that will be notified once the message is encrypted
+     * @param message     the message to encrypt
+     * @param receiver    a receiver that will be notified once the message is encrypted
      */
     public static void startActionEncrypt(Context context, String fingerprint, String message,
                                           ResultReceiver receiver) {
@@ -69,8 +84,9 @@ public class CryptoService extends IntentService {
 
     /**
      * Decrypt a message.
-     * @param context android context
-     * @param message the message to decrypt
+     *
+     * @param context  android context
+     * @param message  the message to decrypt
      * @param receiver a receiver that will be notified once the message is decrypted
      */
     public static void startActionDecrypt(Context context, String message, ResultReceiver receiver) {
@@ -103,41 +119,91 @@ public class CryptoService extends IntentService {
 
     }
 
-    private static final String DUMMY_PREFIX = "----- Dummy Encrypted Message -----";
-
     private void handleActionEncrypt(String fingerprint, String message, ResultReceiver receiver) {
         Contract.throwIfArgNull(fingerprint, "fingerprint");
         Contract.throwIfArgNull(message, "message");
         Contract.throwIfArgNull(receiver, "receiver");
 
-        //TODO do actual encryption
-        String encrypted = DUMMY_PREFIX + message;
-       /* try {
-            if (mKeyManager.getPublicKeyRing().getEncryptionKeys().size() != 0) {
-                throw new AssertionError("Expected size 0");
-            }
-        } catch (IOException ex) {
-            throw new AssertionError("IOException", ex);
-        } catch (PGPException ex) {
-            throw new AssertionError("PGPException", ex);
-        }*/
-
         Bundle bundle = new Bundle();
+        int ret = doEncryption(bundle, fingerprint, message);
         bundle.putString(EXTRA_FINGERPRINT, fingerprint);
-        bundle.putString(EXTRA_ENCRYPTED_TEXT, encrypted);
-        receiver.send(RESULT_SUCCESS, bundle);
+        receiver.send(ret, bundle);
     }
 
     private void handleActionDecrypt(String message, ResultReceiver receiver) {
         Contract.throwIfArgNull(message, "message");
         Contract.throwIfArgNull(receiver, "receiver");
 
-        //TODO do actual decryption
-        String decrypted = message.replaceAll("^" + DUMMY_PREFIX, "");
-
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_CLEAR_TEXT, decrypted);
-        receiver.send(RESULT_SUCCESS, bundle);
+        int ret = doDecryption(bundle, message);
+        receiver.send(ret, bundle);
+    }
+
+    /** Utility method for filling in a bundle with a failure that may happen under normal operation. */
+    private int failure(Bundle bundle, String message) {
+        bundle.putString(EXTRA_FAILURE_MESSAGE, message);
+        return RESULT_FAILURE;
+    }
+
+    /** Utility method for filling in a bundle with a failure that should never occur. */
+    private int hardFailure(Bundle bundle, String action, Exception ex) {
+        String message = "Unexpected exception occurred during " + action;
+        Log.e("CryptoService", message, ex);
+        return failure(bundle, message);
+    }
+
+    /**
+     * Fill a bundle with an encrypted message and return status code.
+     */
+    private int doEncryption(Bundle bundle, String fingerprint, String message) {
+        try {
+            PublicKeyRing keyRing = mKeyManager.getPublicKeyChain().getKeyRing(fingerprint);
+
+            if (keyRing == null) {
+                return failure(bundle, "No public key matching the fingerprint \"" + fingerprint + "\" can be found.");
+            }
+
+            List<PublicKey> encryptionKeys = keyRing.getEncryptionKeys();
+            if (encryptionKeys.size() == 0) {
+                return failure(bundle, "No public keys of fingerprint \"" + fingerprint + "\" support encryption.");
+            }
+            String encrypted = encryptionKeys.get(0).encrypt(message);
+            bundle.putString(EXTRA_ENCRYPTED_TEXT, encrypted);
+
+            return RESULT_SUCCESS;
+        } catch (IOException ex) {
+            return hardFailure(bundle, "encryption", ex);
+        } catch (PGPException ex) {
+            return hardFailure(bundle, "encryption", ex);
+        }
+    }
+
+    /**
+     * Fill a bundle with an decrypted message and return status code.
+     */
+    private int doDecryption(Bundle bundle, String message) {
+        try {
+            String fingerprint = KeyManager.FINGERPRINT; //TODO retrieve fingerprint associated to private key
+            String passphrase = KeyManager.PASSPHRASE; //TODO retrieve passphrase from account management
+
+            SecretKeyRing keyRing = mKeyManager.getSecretKeyChain().getKeyRing(fingerprint);
+
+            if (keyRing == null) {
+                return failure(bundle, "No secret key matching the fingerprint \"" + fingerprint + "\" can be found"
+                    + "on the device.");
+            }
+
+            String decrypted = keyRing.decrypt(message, passphrase);
+            bundle.putString(EXTRA_CLEAR_TEXT, decrypted);
+
+            return RESULT_SUCCESS;
+        } catch (IncorrectPassphraseException ex) {
+            return failure(bundle, "Incorrect passphrase to the private key, please try again.");
+        } catch (IOException ex) {
+            return hardFailure(bundle, "decryption", ex);
+        } catch (PGPException ex) {
+            return hardFailure(bundle, "decryption", ex);
+        }
     }
 
 }
