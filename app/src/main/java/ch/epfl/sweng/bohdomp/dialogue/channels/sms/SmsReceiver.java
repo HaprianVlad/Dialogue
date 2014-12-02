@@ -10,7 +10,6 @@ import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -23,13 +22,8 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context == null) {
-            throw new NullArgumentException("context");
-        }
-
-        if (intent == null) {
-            throw new NullArgumentException("intent");
-        }
+        Contract.throwIfArgNull(context, "context");
+        Contract.throwIfArgNull(intent, "intent");
 
         if (mContactFactory == null) {
             mContactFactory = new ContactFactory(context);
@@ -42,6 +36,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         for (SmsMessage smsMessage : smsMessages) {
 
             Contract.assertNotNull(smsMessage, "smsMessage");
+
             messageBody += smsMessage.getMessageBody();
         }
 
