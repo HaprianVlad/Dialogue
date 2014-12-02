@@ -3,7 +3,6 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import android.content.Context;
 import android.os.Parcel;
 
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -193,9 +192,10 @@ public final class DialogueConversation implements Conversation {
         Contract.throwIfArgNull(message, "message");
         Contract.throwIfArgNull(status, "status");
 
-        for (int i = 0; i < mMessages.size(); i++) {
-            if (mMessages.get(i).equals(message)) {
-                mMessages.get(i).setStatus(status);
+        for (DialogueMessage m : mMessages) {
+            if (m.getId().equals(message.getId())) {
+                m.setStatus(status);
+                notifyListeners();
             }
         }
     }

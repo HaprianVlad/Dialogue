@@ -3,7 +3,6 @@ package ch.epfl.sweng.bohdomp.dialogue.channels;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import ch.epfl.sweng.bohdomp.dialogue.channels.sms.SmsSenderService;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
@@ -61,8 +60,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
     private void sendSms(DialogueMessage message) {
         Contract.assertNotNull(message, "message");
-
-        Log.i("DialogueOutgoingDispatcher", "3");
 
         /* Create intent and send to SmsSenderService */
         Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);

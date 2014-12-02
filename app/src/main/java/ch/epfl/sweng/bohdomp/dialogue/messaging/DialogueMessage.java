@@ -24,7 +24,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
  */
 public abstract class DialogueMessage implements Parcelable {
 
-
     /**
      * Enumeration representing the state of a message.
      */
