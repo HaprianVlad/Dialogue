@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.BuildConfig;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
@@ -35,8 +34,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * Activity displaying a set of messages
  */
 public class ConversationActivity extends Activity implements ConversationListener {
-    private static final String LOG_TAG = "ConversationActivity";
-
     private ListView mMessageList;
     private EditText mNewMessageText;
     private Button mSendButton;
@@ -73,9 +70,10 @@ public class ConversationActivity extends Activity implements ConversationListen
     }
 
     private void setupActionBar() {
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -86,12 +84,9 @@ public class ConversationActivity extends Activity implements ConversationListen
         Contract.throwIfArgNull(conversationId, "conversationId");
 
         mStorageManager = new StorageManager(getApplicationContext());
-
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
-        if (BuildConfig.DEBUG && mConversation == null) {
-            throw new AssertionError("null mConversation");
-        }
+        Contract.assertNotNull(mConversation, "mConversation");
 
 
         mConversation.addListener(this);

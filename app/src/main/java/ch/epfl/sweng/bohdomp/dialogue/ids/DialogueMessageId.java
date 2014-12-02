@@ -22,6 +22,8 @@ public final class DialogueMessageId extends Id {
     public static final Parcelable.Creator<DialogueMessageId> CREATOR
         = new Parcelable.Creator<DialogueMessageId>() {
             public DialogueMessageId createFromParcel(Parcel in) {
+                Contract.throwIfArgNull(in, "in");
+
                 return new DialogueMessageId(in.readLong());
             }
 

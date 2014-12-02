@@ -3,7 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 import android.net.Uri;
 import android.os.Parcel;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
  * Class representing the mBody of a data message
@@ -15,9 +15,7 @@ public final class DataMessageBody implements MessageBody{
     private final Uri mBody;
 
     public DataMessageBody(String body) {
-        if (body == null) {
-            throw new NullArgumentException("body");
-        }
+        Contract.throwIfArgNull(body, "body");
 
         this.mBody = Uri.parse(body);
     }
@@ -34,10 +32,14 @@ public final class DataMessageBody implements MessageBody{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        Contract.throwIfArgNull(dest, "dest");
+
         dest.writeParcelable(this.mBody, 0);
     }
 
     private DataMessageBody(Parcel in) {
+        Contract.throwIfArgNull(in, "in");
+
         this.mBody = in.readParcelable(Uri.class.getClassLoader());
     }
 

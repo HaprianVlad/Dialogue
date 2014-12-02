@@ -15,7 +15,6 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -30,6 +29,9 @@ public final class DefaultDialogData implements DialogueData {
     static {
         TIME_STAMPS_COMPARATOR = new Comparator<Conversation>() {
             public int compare(Conversation c1, Conversation c2) {
+                Contract.throwIfArgNull(c1, "c1");
+                Contract.throwIfArgNull(c2, "c2");
+
                 return c2.getLastActivityTime().
                         compareTo(c1.getLastActivityTime()); // lowest timestamp comes before
             }
@@ -62,10 +64,9 @@ public final class DefaultDialogData implements DialogueData {
         See DialogData.getConversations
      */
     public List<Conversation> getConversations() {
-
         List<Conversation> dialogueConversations = new ArrayList<Conversation>(mConversations.values());
-
         Collections.sort(dialogueConversations, TIME_STAMPS_COMPARATOR);
+
         return dialogueConversations;
     }
 
@@ -73,9 +74,7 @@ public final class DefaultDialogData implements DialogueData {
     See DialogData.getConversation
     */
     public Conversation getConversation(ConversationId conversationId) {
-        if (conversationId == null) {
-            throw new NullArgumentException("conversationId");
-        }
+        Contract.throwIfArgNull(conversationId, "conversationId");
 
         return mConversations.get(conversationId);
     }
@@ -141,9 +140,7 @@ public final class DefaultDialogData implements DialogueData {
 
     @Override
     public void addMessageToConversation(DialogueMessage message) {
-        if (message == null) {
-            throw new NullArgumentException("message");
-        }
+        Contract.throwIfArgNull(message, "message");
 
         Conversation c = this.createOrGetConversation(message.getContact());
         c.addMessage(message);
@@ -174,9 +171,7 @@ public final class DefaultDialogData implements DialogueData {
 
     @Override
     public void addListener(DialogueDataListener listener) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
+        Contract.throwIfArgNull(listener, "listener");
 
         if (!mListeners.contains(listener)) {
             mListeners.add(listener);
@@ -186,9 +181,7 @@ public final class DefaultDialogData implements DialogueData {
 
     @Override
     public void removeListener(DialogueDataListener listener) {
-        if (listener == null) {
-            throw new NullArgumentException("listener == null !");
-        }
+        Contract.throwIfArgNull(listener, "listener");
 
         if (mListeners.contains(listener)) {
             mListeners.remove(listener);
@@ -197,9 +190,8 @@ public final class DefaultDialogData implements DialogueData {
 
     @Override
     public void restoreFromBundle(Bundle savedData) {
-        if (savedData == null) {
-            throw new NullArgumentException("savedData");
-        }
+        Contract.throwIfArgNull(savedData, "savedData");
+
         savedData.setClassLoader(getClass().getClassLoader());
         List<ConversationId> conversationIds = savedData.getParcelableArrayList(CONVERSATION_ID);
         List<Conversation> conversations = savedData.getParcelableArrayList(CONVERSATION);
