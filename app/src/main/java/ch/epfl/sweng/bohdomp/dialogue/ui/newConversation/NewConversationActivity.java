@@ -33,6 +33,8 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class NewConversationActivity extends Activity {
 
+    private static final int PICK_CONTACT = 3;
+
     private ContactFactory mContactFactory;
 
     private EditText mToEditText;
@@ -123,9 +125,8 @@ public class NewConversationActivity extends Activity {
         mSelectContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-                startActivityForResult(intent, 1);
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, PICK_CONTACT);
             }
         });
     }
@@ -134,7 +135,7 @@ public class NewConversationActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_CONTACT && resultCode == Activity.RESULT_OK) {
 
             Uri contactData = data.getData();
             Cursor s = getContentResolver().query(contactData, null, null, null, null);
@@ -145,7 +146,14 @@ public class NewConversationActivity extends Activity {
 
                 try {
                     Contact contact = mContactFactory.contactFromLookupKey(key);
-                    goToConversation(contact);
+                    if (contact.getPhoneNumbers().isEmpty()) {
+                        Toast.makeText(getApplicationContext(),
+                                "This contact has no phone number!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                        startActivityForResult(intent, PICK_CONTACT);
+                    } else {
+                        goToConversation(contact);
+                    }
                 } catch (ContactLookupException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "This is not a valid contact, "
