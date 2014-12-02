@@ -2,6 +2,8 @@ package ch.epfl.sweng.bohdomp.dialogue.ids;
 
 import android.os.Parcel;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Abstract class defining an id.
  */
@@ -31,6 +33,8 @@ abstract class Id implements Identifier, Comparable<Id> {
      */
     @Override
     public int compareTo(Id another) {
+        Contract.throwIfArgNull(another, "another");
+
         return Long.compare(this.mId, another.mId);
     }
 
@@ -61,6 +65,8 @@ abstract class Id implements Identifier, Comparable<Id> {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        Contract.throwIfArgNull(out, "out");
+
         out.writeLong(mId);
     }
 }

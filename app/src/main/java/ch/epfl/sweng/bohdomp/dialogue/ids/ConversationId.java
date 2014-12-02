@@ -22,6 +22,8 @@ public final class ConversationId extends Id {
     public static final Parcelable.Creator<ConversationId> CREATOR
         = new Parcelable.Creator<ConversationId>() {
             public ConversationId createFromParcel(Parcel in) {
+                Contract.throwIfArgNull(in, "in");
+
                 return new ConversationId(in.readLong());
             }
 
