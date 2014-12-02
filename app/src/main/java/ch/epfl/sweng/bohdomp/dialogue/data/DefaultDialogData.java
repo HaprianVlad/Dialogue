@@ -18,7 +18,6 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Default implementation of DialogData
@@ -95,7 +94,7 @@ public final class DefaultDialogData implements DialogueData {
         // Default case, conversation not found.
         List<Contact> contacts = new ArrayList<Contact>();
         contacts.add(contact);
-        Conversation conversation = new DialogueConversation(contacts, new SystemTimeProvider());
+        Conversation conversation = new DialogueConversation(contacts);
 
         //Notify Dialogue Data listeners if a conversation changes
         conversation.addListener(new ConversationListener() {

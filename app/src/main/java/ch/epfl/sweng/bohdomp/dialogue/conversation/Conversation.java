@@ -3,13 +3,13 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import android.content.Context;
 import android.os.Parcelable;
 
-import java.sql.Timestamp;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Interface representing a conversation.
@@ -52,7 +52,7 @@ public interface Conversation extends Parcelable {
      * Getter for the timeStamp of the conversation
      * @return the current timestamp
      */
-    Timestamp getLastActivityTime();
+    DateTime getLastActivityTime();
 
     /**
      * Depending on the last activity gives you an info to display.
@@ -78,12 +78,6 @@ public interface Conversation extends Parcelable {
      * @return the list of listeners of the conversation
      */
     List<ConversationListener> getListeners();
-
-    /**
-     * Getter for the system time provider of the conversation
-     * @return the system time provider of the conversation
-     */
-    SystemTimeProvider getSystemTimeProvider();
 
     /**
      * Getter for the hasUnread parameter of the conversation

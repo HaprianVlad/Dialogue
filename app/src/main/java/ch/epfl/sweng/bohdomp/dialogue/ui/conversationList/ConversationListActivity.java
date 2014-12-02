@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
@@ -51,6 +53,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_contact_list);
+
+        JodaTimeAndroid.init(this);
 
         initData();
         setViewElements();
