@@ -32,7 +32,7 @@ public class Notificator {
         Contract.throwIfArgNull(message, "message");
 
         Notification.Builder mBuilder = new Notification.Builder(mContext)
-                .setContentTitle("New Message from:" + message.getContact().getPhoneNumbers().iterator().next())
+                .setContentTitle("Message from:" + message.getContact().getDisplayName())
                 .setContentText(message.getBody().getMessageBody())
                 .setAutoCancel(true)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
