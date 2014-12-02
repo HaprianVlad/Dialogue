@@ -17,7 +17,7 @@ public class NullArgumentException extends IllegalArgumentException {
     }
 
     public NullArgumentException(String message) {
-        super(Contract.throwIfArgNull(message, "message"));
+        super(makeMessage(message));
     }
 
     public NullArgumentException(Throwable throwable) {
@@ -25,7 +25,7 @@ public class NullArgumentException extends IllegalArgumentException {
     }
 
     public NullArgumentException(String message, Throwable throwable) {
-        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
+        super(makeMessage(message), Contract.throwIfArgNull(throwable, "throwable"));
     }
 
     private static String makeMessage(String message) {
