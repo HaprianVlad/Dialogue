@@ -17,7 +17,7 @@
     <string name="defaultAppButton">Change</string>
     <string name="contactPictureHint">contactPicture</string>
     <string name="type_message">Type new message</string>
-    <string name="send_message_button">Send Message</string>
+    <string name="send_message_button">Send</string>
     <string name="title_activity_new_conversation">newConversationActivity</string>
     <string name="to_hint">To</string>
     <string name="create_conversation_button">Create</string>
