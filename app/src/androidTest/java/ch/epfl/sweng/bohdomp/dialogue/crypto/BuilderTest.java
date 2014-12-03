@@ -25,7 +25,7 @@ public class BuilderTest extends AndroidTestCase {
                 .getKeyRings()
                 .get(0)
                 .getKeys();
-        Assert.assertEquals(TestKeyData.PUBLIC_KEYS, keys.size());
+        Assert.assertEquals(TestKeyData.PUBLIC_KEY_RING_SIZE, keys.size());
     }
 
     public void testSecretBuilder() throws Exception {
@@ -34,7 +34,7 @@ public class BuilderTest extends AndroidTestCase {
                 .getKeyRings()
                 .get(0)
                 .getKeys();
-        Assert.assertEquals(TestKeyData.SECRET_KEYS, keys.size());
+        Assert.assertEquals(TestKeyData.SECRET_KEY_RING_SIZE, keys.size());
     }
 
     public void testPublicBuilderNull() throws Exception {

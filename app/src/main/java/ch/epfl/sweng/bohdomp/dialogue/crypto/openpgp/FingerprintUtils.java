@@ -25,16 +25,17 @@ public class FingerprintUtils {
     }
 
     /**
-     * Create a pretty fingerprint from a fingerpint in hex string format.
-     * A pretty fingerprint is divided into groups of four hex digits, i.e
-     * 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+     * Create a pretty fingerprint from a fingerprint in hex string format.
+     * A pretty fingerprint is divided into groups of four, uppercase hex digits, i.e
+     * AAAA BBBB 0000 0000 0000 0000 0000 0000 0000 0000
      */
     public static String fromString(String fingerprint) {
         Contract.throwIfArgNull(fingerprint, "fingerprint");
 
         String cleaned = fingerprint.replaceAll("\\s+", "");
         String upper = cleaned.toUpperCase(Locale.US);
-        return upper.replaceAll("(.{4}?)", "$0 ").trim();
+        String grouped = upper.replaceAll("(.{4}?)", "$0 "); //add space after every 4 characters
+        return grouped.trim();
     }
 
     /**

@@ -23,11 +23,13 @@ public class PublicKeyChain extends KeyChain<PublicKeyRing> {
 
     public List<PublicKeyRing> getKeyRings() {
         List<PublicKeyRing> rings = new ArrayList<PublicKeyRing>();
+
         @SuppressWarnings("unchecked") // bouncy castle returns a raw iterator
         Iterator<PGPPublicKeyRing> iterator = mUnderlying.getKeyRings();
         while (iterator.hasNext()) {
             rings.add(new PublicKeyRing(iterator.next()));
         }
+
         return rings;
     }
 

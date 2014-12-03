@@ -14,8 +14,8 @@ public class TestKeyData {
 
     public final static String FINGERPRINT = "6551 C260 FF5C CEBB EE37  83D1 DE75 B27E 59C6 7511";
 
-    public final static int PUBLIC_KEYS = 2; //one master, one subkey
-    public final static int SECRET_KEYS = 2; //one master, one subkey
+    public final static int PUBLIC_KEY_RING_SIZE = 2; //one master, one subkey
+    public final static int SECRET_KEY_RING_SIZE = 2; //one master, one subkey
 
     public final static String PUBLIC_KEY_RING = "-----BEGIN PGP PUBLIC KEY BLOCK-----\n"
             + "Version: GnuPG v1\n"

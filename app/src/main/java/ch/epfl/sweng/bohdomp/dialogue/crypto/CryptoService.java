@@ -167,6 +167,7 @@ public class CryptoService extends IntentService {
             if (encryptionKeys.size() == 0) {
                 return failure(bundle, "No public keys of fingerprint \"" + fingerprint + "\" support encryption.");
             }
+
             String encrypted = encryptionKeys.get(0).encrypt(message);
             bundle.putString(EXTRA_ENCRYPTED_TEXT, encrypted);
 
