@@ -18,6 +18,7 @@
             android:name=".ui.conversationList.ConversationListActivity"
             >
             <intent-filter>
+                <!-- If you want to change this, please update JodaTime initialization -->
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

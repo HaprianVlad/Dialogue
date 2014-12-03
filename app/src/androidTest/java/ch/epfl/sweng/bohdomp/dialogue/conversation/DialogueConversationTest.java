@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 
-import org.mockito.Mockito;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -23,22 +21,18 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
 /**
  * Created by BohDomp! on 08.11.14.
  */
 public class DialogueConversationTest extends MockTestCase {
-
-    private static final long MILLIS_IN_DAY = 86400000;
-    private static final int NB_YEAR_DAY = 366;
-    private static final int NB_MONTH_DAY = 31;
-    private static final int FOUR = 4;
-    private static final long MAGIC_MONDAY = 1415628854000L;
+    private static final int MONDAY_INDEX = 0;
+    private static final int THREE = 3;
+    private static final int MAGIC_POSITIVE_INT = 42;
+    private static final DateTime LATEST_ACTIVITY = new DateTime(2014, 9, 22, 9, 42, 42, 42);
 
     private Context mContext;
-    private SystemTimeProvider mTimeProvider;
     private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
@@ -51,8 +45,9 @@ public class DialogueConversationTest extends MockTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        DateTimeUtils.setCurrentMillisFixed(LATEST_ACTIVITY.getMillis());
+
         mContext = getInstrumentation().getTargetContext();
-        mTimeProvider = new SystemTimeProvider();
         mContactFactory = new ContactFactory(mContext);
 
         mContact = mContactFactory.contactFromNumber("0773207769");
@@ -63,16 +58,22 @@ public class DialogueConversationTest extends MockTestCase {
         mNumber = mContact.getPhoneNumbers().iterator().next();
         mChannel = Contact.ChannelType.SMS;
 
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+        mConversation = new DialogueConversation(mContacts);
         mMessages = new ArrayList<DialogueMessage>();
 
         mHasBeenCalled = false;
     }
 
+    public void tearDown() throws Exception {
+        super.tearDown();
+
+        DateTimeUtils.setCurrentMillisSystem();
+    }
+
     public void testConstructorContactsNotNull() {
 
         try {
-            mConversation = new DialogueConversation(null, mTimeProvider);
+            mConversation = new DialogueConversation(null);
             fail("No NullArgumentException thrown");
         } catch (NullArgumentException e) {
             // all good :)
@@ -81,7 +82,7 @@ public class DialogueConversationTest extends MockTestCase {
 
     public void testConstructorNoContacts() {
         try {
-            mConversation = new DialogueConversation(new ArrayList<Contact>(), mTimeProvider);
+            mConversation = new DialogueConversation(new ArrayList<Contact>());
             fail("Should detect an empty contact list");
         } catch (IllegalArgumentException e) {
             // OK
@@ -93,16 +94,7 @@ public class DialogueConversationTest extends MockTestCase {
         contactsWithNull.add(null);
 
         try {
-            mConversation = new DialogueConversation(contactsWithNull, mTimeProvider);
-            fail("Should detect a null contact");
-        } catch (IllegalArgumentException e) {
-            // OK
-        }
-    }
-
-    public void testConstructorNullSystemTimeProvider() {
-        try {
-            mConversation = new DialogueConversation(mContacts, null);
+            mConversation = new DialogueConversation(contactsWithNull);
             fail("Should detect a null contact");
         } catch (IllegalArgumentException e) {
             // OK
@@ -131,9 +123,10 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testGetConversationTimeStamp() {
-        long afterConversationLastActivity = System.currentTimeMillis();
+        DateTimeUtils.setCurrentMillisSystem();
 
-        assertTrue(afterConversationLastActivity >= mConversation.getLastActivityTime().getTime());
+        long afterConversationLastActivity = System.currentTimeMillis();
+        assertTrue(afterConversationLastActivity >= mConversation.getLastActivityTime().getMillis());
     }
 
     public void testGetConversationMsgCountNonInit() {
@@ -398,92 +391,58 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testLastActivitySameDay() {
-        Timestamp lastActivity = mConversation.getLastActivityTime();
-        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
-
+        String expectedDisplay = "09:42";
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
 
     public void testLastActivityYesterday() {
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
-
-        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
+        setNow(LATEST_ACTIVITY.plusDays(1));
 
         String expectedDisplay = mContext.getString(R.string.yesterday);
-
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
 
     public void testLastActivityTwoDaysAgo() {
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
-
-        Mockito.doReturn(timeSinceMagicMonday(2)).when(mTimeProvider).currentTimeMillis();
+        setNow(LATEST_ACTIVITY.plusDays(2));
 
         String expectedDisplay = mContext.getString(R.string.two_days_ago);
-
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
 
-    public void testLastActivityOneYearAgo() {
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+    public void testLastActivityAMonthAndADayAgo() {
+        setNow(LATEST_ACTIVITY.plusMonths(1).plusDays(1));
 
-        Timestamp lastActivity = mConversation.getLastActivityTime();
-        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
-        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
-
-        Mockito.doReturn(timeSinceMagicMonday(NB_YEAR_DAY)).when(mTimeProvider).currentTimeMillis();
-
+        String expectedDisplay = "22.09";
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
 
-    public void testLastActivityOneMonthAgo() {
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(0)).when(mTimeProvider).currentTimeMillis();
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+    public void testLastActivityAYearAndADayAgo() {
+        setNow(LATEST_ACTIVITY.plusYears(1).plusDays(1));
 
-        Timestamp lastActivity = mConversation.getLastActivityTime();
-        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
-        String expectedDisplay = onlyHoursAndMin.format(lastActivity);
-
-        Mockito.doReturn(timeSinceMagicMonday(NB_MONTH_DAY)).when(mTimeProvider).currentTimeMillis();
-
+        String expectedDisplay = "09/14";
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
     }
+
+
 
     public void testLastActivityEarlierThisWeek() throws ParseException {
-        mTimeProvider = Mockito.mock(SystemTimeProvider.class);
-        Mockito.doReturn(timeSinceMagicMonday(1)).when(mTimeProvider).currentTimeMillis();
+        setNow(LATEST_ACTIVITY.plusDays(THREE));
 
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
-
-        String expectedDisplay = mContext.getResources().getStringArray(R.array.days_of_week)[1];
-
-        Mockito.doReturn(timeSinceMagicMonday(FOUR)).when(mTimeProvider).currentTimeMillis();
+        String expectedDisplay =
+                mContext.getResources().getStringArray(R.array.days_of_week)[MONDAY_INDEX];
         String toDisplay = mConversation.getLastConversationActivityString(mContext);
 
         assertEquals(expectedDisplay, toDisplay);
-    }
-
-    private long timeSinceMagicMonday(int nbDaysToAdd) {
-
-        return MAGIC_MONDAY + nbDaysToAdd * MILLIS_IN_DAY;
     }
 
     public void testWriteToNullParcel() {
@@ -505,13 +464,10 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testParcelability() {
-
-        mTimeProvider = new SystemTimeProvider();
-
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
 
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+        mConversation = new DialogueConversation(mContacts);
 
         DialogueMessage message = new DialogueTextMessage(mContact, mChannel, mNumber,
                 "Test message 1", MessageDirection.OUTGOING);
@@ -537,28 +493,25 @@ public class DialogueConversationTest extends MockTestCase {
                 mConversation.getId(), conversationFromParcel.getId());
         assertEquals("Contact list does not contain the same things",
                 mConversation.getContacts().hashCode(), conversationFromParcel.getContacts().hashCode());
-        assertEquals(mConversation.getLastActivityTime().getTime(),
-                conversationFromParcel.getLastActivityTime().getTime());
+        assertEquals(mConversation.getLastActivityTime().getMillis(),
+                conversationFromParcel.getLastActivityTime().getMillis());
 
         mMessages = mConversation.getMessages();
         List<DialogueMessage> parcelMessages = conversationFromParcel.getMessages();
 
         for (int i = 0; i < mMessages.size(); i++) {
             assertEquals("Message list does not contain the same message",
-                    mMessages.get(0).getId(), parcelMessages.get(0).getId());
+                    mMessages.get(i).getId(), parcelMessages.get(i).getId());
         }
 
         assertEquals(mConversation.hasUnread(), conversationFromParcel.hasUnread());
     }
 
     public void testParcelabilityWithUnread() {
-
-        mTimeProvider = new SystemTimeProvider();
-
         mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
 
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+        mConversation = new DialogueConversation(mContacts);
 
         DialogueMessage message = new DialogueTextMessage(mContact, null, null,
                 "Test message 1", MessageDirection.INCOMING);
@@ -583,12 +536,14 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testNewArray() {
-        DialogueConversation[] expectedNewArray = new DialogueConversation[FOUR];
-
         DialogueConversation[] foundNewArray;
-        foundNewArray = DialogueConversation.CREATOR.newArray(FOUR);
+        foundNewArray = DialogueConversation.CREATOR.newArray(MAGIC_POSITIVE_INT);
 
-        assertEquals(expectedNewArray.length, foundNewArray.length);
+        assertEquals(MAGIC_POSITIVE_INT, foundNewArray.length);
+    }
+
+    private void setNow(DateTime now) {
+        DateTimeUtils.setCurrentMillisFixed(now.getMillis());
     }
 }
 

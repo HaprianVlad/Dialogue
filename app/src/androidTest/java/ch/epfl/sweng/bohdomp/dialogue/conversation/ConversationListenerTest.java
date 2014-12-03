@@ -12,7 +12,6 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 
 
@@ -32,14 +31,13 @@ public final class ConversationListenerTest extends MockTestCase {
         super.setUp();
 
         Context mContext = getInstrumentation().getTargetContext();
-        SystemTimeProvider mTimeProvider = new SystemTimeProvider();
         mContactFactory = new ContactFactory(mContext);
 
         Contact mContact = mContactFactory.contactFromNumber("0762677108");
         List<Contact> mContacts = new ArrayList<Contact>();
         mContacts.add(mContact);
 
-        mConversation = new DialogueConversation(mContacts, mTimeProvider);
+        mConversation = new DialogueConversation(mContacts);
         mMessages = new ArrayList<DialogueMessage>();
 
         String body = "Hello";
@@ -51,13 +49,13 @@ public final class ConversationListenerTest extends MockTestCase {
 
 
     public void testConversationListenerCalledWhenContactAdded() throws InvalidNumberException {
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         ConversationListener listener = new ConversationListener() {
             @Override
             public void onConversationChanged(ConversationId id) {
                 assertEquals(id, mConversation.getId());
-                mHasBeenCalled=true;
+                mHasBeenCalled = true;
             }
         };
 
@@ -74,13 +72,13 @@ public final class ConversationListenerTest extends MockTestCase {
     }
 
     public void testConversationListenerCalledWhenContactRemoved() throws InvalidNumberException {
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         ConversationListener listener = new ConversationListener() {
             @Override
             public void onConversationChanged(ConversationId id) {
                 assertEquals(id, mConversation.getId());
-                mHasBeenCalled=true;
+                mHasBeenCalled = true;
             }
         };
 
@@ -94,7 +92,7 @@ public final class ConversationListenerTest extends MockTestCase {
         mConversation.removeContact(contact1);
         assertTrue(mHasBeenCalled);
 
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         mConversation.removeListener(listener);
         mConversation.removeContact(contact2);
@@ -104,13 +102,13 @@ public final class ConversationListenerTest extends MockTestCase {
     }
 
     public void testConversationListenerCalledWhenMessageAdded() {
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         ConversationListener listener = new ConversationListener() {
             @Override
             public void onConversationChanged(ConversationId id) {
                 assertEquals(id, mConversation.getId());
-                mHasBeenCalled=true;
+                mHasBeenCalled = true;
             }
         };
 
@@ -118,7 +116,7 @@ public final class ConversationListenerTest extends MockTestCase {
         mConversation.addMessage(mMessages.get(0));
         assertTrue(mHasBeenCalled);
 
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         mConversation.removeListener(listener);
         mConversation.addMessage(mMessages.get(0));
@@ -128,13 +126,13 @@ public final class ConversationListenerTest extends MockTestCase {
 
 
     public void testConversationListenerCalledWhenSetAsRead() {
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         ConversationListener listener = new ConversationListener() {
             @Override
             public void onConversationChanged(ConversationId id) {
                 assertEquals(id, mConversation.getId());
-                mHasBeenCalled=true;
+                mHasBeenCalled = true;
             }
         };
 
@@ -142,7 +140,7 @@ public final class ConversationListenerTest extends MockTestCase {
         mConversation.setAllMessagesAsRead();
         assertTrue(mHasBeenCalled);
 
-        mHasBeenCalled=false;
+        mHasBeenCalled = false;
 
         mConversation.removeListener(listener);
         mConversation.setAllMessagesAsRead();

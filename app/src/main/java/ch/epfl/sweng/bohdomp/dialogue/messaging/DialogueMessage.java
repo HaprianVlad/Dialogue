@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
 import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
@@ -16,7 +17,6 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Abstract class representing an message. This class is mutable.
@@ -39,16 +39,11 @@ public abstract class DialogueMessage implements Parcelable {
 
     public static final String MESSAGE = "MESSAGE";
 
-    private static final long MILLIS_IN_DAY = 86400000;
-    private static final long MILLIS_IN_MIN = 1000;
-
-    private static SystemTimeProvider msSystemTimeProvider = new SystemTimeProvider();
-
     private final Contact mContact;
     private final Contact.ChannelType mChannel;
     private final Contact.PhoneNumber mPhoneNumber;
     private final MessageBody mBody;
-    private final long mTimestamp;
+    private final DateTime mTimestamp;
     private final DialogueMessageId mId;
     private MessageStatus mStatus;
     private MessageDirection mDirection;
@@ -78,7 +73,7 @@ public abstract class DialogueMessage implements Parcelable {
         this.mChannel = channel;
         this.mPhoneNumber = phoneNumber;
         this.mBody = newBody(messageBody);
-        this.mTimestamp = msSystemTimeProvider.currentTimeMillis();
+        this.mTimestamp = new DateTime();
         this.mId = IdManager.getInstance().newDialogueMessageId();
         this.mIsReadStatus = false;
         this.mDirection = messageDirection;
@@ -98,10 +93,6 @@ public abstract class DialogueMessage implements Parcelable {
 
     public Contact.ChannelType getChannel() {
         return mChannel;
-    }
-
-    public static void setTimeProvider(SystemTimeProvider systemTimeProvider) {
-        msSystemTimeProvider = systemTimeProvider;
     }
 
     public Contact.PhoneNumber getPhoneNumber() {
@@ -128,8 +119,8 @@ public abstract class DialogueMessage implements Parcelable {
      * Getter for the message time stamp
      * @return the time stamp of the message
      */
-    public Timestamp getTimeStamp() {
-        return new Timestamp(mTimestamp);
+    public DateTime getTimeStamp() {
+        return mTimestamp;
     }
 
     /**
@@ -139,40 +130,34 @@ public abstract class DialogueMessage implements Parcelable {
     public String prettyTimeStamp(Context context) {
         Contract.throwIfArgNull(context, "context");
 
-        long currentTime = msSystemTimeProvider.currentTimeMillis();
-        long elapsedTime = currentTime - mTimestamp;
-        long millisElapsedToday = currentTime % MILLIS_IN_DAY;
+        DateTime currentTime = new DateTime();
+        DateTime thisMorning = currentTime.withTimeAtStartOfDay();
+        DateTime yesterdayMorning = thisMorning.minusDays(1);
+        DateTime morning2DaysAgo = thisMorning.minusDays(2);
 
-        SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+        Duration elapsedTime = new Duration(mTimestamp, currentTime);
 
-        if (elapsedTime <= MILLIS_IN_MIN) {
+        if (elapsedTime.getStandardMinutes() <= 1) {
             return context.getString(R.string.now);
         }
 
-        if (elapsedTime <= millisElapsedToday) {
-            return onlyHoursAndMin.format(mTimestamp);
+        if (mTimestamp.withTimeAtStartOfDay().equals(thisMorning)) {
+            return mTimestamp.toString("HH:mm", Locale.ENGLISH);
         }
 
-        if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
-            return context.getString(R.string.yesterday) + ": " + onlyHoursAndMin.format(mTimestamp);
+        if (new Interval(yesterdayMorning, thisMorning).contains(mTimestamp)) {
+            return context.getString(R.string.yesterday) + ": " + mTimestamp.toString("HH:mm", Locale.ENGLISH);
         }
 
-        if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
-            return context.getString(R.string.two_days_ago) + ": " + onlyHoursAndMin.format(mTimestamp);
+        if (new Interval(morning2DaysAgo, yesterdayMorning).contains(mTimestamp)) {
+            return context.getString(R.string.two_days_ago) + ": " + mTimestamp.toString("HH:mm", Locale.ENGLISH);
         }
 
-        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-        Date currentDate = new Date(currentTime);
-
-        if (!year.format(currentDate).equals(year.format(mTimestamp))) {
-            SimpleDateFormat dayMonthYear = new SimpleDateFormat("dd/MM/yy: HH:mm", Locale.ENGLISH);
-
-            return dayMonthYear.format(mTimestamp);
+        if (!currentTime.toString("yyyy").equals(mTimestamp.toString("yyyy"))) {
+            return mTimestamp.toString("dd/MM/yy: HH:mm", Locale.ENGLISH);
         }
 
-        SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM: HH:mm", Locale.ENGLISH);
-
-        return onlyDayMonth.format(mTimestamp);
+        return mTimestamp.toString("dd.MM: HH:mm", Locale.ENGLISH);
     }
 
     /**
@@ -245,7 +230,7 @@ public abstract class DialogueMessage implements Parcelable {
         dest.writeParcelable(this.mChannel, 0);
         dest.writeParcelable(this.mPhoneNumber, 0);
         dest.writeParcelable(this.mBody, 0);
-        dest.writeLong(this.mTimestamp);
+        dest.writeLong(this.mTimestamp.getMillis());
         dest.writeParcelable(this.mId, 0);
         dest.writeInt(this.mStatus == null ? -1 : this.mStatus.ordinal());
         dest.writeInt(this.mDirection == null ? -1 : this.mDirection.ordinal());
@@ -260,7 +245,7 @@ public abstract class DialogueMessage implements Parcelable {
         this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
         this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
         this.mBody = in.readParcelable(MessageBody.class.getClassLoader());
-        this.mTimestamp = in.readLong();
+        this.mTimestamp = new DateTime(in.readLong());
         this.mId = in.readParcelable(DialogueMessageId.class.getClassLoader());
         int tmpMessageStatus = in.readInt();
         this.mStatus = tmpMessageStatus == -1 ? null : MessageStatus.values()[tmpMessageStatus];

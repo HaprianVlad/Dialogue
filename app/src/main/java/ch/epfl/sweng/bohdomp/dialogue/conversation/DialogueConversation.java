@@ -3,10 +3,10 @@ package ch.epfl.sweng.bohdomp.dialogue.conversation;
 import android.content.Context;
 import android.os.Parcel;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,31 +17,20 @@ import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 /**
  * Class representing a Dialogue conversation. This class is mutable
  */
 public final class DialogueConversation implements Conversation {
     public static final String CONVERSATION_ID = "conversationID";
-    private static final long MILLIS_IN_DAY = 86400000;
-
-    /**
-     * Describes all week day from SimpleDateFormat 'E'
-     */
-    private enum WeekDays {
-        Mon, Tue, Wed, Thu, Fri, Sat, Sun
-    }
 
     private final ConversationId mId;
-    private final SystemTimeProvider mTimeProvider;
-
     private final List<Contact> mContact;
 
     private final List<DialogueMessage> mMessages;
     private List<ConversationListener> mListeners;
 
-    private Timestamp mLastActivityTime;
+    private DateTime mLastActivityTime;
 
     private Contact.ChannelType mChannel;
     private Contact.PhoneNumber mPhoneNumber;
@@ -52,13 +41,11 @@ public final class DialogueConversation implements Conversation {
     /**
      * Constructor of the class
      * @param contacts - set of contacts we add to conversation
-     * @param systemTimeProvider - will provide us system time
      */
-    public DialogueConversation(List<Contact> contacts, SystemTimeProvider systemTimeProvider) {
+    public DialogueConversation(List<Contact> contacts) {
         Contract.throwIfArgNull(contacts, "contacts");
         Contract.throwIfArg(contacts.size() == 0, "Must have at least one contact");
         Contract.throwIfArg(contacts.contains(null), "There is a null contact");
-        Contract.throwIfArgNull(systemTimeProvider, "systemTimeProvider");
 
         this.mId = IdManager.getInstance().newConversationId();
         this.mContact = new ArrayList<Contact>(contacts);
@@ -67,8 +54,7 @@ public final class DialogueConversation implements Conversation {
         this.mMessages = new ArrayList<DialogueMessage>();
         this.mListeners = new ArrayList<ConversationListener>();
         this.mMessageCount = 0;
-        this.mTimeProvider = systemTimeProvider;
-        this.mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
+        this.mLastActivityTime = new DateTime();
         this.mHasUnread = false;
     }
 
@@ -120,7 +106,7 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
-    public Timestamp getLastActivityTime() {
+    public DateTime getLastActivityTime() {
         return mLastActivityTime;
     }
 
@@ -128,45 +114,33 @@ public final class DialogueConversation implements Conversation {
     public String getLastConversationActivityString(Context context) {
         Contract.throwIfArgNull(context, "context");
 
-        long currentTime = mTimeProvider.currentTimeMillis();
-        long elapsedTime = currentTime - mLastActivityTime.getTime();
-        long millisElapsedToday = currentTime % MILLIS_IN_DAY;
+        DateTime currentTime = new DateTime();
+        DateTime thisMorning = currentTime.withTimeAtStartOfDay();
+        DateTime yesterdayMorning = thisMorning.minusDays(1);
+        DateTime morning2DaysAgo = thisMorning.minusDays(2);
 
-        if (elapsedTime <= millisElapsedToday) {
-            SimpleDateFormat onlyHoursAndMin = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-
-            return onlyHoursAndMin.format(mLastActivityTime);
+        if (mLastActivityTime.withTimeAtStartOfDay().equals(thisMorning)) {
+            return mLastActivityTime.toString("HH:mm", Locale.ENGLISH);
         }
 
-        if (elapsedTime <= (millisElapsedToday + MILLIS_IN_DAY)) {
+        if (new Interval(yesterdayMorning, thisMorning).contains(mLastActivityTime)) {
             return context.getString(R.string.yesterday);
         }
 
-        if (elapsedTime <= (millisElapsedToday + 2 * MILLIS_IN_DAY)) {
+        if (new Interval(morning2DaysAgo, yesterdayMorning).contains(mLastActivityTime)) {
             return context.getString(R.string.two_days_ago);
         }
 
-        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-        Date currentDate = new Date(currentTime);
-
-        if (!year.format(currentDate).equals(year.format(mLastActivityTime))) {
-            SimpleDateFormat onlyMonthYear = new SimpleDateFormat("MM/yy", Locale.ENGLISH);
-
-            return onlyMonthYear.format(mLastActivityTime);
+        if (!currentTime.toString("yyyy").equals(mLastActivityTime.toString("yyyy"))) {
+            return mLastActivityTime.toString("MM/yy", Locale.ENGLISH);
         }
 
-        SimpleDateFormat week = new SimpleDateFormat("ww", Locale.ENGLISH);
 
-        if (!week.format(currentDate).equals(week.format(mLastActivityTime))) {
-            SimpleDateFormat onlyDayMonth = new SimpleDateFormat("dd.MM", Locale.ENGLISH);
-
-            return onlyDayMonth.format(mLastActivityTime);
+        if (!currentTime.toString("ww").equals(mLastActivityTime.toString("ww"))) {
+            return mLastActivityTime.toString("dd.MM", Locale.ENGLISH);
         }
 
-        SimpleDateFormat dayOfTheWeek = new SimpleDateFormat("E", Locale.ENGLISH);
-
-        int indexWeekDay = WeekDays.valueOf(dayOfTheWeek.format(mLastActivityTime)).ordinal();
-
+        int indexWeekDay = mLastActivityTime.getDayOfWeek() - 1;
         return context.getResources().getStringArray(R.array.days_of_week)[indexWeekDay];
     }
 
@@ -224,7 +198,7 @@ public final class DialogueConversation implements Conversation {
         mMessages.add(message);
         mMessageCount += 1;
 
-        mLastActivityTime = new Timestamp(mTimeProvider.currentTimeMillis());
+        mLastActivityTime = new DateTime();
 
         notifyListeners();
     }
@@ -251,11 +225,6 @@ public final class DialogueConversation implements Conversation {
     @Override
     public List<ConversationListener> getListeners() {
         return new ArrayList<ConversationListener>(mListeners);
-    }
-
-    @Override
-    public SystemTimeProvider getSystemTimeProvider() {
-        return mTimeProvider;
     }
 
     @Override
@@ -295,32 +264,29 @@ public final class DialogueConversation implements Conversation {
         dest.writeParcelable(mChannel, flags);
         dest.writeParcelable(mPhoneNumber, flags);
         dest.writeList(mMessages);
-        dest.writeLong(this.mLastActivityTime.getTime());
+        dest.writeLong(this.mLastActivityTime.getMillis());
         dest.writeInt(this.mMessageCount);
         dest.writeByte(mHasUnread ? (byte) 1 : (byte) 0);
 
     }
 
     @SuppressWarnings("unchecked") // we cannot solve this unchecked problem!
-    private DialogueConversation(Parcel in, SystemTimeProvider timeProvider) {
-
-        this.mTimeProvider = timeProvider;
+    private DialogueConversation(Parcel in) {
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
         this.mContact = in.readArrayList(Contact.class.getClassLoader());
         this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
         this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
         this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
-        this.mLastActivityTime = new Timestamp(in.readLong());
+        this.mLastActivityTime = new DateTime(in.readLong());
         this.mMessageCount = in.readInt();
         this.mHasUnread = in.readByte() != 0;
-
     }
 
     public static final Creator<DialogueConversation> CREATOR = new Creator<DialogueConversation>() {
         public DialogueConversation createFromParcel(Parcel source) {
             Contract.throwIfArgNull(source, "source");
 
-            return new DialogueConversation(source, new SystemTimeProvider());
+            return new DialogueConversation(source);
         }
 
         public DialogueConversation[] newArray(int size) {

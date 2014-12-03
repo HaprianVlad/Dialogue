@@ -19,7 +19,6 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListAdapter;
-import ch.epfl.sweng.bohdomp.dialogue.utils.SystemTimeProvider;
 
 import static ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage.MessageDirection;
 
@@ -55,7 +54,7 @@ public class ConversationListAdapterTest extends MockTestCase {
         Contact.ChannelType channel = Contact.ChannelType.SMS;
 
         mConversationList = new ArrayList<Conversation>();
-        mConversationList.add(new DialogueConversation(mContactList, new SystemTimeProvider()));
+        mConversationList.add(new DialogueConversation(mContactList));
         mConversationList.get(0).addMessage(new DialogueTextMessage(mContactList.get(0), channel, number, "HEllO",
                 MessageDirection.OUTGOING));
 
@@ -83,7 +82,7 @@ public class ConversationListAdapterTest extends MockTestCase {
     }
 
     public void testUpdateData() {
-        mConversationList.add(new DialogueConversation(mContactList, new SystemTimeProvider()));
+        mConversationList.add(new DialogueConversation(mContactList));
 
         mAdapter.update(mConversationList);
 
