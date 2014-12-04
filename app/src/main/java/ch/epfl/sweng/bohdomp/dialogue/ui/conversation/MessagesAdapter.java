@@ -31,7 +31,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class MessagesAdapter extends BaseAdapter {
     private static final String LOG_TAG = "MessagesAdapter";
-    public static final float HALF_VISIBLE = 0.3f;
+    public static final float NOT_COMPLETELY_INVISIBLE_NOR_VISIBLE = 0.3f;
     public static final float VISIBLE = 1.0f;
 
     private static final int ANIMATION_DURATION = 700;
@@ -183,11 +183,11 @@ public class MessagesAdapter extends BaseAdapter {
     }
 
     private void anim(final MessageViewHolder viewHolder, final DialogueMessage msg) {
-        final AlphaAnimation animation1 = new AlphaAnimation(HALF_VISIBLE, VISIBLE);
+        final AlphaAnimation animation1 = new AlphaAnimation(NOT_COMPLETELY_INVISIBLE_NOR_VISIBLE, VISIBLE);
         animation1.setDuration(ANIMATION_DURATION);
         animation1.setStartOffset(ANIMATION_OFFSET);
 
-        final AlphaAnimation animation2 = new AlphaAnimation(VISIBLE, HALF_VISIBLE);
+        final AlphaAnimation animation2 = new AlphaAnimation(VISIBLE, NOT_COMPLETELY_INVISIBLE_NOR_VISIBLE);
         animation2.setDuration(ANIMATION_DURATION);
         animation2.setStartOffset(ANIMATION_OFFSET);
 

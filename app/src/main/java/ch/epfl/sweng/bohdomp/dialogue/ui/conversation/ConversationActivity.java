@@ -141,8 +141,6 @@ public class ConversationActivity extends Activity implements ConversationListen
 
             @Override
             public void onClick(View view) {
-                Contract.throwIfArgNull(view, "view");
-
                 String draftText = mNewMessageText.getText().toString();
 
                 Contact.ChannelType channel = mConversation.getChannel();
