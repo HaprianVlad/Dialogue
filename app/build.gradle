@@ -33,7 +33,6 @@ android {
     lintOptions {
         disable 'OldTargetApi'
 	    disable 'GradleDependency'
-	    disable 'UnusedResources'
 
         //bouncy castle pgp depends on a package that itself depends on some X509 algorithms
         //unavailable in android but never used by bouncycastle pgp
