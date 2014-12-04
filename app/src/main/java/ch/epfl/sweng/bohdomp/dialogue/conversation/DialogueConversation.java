@@ -155,7 +155,7 @@ public final class DialogueConversation implements Conversation {
         Contract.throwIfArgNull(status, "status");
 
         for (DialogueMessage m : mMessages) {
-            if (m.getId().equals(message.getId())) {
+            if (m.getId().equals(message.getId()) && m.getStatus() != status) {
                 m.setStatus(status);
                 notifyListeners();
             }

@@ -1,11 +1,14 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,8 +31,11 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class MessagesAdapter extends BaseAdapter {
     private static final String LOG_TAG = "MessagesAdapter";
-    public static final float HALF_VISIBLE = 0.5f;
+    public static final float HALF_VISIBLE = 0.3f;
     public static final float VISIBLE = 1.0f;
+
+    private static final int ANIMATION_DURATION = 700;
+    private static final int ANIMATION_OFFSET = 700;
 
     private final Context mContext;
     private List<DialogueMessage> mMessagesList;
@@ -44,8 +50,8 @@ public class MessagesAdapter extends BaseAdapter {
 
         protected TextView body;
         protected TextView timeStamp;
-        protected TextView direction;
-        protected TextView status;
+
+        protected boolean anim = false;
     }
 
     /**
@@ -126,8 +132,6 @@ public class MessagesAdapter extends BaseAdapter {
 
         viewHolder.body = (TextView) convertView.findViewById(R.id.body);
         viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.timeStamp);
-        viewHolder.direction = (TextView) convertView.findViewById(R.id.messageDirection);
-        viewHolder.status = (TextView) convertView.findViewById(R.id.messageStatus);
 
         return viewHolder;
     }
@@ -143,43 +147,85 @@ public class MessagesAdapter extends BaseAdapter {
 
         String body = msg.getBody().getMessageBody();
         viewHolder.body.setText(body);
-
         viewHolder.timeStamp.setText(msg.prettyTimeStamp(mContext));
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
-            viewHolder.direction.setVisibility(View.VISIBLE);
-        }
-
-        if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
-            viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_right);
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
+
+            viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80DEEA"), PorterDuff.Mode.MULTIPLY);
             viewHolder.wrapper.setGravity(Gravity.RIGHT);
-            viewHolder.status.setVisibility(View.VISIBLE);
-            viewHolder.wrapper.setAlpha(HALF_VISIBLE);
 
             switch(msg.getStatus()) {
                 case IN_TRANSIT:
-                    Log.d("Bla", "transit");
-                    viewHolder.status.setText("In transit");
+                    viewHolder.anim = true;
+                    anim(viewHolder, msg);
                     break;
                 case SENT:
-                    Log.d("Bla", "sent");
-                    viewHolder.status.setText("Sent");
-                    viewHolder.wrapper.setAlpha(VISIBLE);
                     break;
                 case DELIVERED:
-                    Log.d("Bla", "delivered");
-                    viewHolder.status.setText("Delivered");
-                    viewHolder.wrapper.setAlpha(1.0f);
+                    viewHolder.anim = false;
+                    break;
+                case FAILED:
+                    viewHolder.anim = false;
                     break;
                 default:
                     break;
             }
+
         } else if (msg.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
-            viewHolder.wrapper.setBackgroundResource(R.drawable.bubble_left);
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
+
+            viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DD0E1"),
+                    PorterDuff.Mode.MULTIPLY);
             viewHolder.wrapper.setGravity(Gravity.LEFT);
-            viewHolder.status.setVisibility(View.GONE);
+
         }
+    }
+
+    private void anim(final MessageViewHolder viewHolder, final DialogueMessage msg) {
+        final AlphaAnimation animation1 = new AlphaAnimation(HALF_VISIBLE, VISIBLE);
+        animation1.setDuration(ANIMATION_DURATION);
+        animation1.setStartOffset(ANIMATION_OFFSET);
+
+        final AlphaAnimation animation2 = new AlphaAnimation(VISIBLE, HALF_VISIBLE);
+        animation2.setDuration(ANIMATION_DURATION);
+        animation2.setStartOffset(ANIMATION_OFFSET);
+
+        animation1.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                if (viewHolder.anim) {
+
+                    viewHolder.wrapper.startAnimation(animation2);
+
+                } else {
+
+                    if (msg.getStatus() == DialogueMessage.MessageStatus.FAILED) {
+                        viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#F44336"),
+                                PorterDuff.Mode.MULTIPLY);
+                    }
+
+                    viewHolder.wrapper.clearAnimation();
+                }
+            }
+
+            @Override public void onAnimationRepeat(Animation arg0) { }
+            @Override public void onAnimationStart(Animation arg0) { }
+        });
+
+        animation2.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                viewHolder.wrapper.startAnimation(animation1);
+            }
+
+            @Override public void onAnimationRepeat(Animation arg0) { }
+            @Override public void onAnimationStart(Animation arg0) { }
+
+        });
+
+        viewHolder.wrapper.startAnimation(animation1);
     }
 }

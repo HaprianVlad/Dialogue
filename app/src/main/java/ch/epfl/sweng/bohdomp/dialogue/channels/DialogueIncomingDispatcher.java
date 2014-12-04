@@ -46,7 +46,7 @@ public final class DialogueIncomingDispatcher extends IntentService{
                     String decryptedText = resultData.getString(CryptoService.EXTRA_CLEAR_TEXT);
                     DialogueMessage decryptedMessage = new DialogueTextMessage(message.getContact(),
                             message.getChannel(), message.getPhoneNumber(),
-                            decryptedText, DialogueMessage.MessageDirection.OUTGOING);
+                            decryptedText, DialogueMessage.MessageDirection.INCOMING);
 
                     /* Create intent and send to myself */
                     Intent intent = new Intent(context, DialogueIncomingDispatcher.class);
