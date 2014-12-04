@@ -7,16 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.mockito.Mockito;
-import org.mockito.internal.verification.Times;
-
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
-import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
-import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
