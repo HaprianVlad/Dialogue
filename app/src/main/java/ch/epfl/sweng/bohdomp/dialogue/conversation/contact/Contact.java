@@ -7,7 +7,6 @@ import android.telephony.PhoneNumberUtils;
 
 import java.util.Set;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -18,7 +17,9 @@ public interface Contact extends Parcelable {
     Set<PhoneNumber> getPhoneNumbers();
     Set<PhoneNumber> getPhoneNumbers(ChannelType channel);
     Set<ChannelType> availableChannels();
-    Contact updateInfo(final Context context) throws InvalidNumberException;
+    boolean hasFingerprint();
+    String getFingerprint();
+    Contact updateInfo(final Context context);
     Creator<Contact> getParcelCreator();
 
     /**

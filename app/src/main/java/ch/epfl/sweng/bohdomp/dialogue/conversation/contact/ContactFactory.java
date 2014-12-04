@@ -1,9 +1,12 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -16,8 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.FingerprintUtils;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.FingerprintInsertionException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NoFingerprintException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -26,6 +32,8 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 public class ContactFactory {
 
     private final Context mContext;
+
+    private static final String FINGERPRINT_MIMETYPE = "vnd.android.cursor.item/dialogue_fingerprint";
 
     private static final String[] LOOKUPKEY_PROJECTION =
             new String[] {ContactsContract.Contacts.LOOKUP_KEY };
@@ -38,6 +46,29 @@ public class ContactFactory {
         Contract.throwIfArgNull(context, "context");
 
         this.mContext = context;
+    }
+
+    public void insertFingerprintForLookupKey(final String lookupKey, final String fingerprint)
+        throws FingerprintInsertionException {
+
+        Contract.throwIfArgNull(lookupKey, "lookupKey");
+        Contract.throwIfArgNull(fingerprint, "fingerprint");
+        Contract.throwIfArg(!FingerprintUtils.isValidFingerPrint(fingerprint), "fingerprint invalid");
+
+        final String contactId;
+        try {
+            contactId = AndroidContact.contactIdFromLookupKey(lookupKey, mContext);
+        } catch (ContactLookupException e) {
+            throw new FingerprintInsertionException(
+                    "could not find contact associated with given lookup key: " + lookupKey,
+                    e);
+        }
+
+        final Set<String> rawContactIds = rawContactIdsFromId(contactId, mContext);
+
+        for (final String rawId : rawContactIds) {
+            fingerprintUpdateOrInsert(rawId, fingerprint, mContext);
+        }
     }
 
     /**
@@ -112,6 +143,62 @@ public class ContactFactory {
         return result;
     }
 
+    private static void fingerprintUpdateOrInsert(final String rawId, final String fingerprint, final Context context)
+        throws FingerprintInsertionException {
+
+        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+
+        operations.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+            .withSelection(
+                    ContactsContract.Data.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
+                    new String[] {rawId, FINGERPRINT_MIMETYPE})
+            .build());
+
+        operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
+            .withValue(ContactsContract.Data.MIMETYPE, FINGERPRINT_MIMETYPE)
+            .withValue(ContactsContract.Data.DATA1, fingerprint)
+            .build());
+
+        try {
+            context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
+        } catch (RemoteException e) {
+            throw new FingerprintInsertionException(e);
+        } catch (OperationApplicationException e) {
+            throw new FingerprintInsertionException(e);
+        }
+    }
+
+    /*
+     * inspired by:
+     * http://stackoverflow.com/questions/9012263/get-rawcontactid-of-specific-contact-based-off-phonelookup
+     */
+    private static Set<String> rawContactIdsFromId(final String id, final Context context) {
+        Contract.assertNotNull(id, "id");
+        Contract.assertNotNull(context, "context");
+
+        HashSet<String> result = new HashSet<String>();
+
+        Cursor rawIdCursor = context.getContentResolver().query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                new String[] {ContactsContract.RawContacts._ID},
+                ContactsContract.RawContacts._ID + " = ?",
+                new String[] {id},
+                null);
+
+        if (rawIdCursor == null || !rawIdCursor.moveToFirst()) {
+            return result;
+        }
+
+        do {
+            result.add(rawIdCursor.getString(rawIdCursor.getColumnIndex(ContactsContract.RawContacts._ID)));
+        } while (rawIdCursor.moveToNext());
+
+        rawIdCursor.close();
+
+        return result;
+    }
+
     /**
      * phone number verification copied from:
      * http://stackoverflow.com/questions/5958665/validation-for-a-cell-number-in-android
@@ -132,6 +219,7 @@ public class ContactFactory {
     private static class AndroidContact implements Contact {
         private final String mLookupKey;
         private final String mDisplayName;
+        private final String mFingerprint;
         private final Map<ChannelType, Set<PhoneNumber>> mPhoneNumberMap;
         private final Set<PhoneNumber> mPhoneNumbers;
 
@@ -147,6 +235,7 @@ public class ContactFactory {
 
             this.mLookupKey = lookupKey;
             this.mDisplayName = displayNameFromLookupKey(lookupKey, context);
+            this.mFingerprint = fingerprintFromLookupKey(lookupKey, context);
             this.mPhoneNumbers = phoneNumbersFromLookupKey(lookupKey, context);
             this.mPhoneNumberMap = channelMapFromPhoneNumberSet(mPhoneNumbers);
         }
@@ -175,6 +264,20 @@ public class ContactFactory {
         @Override
         public Set<ChannelType> availableChannels() {
             return mPhoneNumberMap.keySet();
+        }
+
+        @Override
+        public boolean hasFingerprint() {
+            return this.mFingerprint != null;
+        }
+
+        @Override
+        public String getFingerprint() {
+            if (this.mFingerprint != null) {
+                return this.mFingerprint;
+            } else {
+                throw new NoFingerprintException("contact has no fingerprint");
+            }
         }
 
         @Override
@@ -253,6 +356,38 @@ public class ContactFactory {
             return result;
         }
 
+        private static String fingerprintFromLookupKey(final String lookupKey, final Context context)
+            throws ContactLookupException {
+
+            Contract.assertNotNull(lookupKey, "lookupKey");
+            Contract.assertFalse(lookupKey.isEmpty(), "lookupKey mustn't be empty string");
+            Contract.assertNotNull(context, "context");
+
+            final String contactId = contactIdFromLookupKey(lookupKey, context);
+
+            if (contactId == null) {
+                throw new ContactLookupException("got an invalid id");
+            }
+
+            Cursor fingerprintCursor = context.getContentResolver().query(
+                    ContactsContract.Data.CONTENT_URI,
+                    new String[] {ContactsContract.Data.DATA1},
+                    ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
+                    new String[] {contactId, FINGERPRINT_MIMETYPE},
+                    null);
+
+            if (fingerprintCursor == null) {
+                return null;
+            }
+
+            final String result = fingerprintCursor.moveToFirst()
+                ? fingerprintCursor.getString(fingerprintCursor.getColumnIndex(ContactsContract.Data.DATA1))
+                : null;
+
+            fingerprintCursor.close();
+
+            return result;
+        }
 
         /**
          * sample code taken from this question:
@@ -394,6 +529,12 @@ public class ContactFactory {
             dest.writeString(this.mLookupKey);
             dest.writeString(this.mDisplayName);
 
+            if (this.mFingerprint != null) {
+                dest.writeString(this.mFingerprint);
+            } else {
+                dest.writeString("");
+            }
+
             List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>(this.mPhoneNumbers);
             dest.writeList(phoneNumbers);
         }
@@ -402,6 +543,15 @@ public class ContactFactory {
         private AndroidContact(Parcel in) {
             this.mLookupKey = in.readString();
             this.mDisplayName = in.readString();
+
+            final String maybeFingerprint = in.readString();
+
+            if (maybeFingerprint.isEmpty()) {
+                this.mFingerprint = null;
+            } else {
+                this.mFingerprint = maybeFingerprint;
+            }
+
             this.mPhoneNumbers = new HashSet<PhoneNumber>(in.readArrayList(getClass().getClassLoader()));
             this.mPhoneNumberMap = channelMapFromPhoneNumberSet(this.mPhoneNumbers);
         }
@@ -464,10 +614,24 @@ public class ContactFactory {
         }
 
         @Override
-        public Contact updateInfo(final Context context) throws InvalidNumberException {
+        public boolean hasFingerprint() {
+            return false;
+        }
+
+        @Override
+        public String getFingerprint() {
+            throw new NoFingerprintException("unknown contact has no fingerprint");
+        }
+
+        @Override
+        public Contact updateInfo(final Context context) {
             Contract.throwIfArgNull(context, "context");
 
-            return new ContactFactory(context).contactFromNumber(mPhoneNumber);
+            try {
+                return new ContactFactory(context).contactFromNumber(mPhoneNumber);
+            } catch (InvalidNumberException e) {
+                return this;
+            }
         }
 
         @Override
