@@ -100,19 +100,20 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
             @Override public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-                final Conversation item = (Conversation) mConversationItemListAdapter.getItem(position);
+                final Conversation deletedConversation = (Conversation) mConversationItemListAdapter.getItem(position);
                 mConversationItemListAdapter.remove(position);
 
                 return new EnhancedListView.Undoable() {
                     @Override
                     public void undo() {
-                        mConversationItemListAdapter.insert(position, item);
+                        mConversationItemListAdapter.insert(position, deletedConversation);
                     }
 
                     @Override
                     public void discard() {
-                        mData.removeConversation(item.getId());
+                        mData.removeConversation(deletedConversation.getId());
                     }
+
                 };
             }
         });
@@ -206,7 +207,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onResume();
     }
 
-    @Override
     protected void onPause() {
         mContactListView.discardUndo();
         super.onPause();
@@ -220,9 +220,9 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     }
 
     /**
-     * Method called when the new conversation is clicked
-     * Start the "new message activity"
-     */
+    * Method called when the new conversation is clicked
+    * Start the "new message activity"
+    */
     public void newConversationClicked(MenuItem item) {
         Intent intent = new Intent(this, NewConversationActivity.class);
         startActivity(intent);

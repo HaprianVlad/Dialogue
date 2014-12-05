@@ -101,7 +101,7 @@ public class ConversationSettingsActivity extends Activity {
         mEncryptBox.setVisibility(View.VISIBLE);
         mEncryptBox.setChecked(mConversation.getEncrypt());
 
-        if (!contact.hasFingerprint()) {
+        if (contact.hasFingerprint()) {
             mEncryptBox.setText("Encrypt this conversation");
             mEncryptBox.setEnabled(true);
         } else {
