@@ -68,7 +68,7 @@ public class StorageManager {
         }
     }
 
-    private byte [] readFile() {
+    private byte[] readFile() {
         byte[] data = null;
 
         try {

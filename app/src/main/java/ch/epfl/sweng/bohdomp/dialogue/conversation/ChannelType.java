@@ -40,7 +40,7 @@ public enum ChannelType implements Parcelable {
         public ChannelType createFromParcel(Parcel source) {
             Contract.throwIfArgNull(source, "source");
 
-            return ChannelType.values()[source.readInt()];
+            return values()[source.readInt()];
         }
 
         @Override
