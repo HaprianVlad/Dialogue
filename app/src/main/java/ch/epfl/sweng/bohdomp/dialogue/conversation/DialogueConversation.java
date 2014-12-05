@@ -34,6 +34,7 @@ public final class DialogueConversation implements Conversation {
 
     private Contact.ChannelType mChannel;
     private Contact.PhoneNumber mPhoneNumber;
+    private boolean mEncrypt;
 
     private int mMessageCount;
     private boolean mHasUnread;
@@ -50,6 +51,7 @@ public final class DialogueConversation implements Conversation {
         this.mId = IdManager.getInstance().newConversationId();
         this.mContact = new ArrayList<Contact>(contacts);
         this.mChannel = null;
+        this.mEncrypt = false;
         this.mPhoneNumber = null;
         this.mMessages = new ArrayList<DialogueMessage>();
         this.mListeners = new ArrayList<ConversationListener>();
@@ -98,6 +100,17 @@ public final class DialogueConversation implements Conversation {
     @Override
     public Contact.PhoneNumber getPhoneNumber() {
         return mPhoneNumber;
+    }
+
+    @Override
+    public void setEncrypt(boolean encrypt) {
+        this.mEncrypt = encrypt;
+        notifyListeners();
+    }
+
+    @Override
+    public Boolean getEncrypt() {
+        return mEncrypt;
     }
 
     @Override
@@ -244,9 +257,7 @@ public final class DialogueConversation implements Conversation {
             for (ConversationListener listener : mListeners) {
                 listener.onConversationChanged(mId);
             }
-
         }
-
     }
 
 
@@ -263,6 +274,7 @@ public final class DialogueConversation implements Conversation {
         dest.writeList(mContact);
         dest.writeParcelable(mChannel, flags);
         dest.writeParcelable(mPhoneNumber, flags);
+        dest.writeByte((byte) (mEncrypt ? 1 : 0));
         dest.writeList(mMessages);
         dest.writeLong(this.mLastActivityTime.getMillis());
         dest.writeInt(this.mMessageCount);
@@ -276,6 +288,7 @@ public final class DialogueConversation implements Conversation {
         this.mContact = in.readArrayList(Contact.class.getClassLoader());
         this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
         this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
+        this.mEncrypt = in.readByte() != 0;
         this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
         this.mLastActivityTime = new DateTime(in.readLong());
         this.mMessageCount = in.readInt();

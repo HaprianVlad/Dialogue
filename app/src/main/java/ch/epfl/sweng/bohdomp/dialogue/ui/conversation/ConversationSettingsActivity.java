@@ -4,6 +4,9 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -24,6 +27,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public class ConversationSettingsActivity extends Activity {
     private RadioGroup mGroup;
+    private CheckBox mEncryptBox;
 
     private Conversation mConversation;
     private List<Contact> mContact;
@@ -63,6 +67,7 @@ public class ConversationSettingsActivity extends Activity {
 
     private void setViewElements() {
         mGroup = (RadioGroup) this.findViewById(R.id.radioGroup);
+        mEncryptBox = (CheckBox) findViewById(R.id.encryptBox);
 
         Contract.assertNotNull(mGroup, "radioGroup");
 
@@ -92,6 +97,17 @@ public class ConversationSettingsActivity extends Activity {
                 mGroup.addView(btn);
             }
         }
+
+        mEncryptBox.setVisibility(View.VISIBLE);
+        mEncryptBox.setChecked(mConversation.getEncrypt());
+
+        if (!contact.hasFingerprint()) {
+            mEncryptBox.setText("Encrypt this conversation");
+            mEncryptBox.setEnabled(true);
+        } else {
+            mEncryptBox.setText("Encryption not available for " + contact.getDisplayName());
+            mEncryptBox.setEnabled(false);
+        }
     }
 
     private void setListensers() {
@@ -112,5 +128,17 @@ public class ConversationSettingsActivity extends Activity {
                 finish();
             }
         });
+
+        mEncryptBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b != mConversation.getEncrypt()) {
+                    mConversation.setEncrypt(b);
+                }
+
+                finish();
+            }
+        });
+
     }
 }

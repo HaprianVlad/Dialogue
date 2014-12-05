@@ -61,7 +61,7 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveNullContext() {
         try {
-            DialogueOutgoingDispatcher.sendMessage(null, mMessage);
+            DialogueOutgoingDispatcher.sendMessage(null, mMessage, false);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //ok
@@ -70,7 +70,7 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveNullMessage() {
         try {
-            DialogueOutgoingDispatcher.sendMessage(mContext, null);
+            DialogueOutgoingDispatcher.sendMessage(mContext, null, false);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //ok
@@ -79,7 +79,7 @@ public final class DialogueOutgoingDispatcherTest extends ServiceTestCase<Dialog
 
     public void testReceiveOutgoingMessage() {
         try {
-            DialogueOutgoingDispatcher.sendMessage(mContext, mMessageIncoming);
+            DialogueOutgoingDispatcher.sendMessage(mContext, mMessageIncoming, false);
             fail("Exception should have been thrown");
         } catch (IllegalArgumentException e) {
             //ok

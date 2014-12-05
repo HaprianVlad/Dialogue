@@ -14,7 +14,7 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  */
 public final class SmsSenderServiceTest extends ServiceTestCase<SmsSenderService> {
 
-    private final static String PHONE_NUMBER = "0762677108";
+    private final static String PHONE_NUMBER = "000000000000000000";
     private final static String BODY = "Hello";
     private Intent mIntent;
     private SmsManager mSmsManager;

@@ -8,6 +8,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.util.encoders.DecoderException;
 
 import java.io.IOException;
 import java.util.List;
@@ -198,11 +199,16 @@ public class CryptoService extends IntentService {
             bundle.putString(EXTRA_CLEAR_TEXT, decrypted);
 
             return RESULT_SUCCESS;
+            //FIXME IF YOU CAN NOT DECRYPT RETURN PLAIN TEXT
+        } catch (PGPException ex) {
+            bundle.putString(EXTRA_CLEAR_TEXT, message);
+            return RESULT_SUCCESS;
+        } catch (DecoderException ex) {
+            bundle.putString(EXTRA_CLEAR_TEXT, message);
+            return RESULT_SUCCESS;
         } catch (IncorrectPassphraseException ex) {
             return failure(bundle, "Incorrect passphrase to the private key, please try again.");
         } catch (IOException ex) {
-            return hardFailure(bundle, "decryption", ex);
-        } catch (PGPException ex) {
             return hardFailure(bundle, "decryption", ex);
         }
     }
