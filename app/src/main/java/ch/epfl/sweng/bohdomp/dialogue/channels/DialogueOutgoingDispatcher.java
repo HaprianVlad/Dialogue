@@ -20,6 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public final class DialogueOutgoingDispatcher extends IntentService {
     private static final String ACTION_SEND_MESSAGE = "ACTION_SEND_MESSAGE";
+    private static final String MUST_BE_ENCRYPTED = "ENCRYPT";
 
     public DialogueOutgoingDispatcher() {
         super("DialogueOutgoingDispatcher");
@@ -31,7 +32,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
      * @param context of the application.
      * @param message to be sent.
      */
-    public static void sendMessage(Context context, DialogueMessage message) {
+    public static void sendMessage(Context context, DialogueMessage message, boolean encrypt) {
         Contract.throwIfArgNull(context, "context");
         Contract.throwIfArgNull(message, "message");
         Contract.throwIfArg(message.getDirection() == DialogueMessage.MessageDirection.INCOMING,
@@ -40,6 +41,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         /* Create intent and send to myself */
         Intent intent = new Intent(context, DialogueOutgoingDispatcher.class);
         intent.setAction(ACTION_SEND_MESSAGE);
+        intent.putExtra(MUST_BE_ENCRYPTED, encrypt);
         intent.putExtra(DialogueMessage.MESSAGE, message);
         context.startService(intent);
     }
@@ -52,10 +54,10 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
-
+            Boolean encrypt = intent.getBooleanExtra(MUST_BE_ENCRYPTED, false);
             switch (message.getChannel()) {
                 case SMS:
-                    sendSms(message);
+                    sendSms(message, encrypt);
                     break;
                 default:
                     throw new IllegalStateException("not valid channel");
@@ -64,31 +66,40 @@ public final class DialogueOutgoingDispatcher extends IntentService {
 
     }
 
-    private void sendSms(final DialogueMessage message) {
+    private void sendSms(final DialogueMessage message, boolean crypt) {
         Contract.assertNotNull(message, "message");
+
 
         Log.i("DialogueOutgoingDispatcher", "3");
 
-        CryptoService.startActionEncrypt(getApplicationContext(), KeyManager.FINGERPRINT,
-                message.getBody().getMessageBody(),
+        if (crypt) {
 
-                new ResultReceiver(null) {
-                    @Override
-                    protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-                        if (resultCode == CryptoService.RESULT_SUCCESS) {
-                            String encryptedText = resultData.getString(CryptoService.EXTRA_ENCRYPTED_TEXT);
-                            DialogueMessage encryptedMessage = new DialogueTextMessage(message.getContact(),
-                                    message.getChannel(), message.getPhoneNumber(),
-                                    encryptedText, DialogueMessage.MessageDirection.OUTGOING);
+            CryptoService.startActionEncrypt(getApplicationContext(), KeyManager.FINGERPRINT,
+                    message.getBody().getMessageBody(),
 
-                     /* Create intent and send to SmsSenderService */
-                            Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
-                            intent.setAction(SmsSenderService.ACTION_SEND_SMS);
-                            intent.putExtra(DialogueMessage.MESSAGE, encryptedMessage);
-                            getApplicationContext().startService(intent);
+                    new ResultReceiver(null) {
+                        @Override
+                        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
+                            if (resultCode == CryptoService.RESULT_SUCCESS) {
+                                String encryptedText = resultData.getString(CryptoService.EXTRA_ENCRYPTED_TEXT);
+                                DialogueMessage encryptedMessage = new DialogueTextMessage(message.getContact(),
+                                        message.getChannel(), message.getPhoneNumber(),
+                                        encryptedText, DialogueMessage.MessageDirection.OUTGOING);
+
+                                sendMessage(encryptedMessage);
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            sendMessage(message);
+        }
+    }
+
+    private void sendMessage(DialogueMessage message) {
+        Intent intent = new Intent(getApplicationContext(), SmsSenderService.class);
+        intent.setAction(SmsSenderService.ACTION_SEND_SMS);
+        intent.putExtra(DialogueMessage.MESSAGE, message);
+        getApplicationContext().startService(intent);
     }
 
     private void sendMms(DialogueMessage message) {

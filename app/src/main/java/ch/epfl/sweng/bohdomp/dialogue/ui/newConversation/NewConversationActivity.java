@@ -171,9 +171,9 @@ public class NewConversationActivity extends Activity {
         startActivity(intent);
     }
 
-    protected void onResume() {
+    protected void onStop() {
         mStorageManager.saveData();
-        super.onResume();
+        super.onStop();
     }
 
 }

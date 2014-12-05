@@ -203,22 +203,19 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onResume() {
         checkDefaultApp();
-
-
-
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        mStorageManager.saveData();
+        mContactListView.discardUndo();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         mData.removeListener(this);
-        mContactListView.discardUndo();
+        mStorageManager.saveData();
         super.onStop();
     }
 

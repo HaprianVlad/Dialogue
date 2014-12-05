@@ -67,9 +67,10 @@ public class SmsSenderService extends IntentService {
     private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, Contact.PhoneNumber number) {
         Contract.assertNotNull(number, "number");
 
+        //FIXME MUST IMPLEMENT THE PENDING INTENTS
         mSmsManager.sendMultipartTextMessage(number.getNumber(), null, messages,
-                getSentPendingIntentList(message, messages.size()),
-                getDeliveredPendingIntentList(message, messages.size()));
+                null,
+                null);
     }
 
     private void sendMonoPartMessage(DialogueMessage message) {
@@ -79,14 +80,15 @@ public class SmsSenderService extends IntentService {
         mSentBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
         mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver();
 
+        //FIXME MUST IMPLEMENT THE PENDING INTENTS
         mSmsManager.sendTextMessage(phoneNumber, null, messageBody,
-                getSentPendingIntent(message), getDeliveryPendingIntent(message));
+                null, null);
     }
 
     private boolean needsPartitioning(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
-        return message.getBody().getMessageBody().getBytes().length <= SmsMessage.MAX_USER_DATA_BYTES;
+        return message.getBody().getMessageBody().getBytes().length > SmsMessage.MAX_USER_DATA_BYTES;
     }
 
     @Override

@@ -148,6 +148,7 @@ public class MessagesAdapter extends BaseAdapter {
         String body = msg.getBody().getMessageBody();
         viewHolder.body.setText(body);
         viewHolder.timeStamp.setText(msg.prettyTimeStamp(mContext));
+        viewHolder.wrapper.clearAnimation();
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
@@ -173,6 +174,7 @@ public class MessagesAdapter extends BaseAdapter {
             }
 
         } else if (msg.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
+            viewHolder.wrapper.clearAnimation();
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
 
             viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DD0E1"),

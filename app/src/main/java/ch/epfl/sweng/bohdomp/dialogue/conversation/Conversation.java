@@ -41,6 +41,17 @@ public interface Conversation extends Parcelable {
     void setPhoneNumber(Contact.PhoneNumber phone);
     Contact.PhoneNumber getPhoneNumber();
 
+    /**
+     * Setter for the encrypt boolean
+     * @param encrypt
+     */
+    void setEncrypt(boolean encrypt);
+
+    /**
+     * Getter for the encrypt boolean
+     * @return true if conversation is encrypted
+     */
+    Boolean getEncrypt();
 
     /**
      * Getter for the messages list of the conversation
