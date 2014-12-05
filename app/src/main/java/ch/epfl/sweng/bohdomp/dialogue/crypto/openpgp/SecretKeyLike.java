@@ -20,7 +20,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.StreamUtils;
 

@@ -61,7 +61,7 @@ public final class DialogueOutgoingDispatcher extends IntentService {
             DialogueMessage original = DialogueMessage.extractMessage(intent);
             DialogueMessage outgoing = makeEncrypted(original, shouldEncrypt);
 
-            DefaultDialogData.getInstance().addMessageToConversation(original);
+            DefaultDialogData.getInstance().addMessageToConversation(outgoing);
             dispatchMessage(outgoing);
         }
     }

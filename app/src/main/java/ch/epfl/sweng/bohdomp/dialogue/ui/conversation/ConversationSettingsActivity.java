@@ -57,6 +57,7 @@ public class ConversationSettingsActivity extends Activity {
         super.onResume();
     }
 
+
     private void initData(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "conversationId");
 
@@ -65,6 +66,7 @@ public class ConversationSettingsActivity extends Activity {
         Contract.assertNotNull(mConversation, "conversation");
 
         mContact = mConversation.getContacts();
+
     }
 
     private void setViewElements() {
@@ -111,6 +113,8 @@ public class ConversationSettingsActivity extends Activity {
             mEncryptBox.setEnabled(false);
         }
     }
+
+
 
     private void setListensers() {
 

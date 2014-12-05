@@ -75,6 +75,9 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
                 DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.SENT);
 
                 writeToSmsProvider(context, message);
+            } else {
+                DialogueMessage message = DialogueMessage.extractMessage(intent);
+                DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.FAILED);
             }
         }
     }

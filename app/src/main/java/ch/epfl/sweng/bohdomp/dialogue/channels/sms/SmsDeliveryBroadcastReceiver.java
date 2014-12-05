@@ -66,6 +66,9 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
             if ((partsReceived == mNParts) && hasSucceeded) {
                 DialogueMessage message = DialogueMessage.extractMessage(intent);
                 DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.DELIVERED);
+            } else {
+                DialogueMessage message = DialogueMessage.extractMessage(intent);
+                DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.FAILED);
             }
         }
     }

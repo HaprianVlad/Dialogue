@@ -216,10 +216,6 @@ public abstract class DialogueMessage implements Parcelable {
         this.mStatus = status;
     }
 
-    public void setBody(String body) {
-        this.mBody = newBody(body);
-    }
-
     /**
      * Factory method for constructing the corespondent type of message body
      * @param body the string we will put in the body

@@ -11,6 +11,7 @@ import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.CryptoException;
 
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.TextMessageBody;
@@ -59,11 +60,9 @@ public final class DialogueIncomingDispatcher extends IntentService {
 
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
-            TextMessageBody decryptedBody = null;
-
             if (Crypto.isEncrypted(message.getBody().getMessageBody())) {
                 try {
-                    decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
+                    TextMessageBody decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
                             message.getBody().getMessageBody()));
 
                     DialogueMessage decryptedMessage = new DialogueTextMessage(message.getContact(),
@@ -83,9 +82,10 @@ public final class DialogueIncomingDispatcher extends IntentService {
             } else {
                 DefaultDialogData.getInstance().addMessageToConversation(message);
             }
-
             Notificator notificator = new Notificator(getApplicationContext());
             notificator.update(message);
+            StorageManager storageManager = new StorageManager(getApplicationContext());
+            storageManager.saveData();
         }
         //ignore when receiving other commands
 
