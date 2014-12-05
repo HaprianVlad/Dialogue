@@ -177,6 +177,7 @@ public class ConversationActivity extends Activity implements ConversationListen
     @Override
     protected void onStop() {
         mConversation.removeListener(this);
+        mStorageManager.saveData();
         super.onStop();
     }
 
@@ -193,10 +194,6 @@ public class ConversationActivity extends Activity implements ConversationListen
         });
     }
 
-    protected void onPause() {
-        mStorageManager.saveData();
-        super.onPause();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

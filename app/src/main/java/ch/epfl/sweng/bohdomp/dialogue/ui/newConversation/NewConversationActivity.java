@@ -151,6 +151,7 @@ public class NewConversationActivity extends Activity {
                                 "This contact has no phone number!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                         startActivityForResult(intent, PICK_CONTACT);
+
                     } else {
                         goToConversation(contact);
                     }

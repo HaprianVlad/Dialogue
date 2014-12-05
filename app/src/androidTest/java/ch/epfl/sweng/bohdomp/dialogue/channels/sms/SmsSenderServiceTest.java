@@ -1,7 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels.sms;
 
 import android.content.Intent;
-import android.telephony.SmsManager;
 import android.test.ServiceTestCase;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -13,11 +12,11 @@ import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
  * Class creating a Tester for a Sms Sender Service
  */
 public final class SmsSenderServiceTest extends ServiceTestCase<SmsSenderService> {
-
     private final static String PHONE_NUMBER = "000000000000000000";
+
     private final static String BODY = "Hello";
     private Intent mIntent;
-    private SmsManager mSmsManager;
+
 
     public SmsSenderServiceTest() {
         super(SmsSenderService.class);
