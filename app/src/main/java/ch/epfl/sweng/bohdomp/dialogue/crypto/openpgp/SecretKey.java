@@ -22,6 +22,7 @@ public class SecretKey extends SecretKeyLike implements Key {
 
     SecretKey(PGPSecretKey underlyingKey) {
         Contract.throwIfArgNull(underlyingKey, "underlyingKey");
+
         this.mUnderlying = underlyingKey;
     }
 

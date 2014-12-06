@@ -28,15 +28,21 @@ public abstract class KeyChainBuilder<T extends KeyChain<?>> {
     /** Create a key chain from a binary stream. */
     public T fromStream(InputStream in) throws IOException, PGPException {
         Contract.throwIfArgNull(in, "in");
+
         KeyFingerPrintCalculator calculator = new BcKeyFingerprintCalculator();
         return build(PGPUtil.getDecoderStream(in), calculator);
     }
 
     private T fromStringUnsafe(String in) throws PGPException, IOException {
         byte[] bytes = in.getBytes(StandardCharsets.UTF_8);
+
         InputStream stream = new ByteArrayInputStream(bytes);
+
+        T value = fromStream(stream);
+
         stream.close();
-        return fromStream(stream);
+
+        return value;
     }
 
     /** Create a key chain from an ascii-armored string. */

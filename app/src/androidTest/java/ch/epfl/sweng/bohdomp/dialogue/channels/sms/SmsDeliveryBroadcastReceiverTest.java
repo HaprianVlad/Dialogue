@@ -12,11 +12,7 @@ public class SmsDeliveryBroadcastReceiverTest extends AndroidTestCase {
     private SmsDeliveryBroadcastReceiver mReceiver = new SmsDeliveryBroadcastReceiver();
 
     public void testConstructorValidArgument() {
-        try {
-            new SmsDeliveryBroadcastReceiver(2);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
+        new SmsDeliveryBroadcastReceiver(2);
     }
 
     public void testConstructorInvalidArgument() {

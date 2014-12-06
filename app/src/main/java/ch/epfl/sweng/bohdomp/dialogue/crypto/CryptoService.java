@@ -55,8 +55,10 @@ public class CryptoService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+
         Context context = getApplicationContext();
-        Contract.throwIfArgNull(context, "Cannot create a CryptoService with an empty context.");
+        Contract.assertNotNull(context, "Cannot create a CryptoService with an empty context.");
+
         mKeyManager = new KeyManager(context);
     }
 
@@ -80,6 +82,7 @@ public class CryptoService extends IntentService {
         intent.putExtra(EXTRA_FINGERPRINT, fingerprint);
         intent.putExtra(EXTRA_CLEAR_TEXT, message);
         intent.putExtra(EXTRA_RECEIVER, receiver);
+
         context.startService(intent);
     }
 
@@ -99,6 +102,7 @@ public class CryptoService extends IntentService {
         intent.setAction(ACTION_DECRYPT);
         intent.putExtra(EXTRA_ENCRYPTED_TEXT, message);
         intent.putExtra(EXTRA_RECEIVER, receiver);
+
         context.startService(intent);
     }
 
@@ -121,22 +125,24 @@ public class CryptoService extends IntentService {
     }
 
     private void handleActionEncrypt(String fingerprint, String message, ResultReceiver receiver) {
-        Contract.throwIfArgNull(fingerprint, "fingerprint");
-        Contract.throwIfArgNull(message, "message");
-        Contract.throwIfArgNull(receiver, "receiver");
+        Contract.assertNotNull(fingerprint, "fingerprint");
+        Contract.assertNotNull(message, "message");
+        Contract.assertNotNull(receiver, "receiver");
 
         Bundle bundle = new Bundle();
         int ret = doEncryption(bundle, fingerprint, message);
         bundle.putString(EXTRA_FINGERPRINT, fingerprint);
+
         receiver.send(ret, bundle);
     }
 
     private void handleActionDecrypt(String message, ResultReceiver receiver) {
-        Contract.throwIfArgNull(message, "message");
-        Contract.throwIfArgNull(receiver, "receiver");
+        Contract.assertNotNull(message, "message");
+        Contract.assertNotNull(receiver, "receiver");
 
         Bundle bundle = new Bundle();
         int ret = doDecryption(bundle, message);
+
         receiver.send(ret, bundle);
     }
 

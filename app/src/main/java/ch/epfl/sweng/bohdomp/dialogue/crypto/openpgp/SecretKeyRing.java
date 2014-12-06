@@ -21,6 +21,7 @@ public class SecretKeyRing extends SecretKeyLike implements KeyRing<SecretKey> {
 
     SecretKeyRing(PGPSecretKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");
+
         this.mUnderlying = underlyingKeyRing;
     }
 

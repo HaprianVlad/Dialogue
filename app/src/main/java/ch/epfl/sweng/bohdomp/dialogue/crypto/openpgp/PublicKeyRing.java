@@ -20,6 +20,7 @@ public class PublicKeyRing implements KeyRing<PublicKey> {
 
     PublicKeyRing(PGPPublicKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");
+
         this.mUnderlying = underlyingKeyRing;
     }
 

@@ -30,29 +30,36 @@ public class Notificator {
     public void update(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
-        Notification.Builder mBuilder = new Notification.Builder(mContext)
-                .setContentTitle("Message from:" + message.getContact().getDisplayName())
-                .setContentText(message.getBody().getMessageBody())
-                .setAutoCancel(true)
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                .setSmallIcon(R.drawable.ic_notification);
+        PendingIntent resultPendingIntent =
+                makeStackBuilder().getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationManager notificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        final int id = 1;
+        notificationManager.notify(id, makeNotification(message, resultPendingIntent));
+    }
+
+    private TaskStackBuilder makeStackBuilder() {
         Intent resultIntent = new Intent(mContext, ConversationListActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
         stackBuilder.addParentStack(ConversationListActivity.class);
         stackBuilder.addNextIntent(resultIntent);
 
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        return stackBuilder;
+    }
 
+    private Notification makeNotification(DialogueMessage message, PendingIntent intent) {
+        Contract.assertNotNull(message, "message");
+        Contract.assertNotNull(intent, "intent");
 
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        final int mId = 1;
-        mNotificationManager.notify(mId, mBuilder.build());
+        return new Notification.Builder(mContext)
+                .setContentTitle("Message from:" + message.getContact().getDisplayName())
+                .setContentText(message.getBody().getMessageBody())
+                .setAutoCancel(true)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentIntent(intent).build();
     }
 
 }

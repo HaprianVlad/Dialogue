@@ -18,6 +18,7 @@ public class PublicKeyChain extends KeyChain<PublicKeyRing> {
 
     public PublicKeyChain(PGPPublicKeyRingCollection underlying) {
         Contract.throwIfArgNull(underlying, "underlying");
+
         this.mUnderlying = underlying;
     }
 

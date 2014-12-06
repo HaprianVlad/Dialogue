@@ -44,7 +44,7 @@ public interface Conversation extends Parcelable {
 
     /**
      * Setter for the encrypt boolean
-     * @param encrypt
+     * @param encrypt if we want to encrypt or not
      */
     void setEncrypt(boolean encrypt);
 
@@ -125,7 +125,7 @@ public interface Conversation extends Parcelable {
 
     /**
      * Adds a listener to the conversation
-     * @param listener
+     * @param listener the listener to add
      */
     void addListener(ConversationListener listener);
 
