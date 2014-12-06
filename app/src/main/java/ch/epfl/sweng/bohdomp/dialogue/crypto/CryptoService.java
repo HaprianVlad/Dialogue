@@ -13,7 +13,7 @@ import org.bouncycastle.util.encoders.DecoderException;
 import java.io.IOException;
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyRing;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyRing;

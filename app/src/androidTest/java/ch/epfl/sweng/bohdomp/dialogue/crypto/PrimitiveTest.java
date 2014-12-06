@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.bouncycastle.openpgp.PGPException;
 
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChainBuilder;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyRing;
