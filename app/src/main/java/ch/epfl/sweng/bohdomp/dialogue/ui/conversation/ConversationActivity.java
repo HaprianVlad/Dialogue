@@ -18,10 +18,12 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -143,8 +145,8 @@ public class ConversationActivity extends Activity implements ConversationListen
             public void onClick(View view) {
                 String draftText = mNewMessageText.getText().toString();
 
-                Contact.ChannelType channel = mConversation.getChannel();
-                Contact.PhoneNumber number = mConversation.getPhoneNumber();
+                ChannelType channel = mConversation.getChannel();
+                PhoneNumber number = mConversation.getPhoneNumber();
 
                 Contract.assertNotNull(channel, "channel");
                 Contract.assertNotNull(number, "number");

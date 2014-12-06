@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
@@ -32,8 +33,8 @@ public final class DialogueConversation implements Conversation {
 
     private DateTime mLastActivityTime;
 
-    private Contact.ChannelType mChannel;
-    private Contact.PhoneNumber mPhoneNumber;
+    private ChannelType mChannel;
+    private PhoneNumber mPhoneNumber;
     private boolean mEncrypt;
 
     private int mMessageCount;
@@ -77,7 +78,7 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
-    public void setChannel(Contact.ChannelType channel) {
+    public void setChannel(ChannelType channel) {
         Contract.throwIfArgNull(channel, "channel");
 
         this.mChannel = channel;
@@ -85,12 +86,12 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
-    public Contact.ChannelType getChannel() {
+    public ChannelType getChannel() {
         return mChannel;
     }
 
     @Override
-    public void setPhoneNumber(Contact.PhoneNumber phone) {
+    public void setPhoneNumber(PhoneNumber phone) {
         Contract.throwIfArgNull(phone, "phone number");
 
         this.mPhoneNumber = phone;
@@ -98,7 +99,7 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
-    public Contact.PhoneNumber getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return mPhoneNumber;
     }
 
@@ -286,9 +287,11 @@ public final class DialogueConversation implements Conversation {
     private DialogueConversation(Parcel in) {
         this.mId = in.readParcelable(ConversationId.class.getClassLoader());
         this.mContact = in.readArrayList(Contact.class.getClassLoader());
-        this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
-        this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
+
+        this.mChannel = in.readParcelable(ChannelType.class.getClassLoader());
+        this.mPhoneNumber = in.readParcelable(PhoneNumber.class.getClassLoader());
         this.mEncrypt = in.readByte() != 0;
+
         this.mMessages =  in.readArrayList(DialogueMessage.class.getClassLoader());
         this.mLastActivityTime = new DateTime(in.readLong());
         this.mMessageCount = in.readInt();

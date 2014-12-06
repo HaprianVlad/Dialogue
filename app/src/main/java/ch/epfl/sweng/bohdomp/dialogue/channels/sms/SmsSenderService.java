@@ -10,7 +10,7 @@ import android.telephony.SmsMessage;
 
 import java.util.ArrayList;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -59,12 +59,12 @@ public class SmsSenderService extends IntentService {
             mSentBroadcastReceiver = new SmsSentBroadcastReceiver(messages.size());
             mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver(messages.size());
 
-            Contact.PhoneNumber number = message.getPhoneNumber();
+            PhoneNumber number = message.getPhoneNumber();
             sendMultiPartMessage(message, messages, number);
         }
     }
 
-    private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, Contact.PhoneNumber number) {
+    private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, PhoneNumber number) {
         Contract.assertNotNull(number, "number");
 
         //FIXME MUST IMPLEMENT THE PENDING INTENTS

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.FingerprintInsertionException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
@@ -88,10 +89,10 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         String expectedName = "unknown: " + validPhoneNumber;
         assertEquals(expectedName, contact.getDisplayName());
 
-        Set<Contact.PhoneNumber> phoneNumbersInContact = contact.getPhoneNumbers();
+        Set<PhoneNumber> phoneNumbersInContact = contact.getPhoneNumbers();
         Set<String> phoneNumberStrings = new HashSet<String>();
 
-        for (Contact.PhoneNumber num : phoneNumbersInContact) {
+        for (PhoneNumber num : phoneNumbersInContact) {
             phoneNumberStrings.add(num.getNumber());
         }
 
@@ -101,9 +102,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         assertTrue(phoneNumberStrings.contains(validPhoneNumber));
 
         // we assume that contact is reachable via SMS when there is a phone number
-        Set<Contact.ChannelType> contactAvailableChannels = contact.availableChannels();
+        Set<ChannelType> contactAvailableChannels = contact.availableChannels();
         assertEquals(1, contactAvailableChannels.size());
-        assertTrue(contactAvailableChannels.contains(Contact.ChannelType.SMS));
+        assertTrue(contactAvailableChannels.contains(ChannelType.SMS));
     }
 
     public void testContactFromPhoneNumberWhenNumberIsNotKnownAndInvalid() {

@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 
@@ -35,11 +36,11 @@ public interface Conversation extends Parcelable {
 
     List<Contact> getContacts();
 
-    void setChannel(Contact.ChannelType channel);
-    Contact.ChannelType getChannel();
+    void setChannel(ChannelType channel);
+    ChannelType getChannel();
 
-    void setPhoneNumber(Contact.PhoneNumber phone);
-    Contact.PhoneNumber getPhoneNumber();
+    void setPhoneNumber(PhoneNumber phone);
+    PhoneNumber getPhoneNumber();
 
     /**
      * Setter for the encrypt boolean

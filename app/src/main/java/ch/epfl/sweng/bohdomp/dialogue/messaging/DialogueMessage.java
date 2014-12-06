@@ -13,7 +13,9 @@ import org.joda.time.Interval;
 import java.util.Locale;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.ids.DialogueMessageId;
 import ch.epfl.sweng.bohdomp.dialogue.ids.IdManager;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -40,8 +42,8 @@ public abstract class DialogueMessage implements Parcelable {
     public static final String MESSAGE = "MESSAGE";
 
     private final Contact mContact;
-    private final Contact.ChannelType mChannel;
-    private final Contact.PhoneNumber mPhoneNumber;
+    private final ChannelType mChannel;
+    private final PhoneNumber mPhoneNumber;
     private final MessageBody mBody;
     private final DateTime mTimestamp;
     private final DialogueMessageId mId;
@@ -62,7 +64,7 @@ public abstract class DialogueMessage implements Parcelable {
         return (DialogueMessage) intent.getExtras().getParcelable(MESSAGE);
     }
 
-    DialogueMessage(Contact contact, Contact.ChannelType channel, Contact.PhoneNumber phoneNumber,
+    DialogueMessage(Contact contact, ChannelType channel, PhoneNumber phoneNumber,
                     String messageBody, MessageDirection messageDirection, boolean isDataMessage) {
 
         Contract.throwIfArgNull(contact, "contact");
@@ -91,11 +93,11 @@ public abstract class DialogueMessage implements Parcelable {
         return mContact;
     }
 
-    public Contact.ChannelType getChannel() {
+    public ChannelType getChannel() {
         return mChannel;
     }
 
-    public Contact.PhoneNumber getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return mPhoneNumber;
     }
 
@@ -242,8 +244,8 @@ public abstract class DialogueMessage implements Parcelable {
         Contract.throwIfArgNull(in, "in");
 
         this.mContact = in.readParcelable(Contact.class.getClassLoader());
-        this.mChannel = in.readParcelable(Contact.ChannelType.class.getClassLoader());
-        this.mPhoneNumber = in.readParcelable(Contact.PhoneNumber.class.getClassLoader());
+        this.mChannel = in.readParcelable(ChannelType.class.getClassLoader());
+        this.mPhoneNumber = in.readParcelable(PhoneNumber.class.getClassLoader());
         this.mBody = in.readParcelable(MessageBody.class.getClassLoader());
         this.mTimestamp = new DateTime(in.readLong());
         this.mId = in.readParcelable(DialogueMessageId.class.getClassLoader());

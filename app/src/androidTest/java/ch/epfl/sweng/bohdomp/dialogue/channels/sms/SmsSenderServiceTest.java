@@ -3,8 +3,10 @@ package ch.epfl.sweng.bohdomp.dialogue.channels.sms;
 import android.content.Intent;
 import android.test.ServiceTestCase;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 
@@ -29,8 +31,8 @@ public final class SmsSenderServiceTest extends ServiceTestCase<SmsSenderService
         ContactFactory contactFactory = new ContactFactory(getSystemContext());
         Contact contact = contactFactory.contactFromNumber(PHONE_NUMBER);
 
-        Contact.PhoneNumber number = contact.getPhoneNumbers().iterator().next();
-        Contact.ChannelType channel = Contact.ChannelType.SMS;
+        PhoneNumber number = contact.getPhoneNumbers().iterator().next();
+        ChannelType channel = ChannelType.SMS;
 
         DialogueMessage message = new DialogueTextMessage(contact, channel, number,
                 BODY, DialogueMessage.MessageDirection.OUTGOING);

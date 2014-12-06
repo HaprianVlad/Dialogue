@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
@@ -50,8 +52,8 @@ public class ConversationListAdapterTest extends MockTestCase {
         Contact contact = new ContactFactory(mContext).contactFromNumber(CONTACT_NUMBER);
         mContactList.add(contact);
 
-        Contact.PhoneNumber number = mContactList.get(0).getPhoneNumbers().iterator().next();
-        Contact.ChannelType channel = Contact.ChannelType.SMS;
+        PhoneNumber number = mContactList.get(0).getPhoneNumbers().iterator().next();
+        ChannelType channel = ChannelType.SMS;
 
         mConversationList = new ArrayList<Conversation>();
         mConversationList.add(new DialogueConversation(mContactList));
