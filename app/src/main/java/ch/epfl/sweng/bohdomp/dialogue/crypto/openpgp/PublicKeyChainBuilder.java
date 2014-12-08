@@ -25,7 +25,7 @@ public class PublicKeyChainBuilder extends KeyChainBuilder<PublicKeyChain> {
         } catch (IOException ex) {
             throw new AssertionError("IOException while constructing empty keychain", ex);
         } catch (PGPException ex) {
-            throw new AssertionError("IOException while constructing empty keychain", ex);
+            throw new AssertionError("PGPException while constructing empty keychain", ex);
         }
     }
 

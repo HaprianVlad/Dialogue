@@ -30,23 +30,28 @@ public final class SmsReceiver extends BroadcastReceiver {
         }
 
         SmsMessage[] smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+        String messageBody = makeMessageBody(smsMessages);
+
+        sendToIncomingDispatcher(context, messageBody, smsMessages[0].getOriginatingAddress());
+    }
+
+    private String makeMessageBody(SmsMessage[] smsMessages) {
+        Contract.assertNotNull(smsMessages, "smsMessages");
 
         String messageBody = "";
-
         for (SmsMessage smsMessage : smsMessages) {
-
             Contract.assertNotNull(smsMessage, "smsMessage");
 
             messageBody += smsMessage.getMessageBody();
         }
 
-        sendToIncomingDispatcher(context, messageBody, smsMessages[0].getOriginatingAddress());
+        return messageBody;
     }
 
     private void sendToIncomingDispatcher(Context context, String messageBody, String phoneNumber) {
-        Contract.throwIfArgNull(context, "context");
-        Contract.throwIfArgNull(messageBody, "messageBody");
-        Contract.throwIfArgNull(phoneNumber, "phoneNumber");
+        Contract.assertNotNull(context, "context");
+        Contract.assertNotNull(messageBody, "messageBody");
+        Contract.assertNotNull(phoneNumber, "phoneNumber");
 
         try {
             DialogueMessage dialogueMessage = convertFromSmsMessage(messageBody, phoneNumber);
@@ -60,8 +65,8 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     private DialogueTextMessage convertFromSmsMessage(String messageBody, String phoneNumber)
         throws InvalidNumberException {
-        Contract.throwIfArgNull(messageBody, "messageBody");
-        Contract.throwIfArgNull(phoneNumber, "phoneNumber");
+        Contract.assertNotNull(messageBody, "messageBody");
+        Contract.assertNotNull(phoneNumber, "phoneNumber");
 
         Contact contact = mContactFactory.contactFromNumber(phoneNumber);
 

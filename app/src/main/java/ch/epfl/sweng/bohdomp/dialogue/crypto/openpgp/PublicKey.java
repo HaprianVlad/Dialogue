@@ -38,6 +38,7 @@ public class PublicKey implements Key {
 
     PublicKey(PGPPublicKey underlyingKey) {
         Contract.throwIfArgNull(underlyingKey, "underlyingKey");
+
         this.mUnderlying = underlyingKey;
     }
 
@@ -79,9 +80,7 @@ public class PublicKey implements Key {
      * @param size    length of the message in bytes
      */
     private void encrypt(InputStream message, OutputStream output, Long size) throws IOException, PGPException {
-        if (size < 0) {
-            throw new IllegalArgumentException("size must be zero or greater");
-        }
+        Contract.throwIfArg(size < 0, "size must be zero or greater");
 
         OutputStream armored = null;
         OutputStream encrypted = null;
@@ -111,10 +110,14 @@ public class PublicKey implements Key {
     private String encryptUnsafe(String message) throws PGPException, IOException {
         byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
         InputStream in = new ByteArrayInputStream(bytes);
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         encrypt(in, out, (long) bytes.length);
+
         in.close();
         out.close();
+
         return new String(out.toByteArray(), StandardCharsets.UTF_8);
     }
 

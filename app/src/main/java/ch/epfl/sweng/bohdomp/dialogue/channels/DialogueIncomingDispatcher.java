@@ -16,13 +16,10 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 /**
  * Handles the incoming messages.
  */
-public final class DialogueIncomingDispatcher extends IntentService{
+public final class DialogueIncomingDispatcher extends IntentService {
     public static final String ACTION_RECEIVE_MESSAGE = "ACTION_RECEIVE_MESSAGE";
 
     private static boolean sIsRunning;
-
-
-    private Notificator mNotificator;
 
     public DialogueIncomingDispatcher() {
         super("DialogueIncomingDispatcher");
@@ -70,8 +67,8 @@ public final class DialogueIncomingDispatcher extends IntentService{
 
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
-            mNotificator = new Notificator(getApplicationContext());
-            mNotificator.update(message);
+            Notificator notificator = new Notificator(getApplicationContext());
+            notificator.update(message);
 
             DefaultDialogData.getInstance().addMessageToConversation(message);
 

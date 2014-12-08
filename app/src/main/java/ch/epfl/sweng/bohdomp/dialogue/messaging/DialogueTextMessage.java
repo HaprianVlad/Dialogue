@@ -3,13 +3,15 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 
 /**
  * Class representing a dialogue text message
  */
 public final class DialogueTextMessage extends DialogueMessage {
-    public DialogueTextMessage(Contact contact, Contact.ChannelType channel, Contact.PhoneNumber number,
+    public DialogueTextMessage(Contact contact, ChannelType channel, PhoneNumber number,
                                String textBody, MessageDirection messageDirection) {
         super(contact, channel, number, textBody, messageDirection, false);
     }

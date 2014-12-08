@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
@@ -57,7 +58,7 @@ public class ConversationActivityTest extends ActivityInstrumentationTestCase2<C
 
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(mContact);
 
-        mConversation.setChannel(Contact.ChannelType.SMS);
+        mConversation.setChannel(ChannelType.SMS);
         mConversation.setPhoneNumber(mContact.getPhoneNumbers().iterator().next());
 
         Intent intent = new Intent(getInstrumentation().getTargetContext(), ConversationActivity.class);

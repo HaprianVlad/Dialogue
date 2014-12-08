@@ -6,6 +6,7 @@ import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.operator.bc.BcPBESecretKeyDecryptorBuilder;
 import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -21,6 +22,7 @@ public class SecretKey extends SecretKeyLike implements Key {
 
     SecretKey(PGPSecretKey underlyingKey) {
         Contract.throwIfArgNull(underlyingKey, "underlyingKey");
+
         this.mUnderlying = underlyingKey;
     }
 

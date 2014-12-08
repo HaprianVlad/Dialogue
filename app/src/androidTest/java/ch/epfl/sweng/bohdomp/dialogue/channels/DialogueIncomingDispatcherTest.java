@@ -6,7 +6,9 @@ import android.test.ServiceTestCase;
 
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
@@ -39,8 +41,8 @@ public final class DialogueIncomingDispatcherTest extends ServiceTestCase<Dialog
         Contact contact = contactFactory.contactFromNumber("0762677108");
         mConversation = DefaultDialogData.getInstance().createOrGetConversation(contact);
 
-        Contact.PhoneNumber number = contact.getPhoneNumbers().iterator().next();
-        Contact.ChannelType channel = Contact.ChannelType.SMS;
+        PhoneNumber number = contact.getPhoneNumbers().iterator().next();
+        ChannelType channel = ChannelType.SMS;
 
         String body = "Hello";
 

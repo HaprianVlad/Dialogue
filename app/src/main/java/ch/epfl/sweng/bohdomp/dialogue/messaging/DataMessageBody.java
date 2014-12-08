@@ -38,7 +38,7 @@ public final class DataMessageBody implements MessageBody{
     }
 
     private DataMessageBody(Parcel in) {
-        Contract.throwIfArgNull(in, "in");
+        Contract.assertNotNull(in, "in");
 
         this.mBody = in.readParcelable(Uri.class.getClassLoader());
     }

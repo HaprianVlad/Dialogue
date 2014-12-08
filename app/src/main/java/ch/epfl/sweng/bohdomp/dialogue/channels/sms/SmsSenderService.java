@@ -10,7 +10,7 @@ import android.telephony.SmsMessage;
 
 import java.util.ArrayList;
 
-import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -43,8 +43,7 @@ public class SmsSenderService extends IntentService {
         Contract.assertNotNull(intent, "intent");
 
         if (intent.getAction().equals(ACTION_SEND_SMS)) {
-            DialogueMessage message = DialogueMessage.extractMessage(intent);
-            sendMessage(message);
+            sendMessage(DialogueMessage.extractMessage(intent));
         }
     }
 
@@ -59,12 +58,14 @@ public class SmsSenderService extends IntentService {
             mSentBroadcastReceiver = new SmsSentBroadcastReceiver(messages.size());
             mDeliveryBroadcastReceiver = new SmsDeliveryBroadcastReceiver(messages.size());
 
-            Contact.PhoneNumber number = message.getPhoneNumber();
+            PhoneNumber number = message.getPhoneNumber();
             sendMultiPartMessage(message, messages, number);
         }
     }
 
-    private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, Contact.PhoneNumber number) {
+    private void sendMultiPartMessage(DialogueMessage message, ArrayList<String> messages, PhoneNumber number) {
+        Contract.assertNotNull(message, "message");
+        Contract.assertNotNull(messages, "messages");
         Contract.assertNotNull(number, "number");
 
         //FIXME MUST IMPLEMENT THE PENDING INTENTS
@@ -74,6 +75,8 @@ public class SmsSenderService extends IntentService {
     }
 
     private void sendMonoPartMessage(DialogueMessage message) {
+        Contract.assertNotNull(message, "message");
+
         String phoneNumber = message.getPhoneNumber().getNumber();
         String messageBody = message.getBody().getMessageBody();
 
@@ -86,7 +89,7 @@ public class SmsSenderService extends IntentService {
     }
 
     private boolean needsPartitioning(DialogueMessage message) {
-        Contract.throwIfArgNull(message, "message");
+        Contract.assertNotNull(message, "message");
 
         return message.getBody().getMessageBody().getBytes().length > SmsMessage.MAX_USER_DATA_BYTES;
     }
@@ -118,13 +121,14 @@ public class SmsSenderService extends IntentService {
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_SENT),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // FIXME: check wheter multiple registerReciever of the same reciever will not cause problems
         registerReceiver(mSentBroadcastReceiver, new IntentFilter(ACTION_SMS_SENT));
 
         return sentPendingIntent;
     }
 
     private PendingIntent getSentPendingIntent(DialogueMessage message) {
-        Contract.throwIfArgNull(message, "message");
+        Contract.assertNotNull(message, "message");
 
         Intent intent = new Intent(getApplicationContext(), SmsSentBroadcastReceiver.class);
         intent.setAction(SmsSenderService.ACTION_SMS_SENT);
@@ -133,6 +137,7 @@ public class SmsSenderService extends IntentService {
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // FIXME: check wheter multiple registerReciever of the same reciever will not cause problems
         registerReceiver(mSentBroadcastReceiver, new IntentFilter(ACTION_SMS_SENT));
 
         return sentPendingIntent;
@@ -149,13 +154,14 @@ public class SmsSenderService extends IntentService {
         PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_DELIVERED),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // FIXME: check wheter multiple registerReciever of the same reciever will not cause problems
         registerReceiver(mDeliveryBroadcastReceiver, new IntentFilter(ACTION_SMS_DELIVERED));
 
         return deliveryPendingIntent;
     }
 
     private PendingIntent getDeliveryPendingIntent(DialogueMessage message) {
-        Contract.throwIfArgNull(message, "message");
+        Contract.assertNotNull(message, "message");
 
         Intent intent = new Intent(getApplicationContext(), SmsDeliveryBroadcastReceiver.class);
         intent.setAction(SmsSenderService.ACTION_SMS_DELIVERED);
@@ -164,6 +170,7 @@ public class SmsSenderService extends IntentService {
         PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // FIXME: check wheter multiple registerReciever of the same reciever will not cause problems
         registerReceiver(mDeliveryBroadcastReceiver, new IntentFilter(ACTION_SMS_DELIVERED));
 
         return deliveryPendingIntent;

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.FingerprintUtils;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.FingerprintInsertionException;
@@ -90,7 +91,7 @@ public class ContactFactory {
      * tries to fill in missing information in case the number is associated with a known
      * contact
      *
-     * @param phoneNumber
+     * @param phoneNumber the phonenumber we want to create a contact from.
      * @return a Contact for this number
      * @throws InvalidNumberException when given phone number is not valid
      */
@@ -98,6 +99,7 @@ public class ContactFactory {
         throws InvalidNumberException {
 
         Contract.throwIfArgNull(phoneNumber, "phone number");
+
         if (!verifyPhoneNumber(phoneNumber)) {
             throw new InvalidNumberException(" is not a valid phone number");
         }

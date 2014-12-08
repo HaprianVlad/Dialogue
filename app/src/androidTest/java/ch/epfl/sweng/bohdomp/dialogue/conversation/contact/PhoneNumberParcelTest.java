@@ -8,11 +8,11 @@ import android.test.AndroidTestCase;
  */
 public class PhoneNumberParcelTest extends AndroidTestCase {
 
-    private Contact.PhoneNumber mPhoneNumber;
+    private PhoneNumber mPhoneNumber;
 
     @Override
     public void setUp() {
-        mPhoneNumber = new Contact.PhoneNumber("0123456789", Contact.PhoneNumber.Tag.MOBILE);
+        mPhoneNumber = new PhoneNumber("0123456789", PhoneNumber.Tag.MOBILE);
     }
 
     public void testDescribeContents() {
@@ -25,7 +25,7 @@ public class PhoneNumberParcelTest extends AndroidTestCase {
         mPhoneNumber.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
 
-        Contact.PhoneNumber unpacked = Contact.PhoneNumber.CREATOR.createFromParcel(parcel);
+        PhoneNumber unpacked = PhoneNumber.CREATOR.createFromParcel(parcel);
 
         parcel.recycle();
 

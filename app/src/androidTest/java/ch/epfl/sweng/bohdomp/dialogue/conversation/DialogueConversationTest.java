@@ -14,6 +14,7 @@ import java.util.List;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
@@ -36,8 +37,8 @@ public class DialogueConversationTest extends MockTestCase {
     private ContactFactory mContactFactory;
     private List<Contact> mContacts;
     private Contact mContact;
-    private Contact.PhoneNumber mNumber;
-    private Contact.ChannelType mChannel;
+    private PhoneNumber mNumber;
+    private ChannelType mChannel;
     private DialogueConversation mConversation;
     private List<DialogueMessage> mMessages;
     private boolean mHasBeenCalled;
@@ -56,7 +57,7 @@ public class DialogueConversationTest extends MockTestCase {
 
 
         mNumber = mContact.getPhoneNumbers().iterator().next();
-        mChannel = Contact.ChannelType.SMS;
+        mChannel = ChannelType.SMS;
 
         mConversation = new DialogueConversation(mContacts);
         mMessages = new ArrayList<DialogueMessage>();
@@ -221,14 +222,14 @@ public class DialogueConversationTest extends MockTestCase {
     }
 
     public void testPhoneNumber() {
-        Contact.PhoneNumber number = mContact.getPhoneNumbers().iterator().next();
+        PhoneNumber number = mContact.getPhoneNumbers().iterator().next();
         mConversation.setPhoneNumber(number);
 
         assertEquals(number, mConversation.getPhoneNumber());
     }
 
     public void testChannel() {
-        Contact.ChannelType channel = Contact.ChannelType.SMS;
+        ChannelType channel = ChannelType.SMS;
         mConversation.setChannel(channel);
 
         assertEquals(channel, mConversation.getChannel());

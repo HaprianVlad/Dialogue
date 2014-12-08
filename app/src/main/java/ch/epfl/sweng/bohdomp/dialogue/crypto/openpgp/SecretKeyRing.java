@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -20,6 +21,7 @@ public class SecretKeyRing extends SecretKeyLike implements KeyRing<SecretKey> {
 
     SecretKeyRing(PGPSecretKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");
+
         this.mUnderlying = underlyingKeyRing;
     }
 

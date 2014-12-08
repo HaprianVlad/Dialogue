@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
@@ -143,13 +144,13 @@ public class DialogueDataNotListenerTest extends InstrumentationTestCase {
         Conversation conversationBefore = mDialogueData.createOrGetConversation(contact1);
         assertNull(conversationBefore.getChannel());
 
-        conversationBefore.setChannel(Contact.ChannelType.SMS);
+        conversationBefore.setChannel(ChannelType.SMS);
 
         mDialogueData.updateConversation(conversationBefore);
 
         Conversation conversationAfter = mDialogueData.createOrGetConversation(contact1);
         assertNotNull(conversationAfter.getChannel());
-        assertEquals(Contact.ChannelType.SMS, conversationAfter.getChannel());
+        assertEquals(ChannelType.SMS, conversationAfter.getChannel());
 
         mDialogueData.removeConversation(conversationBefore.getId());
         mDialogueData.removeConversation(conversationAfter.getId());

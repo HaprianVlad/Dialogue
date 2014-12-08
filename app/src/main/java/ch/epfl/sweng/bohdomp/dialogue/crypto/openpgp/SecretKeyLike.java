@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.StreamUtils;
 
@@ -61,6 +62,7 @@ public abstract class SecretKeyLike {
         } else if (plain instanceof PGPCompressedData) {
             PGPCompressedData compressed = (PGPCompressedData) plain;
             BcPGPObjectFactory fact = new BcPGPObjectFactory(compressed.getDataStream());
+
             return extractLiteral(fact.nextObject());
         } else if (plain instanceof PGPOnePassSignature) {
             throw new PGPException("Cannot extract message, it is a signature");
@@ -113,25 +115,20 @@ public abstract class SecretKeyLike {
             throw new PGPException("No secret key found that can decrypt this message");
         }
 
-        Decryptable packet = new Decryptable(data, priv);
-        return packet;
+        return new Decryptable(data, priv);
     }
 
     private InputStream decrypt(Decryptable decryptable) throws IOException, PGPException {
         BcPublicKeyDataDecryptorFactory decryptor = new BcPublicKeyDataDecryptorFactory(decryptable.getPrivateKey());
         InputStream clear = null;
-        InputStream message = null;
+
         try {
             clear = decryptable.getEncrypted().getDataStream(decryptor);
-            message = extractLiteral(new BcPGPObjectFactory(clear).nextObject()).getInputStream();
-            return message;
+            return extractLiteral(new BcPGPObjectFactory(clear).nextObject()).getInputStream();
         } finally {
             //bouncy castle requires the client to close streams
             if (clear != null) {
                 clear.close();
-            }
-            if (message != null) {
-                message.close();
             }
         }
     }
@@ -148,9 +145,13 @@ public abstract class SecretKeyLike {
         throws IOException, PGPException, IncorrectPassphraseException {
 
         PGPEncryptedDataList decoded = decode(encrypted);
+
         Decryptable decryptable = findDecryptable(decoded, passphrase.toCharArray());
         InputStream message = decrypt(decryptable);
+
         StreamUtils.pipe(message, decrypted);
+
+        message.close();
     }
 
     private String decryptUnsafe(String message, String passphrase)
@@ -158,10 +159,14 @@ public abstract class SecretKeyLike {
 
         byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
         InputStream in = new ByteArrayInputStream(bytes);
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         decrypt(in, out, passphrase);
+
         in.close();
         out.close();
+
         return new String(out.toByteArray(), StandardCharsets.UTF_8);
     }
 

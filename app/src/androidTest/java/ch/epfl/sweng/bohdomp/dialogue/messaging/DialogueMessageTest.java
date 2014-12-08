@@ -6,8 +6,10 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 import ch.epfl.sweng.bohdomp.dialogue.testing.MockTestCase;
 
@@ -27,10 +29,10 @@ public class DialogueMessageTest extends MockTestCase {
     private Context mContext;
 
     private ContactFactory mContactFactory;
-    private Contact.PhoneNumber.Tag mTag;
+    private PhoneNumber.Tag mTag;
     private Contact mContact;
-    private Contact.PhoneNumber mNumber;
-    private Contact.ChannelType mChannel;
+    private PhoneNumber mNumber;
+    private ChannelType mChannel;
     private DialogueMessage mMessage;
 
     public void setUp() throws Exception {
@@ -41,9 +43,9 @@ public class DialogueMessageTest extends MockTestCase {
 
         mContact = mContactFactory.contactFromNumber(PHONE_NUMBER);
 
-        mTag = Contact.PhoneNumber.Tag.MOBILE;
-        mNumber = new Contact.PhoneNumber(PHONE_NUMBER, mTag);
-        mChannel = Contact.ChannelType.SMS;
+        mTag = PhoneNumber.Tag.MOBILE;
+        mNumber = new PhoneNumber(PHONE_NUMBER, mTag);
+        mChannel = ChannelType.SMS;
 
         DateTimeUtils.setCurrentMillisFixed(MESSAGE_CREATION_TIME.getMillis());
         mMessage = new DialogueTextMessage(mContact, mChannel, mNumber, MESSAGE_BODY, INCOMING);

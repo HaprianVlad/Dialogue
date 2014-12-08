@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -75,16 +77,16 @@ public class ConversationSettingsActivity extends Activity {
 
         Contact contact = mContact.get(0);
 
-        Set<Contact.ChannelType> channels = contact.availableChannels();
+        Set<ChannelType> channels = contact.availableChannels();
 
-        Contact.ChannelType convChannel = mConversation.getChannel();
-        Contact.PhoneNumber convNumber = mConversation.getPhoneNumber();
+        ChannelType convChannel = mConversation.getChannel();
+        PhoneNumber convNumber = mConversation.getPhoneNumber();
 
-        for (Contact.ChannelType channel : channels) {
+        for (ChannelType channel : channels) {
 
-            Set<Contact.PhoneNumber> numbers = contact.getPhoneNumbers(channel);
+            Set<PhoneNumber> numbers = contact.getPhoneNumbers(channel);
 
-            for (Contact.PhoneNumber number :numbers) {
+            for (PhoneNumber number :numbers) {
                 RadioButton btn = new RadioButton(this);
 
                 if (convNumber != null && convNumber.getNumber().equals(number.getNumber()) && convChannel == channel) {
@@ -117,8 +119,8 @@ public class ConversationSettingsActivity extends Activity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton btn = (RadioButton) radioGroup.findViewById(i);
 
-                Contact.ChannelType channel = (Contact.ChannelType) btn.getTag(R.id.id_channel);
-                Contact.PhoneNumber number = (Contact.PhoneNumber) btn.getTag(R.id.id_phoneNumber);
+                ChannelType channel = (ChannelType) btn.getTag(R.id.id_channel);
+                PhoneNumber number = (PhoneNumber) btn.getTag(R.id.id_phoneNumber);
 
                 mConversation.setChannel(channel);
                 mConversation.setPhoneNumber(number);

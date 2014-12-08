@@ -23,7 +23,6 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
     private int mNParts;
     private int partsReceived = 0;
-
     private boolean hasSucceeded = true;
 
     /**
@@ -71,13 +70,11 @@ public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
 
             partsReceived += 1;
 
-            if (partsReceived == mNParts) {
-                if (hasSucceeded) {
-                    DialogueMessage message = DialogueMessage.extractMessage(intent);
-                    DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.SENT);
+            if ((partsReceived == mNParts) && hasSucceeded) {
+                DialogueMessage message = DialogueMessage.extractMessage(intent);
+                DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.SENT);
 
-                    writeToSmsProvider(context, message);
-                }
+                writeToSmsProvider(context, message);
             }
         }
     }

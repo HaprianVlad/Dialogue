@@ -18,6 +18,7 @@ public class SecretKeyChain extends KeyChain<SecretKeyRing> {
 
     public SecretKeyChain(PGPSecretKeyRingCollection underlying) {
         Contract.throwIfArgNull(underlying, "underlying");
+
         this.mUnderlying = underlying;
     }
 

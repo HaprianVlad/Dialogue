@@ -28,22 +28,26 @@ public interface DialogueData {
      * @param id of the conversation we are looking for.
      * @return DialogueConversation associated to the given id.
      */
-    Conversation getConversation(ConversationId id);
+    Conversation getConversation(final ConversationId id);
 
     /**
      * Adds a dialogueConversation to the data
      * @param contact a new dialogueConversation
      * @return the new or found conversation
      */
-    Conversation createOrGetConversation(Contact contact);
+    Conversation createOrGetConversation(final Contact contact);
 
 
     /**
      * Delete the conversation with the given ID
      */
-    void removeConversation(ConversationId id);
+    void removeConversation(final ConversationId id);
 
-    void updateConversation(Conversation conversation);
+    /**
+     * Looks for the conversation by ID. If it is present replaces with this new id.
+     * @param conversation the conversation to update
+     */
+    void updateConversation(final Conversation conversation);
 
     /**
      * Delete all conversations
@@ -54,7 +58,7 @@ public interface DialogueData {
      * Adds the message to the correct conversation.
      * @param message to be added.
      */
-    void addMessageToConversation(DialogueMessage message);
+    void addMessageToConversation(final DialogueMessage message);
 
     /**
      * Sets the status of the message.
@@ -67,19 +71,19 @@ public interface DialogueData {
      * Adds a listener to Dialogue Data
      * @param listener the listener to add
      */
-    void addListener(DialogueDataListener listener);
+    void addListener(final DialogueDataListener listener);
 
     /**
      * Removes a listener from Dialogue Data
      * @param listener the listener to be removed
      */
-    void removeListener(DialogueDataListener listener);
+    void removeListener(final DialogueDataListener listener);
 
     /**
      * Method that recreates the dialogue data from a bundle saved state
      * @param savedData the save state of the application
      */
-    void restoreFromBundle(Bundle savedData);
+    void restoreFromBundle(final Bundle savedData);
 
     /**
      * Method that creates a bundle containing the state of the application
