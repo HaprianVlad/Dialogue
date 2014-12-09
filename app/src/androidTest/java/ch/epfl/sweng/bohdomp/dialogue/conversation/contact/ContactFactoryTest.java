@@ -301,7 +301,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     }
 
     public void testFingerprintInsertionSingleInsertion()
-        throws FingerprintInsertionException, ContactLookupException {
+        throws FingerprintInsertionException, ContactLookupException, NoFingerprintException {
 
         final String lookupKey = lookupKeyFromPhoneNumber(PHONE_1);
         final Contact knownContact = mContactFactory.contactFromLookupKey(lookupKey);
@@ -323,7 +323,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     }
 
     public void testFingerprintInsertionDoubleInsertion()
-        throws FingerprintInsertionException, ContactLookupException {
+        throws FingerprintInsertionException, ContactLookupException, NoFingerprintException {
 
         final String lookupKey = lookupKeyFromPhoneNumber(PHONE_1);
         final Contact originalContact = mContactFactory.contactFromLookupKey(lookupKey);
@@ -335,6 +335,70 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
 
         assertTrue(updatedContact.hasFingerprint());
         assertEquals(DUMMY_FINGERPRINT_1, updatedContact.getFingerprint());
+    }
+
+    public void testFingerprintInsertionNullPhoneNumber()
+        throws FingerprintInsertionException {
+
+        try {
+            mContactFactory.insertFingerprintForPhoneNumber(null, DUMMY_FINGERPRINT_0);
+            fail("expected to throw NullArgumentException");
+        } catch (NullArgumentException e) {
+            // everything ok
+        }
+    }
+
+    public void testFingerprintInsertionInvalidPhoneNumber() throws FingerprintInsertionException {
+
+        try {
+            mContactFactory.insertFingerprintForPhoneNumber("invalid phone number", DUMMY_FINGERPRINT_0);
+            fail("expected to throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // everything ok
+        }
+    }
+
+    public void testFingerprintInsertionValidPhoneNumberNullFingerprint()
+        throws FingerprintInsertionException {
+
+        try {
+            mContactFactory.insertFingerprintForPhoneNumber(PHONE_1, null);
+            fail("expected to throw NullArgumentException");
+        } catch (NullArgumentException e) {
+            // everything ok
+        }
+    }
+
+    public void testFingerprintInsertionValidPhoneNumberInvalidFingerprint()
+        throws FingerprintInsertionException {
+
+        try {
+            mContactFactory.insertFingerprintForPhoneNumber(PHONE_1, "invalid fingerprint");
+            fail("expected to throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // everything ok
+        }
+    }
+
+    public void testFingerprintInsertionValidPhoneNumberValidFingerprint()
+        throws InvalidNumberException, FingerprintInsertionException, NoFingerprintException {
+
+        final Contact contact = mContactFactory.contactFromNumber(PHONE_1);
+
+        mContactFactory.insertFingerprintForPhoneNumber(PHONE_1, DUMMY_FINGERPRINT_0);
+
+        assertFalse(contact.hasFingerprint());
+        try {
+            contact.getFingerprint();
+            fail("expected to throw NoFingerprintException");
+        } catch (NoFingerprintException e) {
+            // continue
+        }
+
+        final Contact updated = contact.updateInfo(mContext);
+
+        assertTrue(updated.hasFingerprint());
+        assertEquals(DUMMY_FINGERPRINT_0, updated.getFingerprint());
     }
 
     private static void contactEqualityCheck(final Contact c1, final Contact c2) {

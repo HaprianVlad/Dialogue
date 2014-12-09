@@ -49,6 +49,36 @@ public class ContactFactory {
         this.mContext = context;
     }
 
+    /**
+     *
+     * @param phoneNumber phone number of the contact for which we want to add a fingerprint
+     * @param fingerprint the fingerprint to insert in the contact database
+     * @throws FingerprintInsertionException when contact associated with phoneNumber is not known
+     *                                       or insertion in database failed
+     */
+    public void insertFingerprintForPhoneNumber(final String phoneNumber, final String fingerprint)
+        throws FingerprintInsertionException {
+
+        Contract.throwIfArgNull(phoneNumber, "phoneNumber");
+        Contract.throwIfArg(!verifyPhoneNumber(phoneNumber), "invalid phone number");
+        Contract.throwIfArgNull(fingerprint, "fingerprint");
+        Contract.throwIfArg(!FingerprintUtils.isValidFingerPrint(fingerprint), "invalid fingerprint");
+
+        final String lookupKey = lookupKeyFromPhoneNumber(phoneNumber);
+
+        if (lookupKey == null) {
+            throw new FingerprintInsertionException("contact with phone number: " + phoneNumber + "not known");
+        }
+
+        insertFingerprintForLookupKey(lookupKey, fingerprint);
+    }
+
+    /**
+     *
+     * @param lookupKey android specific lookupKey of contact for which we want to add a fingerprint
+     * @param fingerprint the fingerprint to insert in the contact database
+     * @throws FingerprintInsertionException on insertion failure
+     */
     public void insertFingerprintForLookupKey(final String lookupKey, final String fingerprint)
         throws FingerprintInsertionException {
 
@@ -274,7 +304,7 @@ public class ContactFactory {
         }
 
         @Override
-        public String getFingerprint() {
+        public String getFingerprint() throws NoFingerprintException {
             if (this.mFingerprint != null) {
                 return this.mFingerprint;
             } else {
@@ -621,7 +651,7 @@ public class ContactFactory {
         }
 
         @Override
-        public String getFingerprint() {
+        public String getFingerprint() throws  NoFingerprintException {
             throw new NoFingerprintException("unknown contact has no fingerprint");
         }
 
