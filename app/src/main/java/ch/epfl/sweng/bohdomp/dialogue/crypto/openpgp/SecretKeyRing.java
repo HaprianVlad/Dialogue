@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -18,6 +17,16 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 public class SecretKeyRing extends SecretKeyLike implements KeyRing<SecretKey> {
     
     private final PGPSecretKeyRing mUnderlying;
+
+    /**
+     * Returns the underlying pgp keyring.
+     * Since bouncy castle's public and secret keys have no common ancestors, and this project's
+     * crypto API should not expose its internal dependencies, factoring this method out to a common
+     * super-class is not possible.
+     * */
+    PGPSecretKeyRing getUnderlying() {
+        return mUnderlying;
+    }
 
     SecretKeyRing(PGPSecretKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");

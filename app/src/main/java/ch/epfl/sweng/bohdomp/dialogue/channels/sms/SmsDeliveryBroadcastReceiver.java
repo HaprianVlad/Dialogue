@@ -14,7 +14,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * return by the sms manager when sending a sms message.
  */
 public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
-    private static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
+    public static final String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
 
     private int mNParts;
     private int partsReceived = 0;
@@ -66,6 +66,9 @@ public final class SmsDeliveryBroadcastReceiver extends BroadcastReceiver {
             if ((partsReceived == mNParts) && hasSucceeded) {
                 DialogueMessage message = DialogueMessage.extractMessage(intent);
                 DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.DELIVERED);
+            } else {
+                DialogueMessage message = DialogueMessage.extractMessage(intent);
+                DefaultDialogData.getInstance().setMessageStatus(message, DialogueMessage.MessageStatus.FAILED);
             }
         }
     }

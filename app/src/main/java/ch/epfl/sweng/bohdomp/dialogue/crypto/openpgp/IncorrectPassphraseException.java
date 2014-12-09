@@ -1,4 +1,4 @@
-package ch.epfl.sweng.bohdomp.dialogue.exceptions;
+package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -23,5 +23,4 @@ public class IncorrectPassphraseException extends Exception {
     public IncorrectPassphraseException(String message, Throwable throwable) {
         super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
-
 }

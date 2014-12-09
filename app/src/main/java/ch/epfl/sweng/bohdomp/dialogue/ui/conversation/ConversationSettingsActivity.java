@@ -57,6 +57,7 @@ public class ConversationSettingsActivity extends Activity {
         super.onResume();
     }
 
+
     private void initData(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "conversationId");
 
@@ -65,6 +66,7 @@ public class ConversationSettingsActivity extends Activity {
         Contract.assertNotNull(mConversation, "conversation");
 
         mContact = mConversation.getContacts();
+
     }
 
     private void setViewElements() {
@@ -101,7 +103,7 @@ public class ConversationSettingsActivity extends Activity {
         }
 
         mEncryptBox.setVisibility(View.VISIBLE);
-        mEncryptBox.setChecked(mConversation.getEncrypt());
+        mEncryptBox.setChecked(mConversation.needEncryption());
 
         if (contact.hasFingerprint()) {
             mEncryptBox.setText("Encrypt this conversation");
@@ -111,6 +113,8 @@ public class ConversationSettingsActivity extends Activity {
             mEncryptBox.setEnabled(false);
         }
     }
+
+
 
     private void setListensers() {
 
@@ -134,7 +138,7 @@ public class ConversationSettingsActivity extends Activity {
         mEncryptBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b != mConversation.getEncrypt()) {
+                if (b != mConversation.needEncryption()) {
                     mConversation.setEncrypt(b);
                 }
 

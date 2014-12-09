@@ -155,8 +155,7 @@ public class ConversationActivity extends Activity implements ConversationListen
                     DialogueMessage message = new DialogueTextMessage(contact, channel, number,
                             draftText, DialogueMessage.MessageDirection.OUTGOING);
 
-                    DialogueOutgoingDispatcher.sendMessage(view.getContext(), message,
-                            mConversation.getEncrypt());
+                    DialogueOutgoingDispatcher.sendMessage(view.getContext(), message, mConversation.needEncryption());
                 }
 
                 mNewMessageText.setText("");
@@ -173,7 +172,7 @@ public class ConversationActivity extends Activity implements ConversationListen
             intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
             startActivity(intent);
         }
-
+        
         super.onResume();
     }
     @Override
