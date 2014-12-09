@@ -72,7 +72,7 @@ public class ConversationSettingsActivityTest extends ActivityUnitTestCase<Conve
         super.tearDown();
     }
 
-    public void testSetup(){
+    public void testSetup() {
         assertNotNull("Not setup correctly", DefaultDialogData.getInstance().getConversation(mConversation.getId()));
         assertEquals("Not setup correctly", 0, mConversation.getMessageCount());
     }
