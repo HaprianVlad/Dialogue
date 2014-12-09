@@ -5,7 +5,7 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 /**
  * exception for trying to get non-existing fingerpint
  */
-public class NoFingerprintException extends UnsupportedOperationException {
+public class NoFingerprintException extends DialogueException {
     private static final long serialVersionUID = 1L;
 
     public NoFingerprintException() {

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.Set;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NoFingerprintException;
 
 /**
  * interface representing a Contact
@@ -16,7 +17,7 @@ public interface Contact extends Parcelable {
     Set<PhoneNumber> getPhoneNumbers(ChannelType channel);
     Set<ChannelType> availableChannels();
     boolean hasFingerprint();
-    String getFingerprint();
+    String getFingerprint() throws NoFingerprintException;
     Contact updateInfo(final Context context);
     Creator<Contact> getParcelCreator();
 }
