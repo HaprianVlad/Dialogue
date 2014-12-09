@@ -23,7 +23,7 @@ android {
 
         debug{
            //manually enable if needed, currently it breaks all builds.
-	        testCoverageEnabled true
+	        testCoverageEnabled false
         }
     }
 

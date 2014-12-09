@@ -14,15 +14,13 @@
 
     <!-- Used to write key fingerprints to contacts -->
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-<<<<<<< HEAD
 
     <!-- Used for communicating with key servers -->
     <uses-permission android:name="android.permission.INTERNET" />
-=======
-    <uses-permission android:name="android.permission.READ_SMS"/>
+
+    <!-- Used for communicating through NFC -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.NFC"/>
->>>>>>> Create finger print activity
 
     <application
         android:allowBackup="true"
