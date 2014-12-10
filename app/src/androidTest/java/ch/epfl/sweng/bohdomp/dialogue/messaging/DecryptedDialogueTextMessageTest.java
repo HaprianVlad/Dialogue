@@ -9,18 +9,16 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 
-
 /**
- * Tests the EncryptedDialogueTextMessage class.
+ * Tests the DecryptedDialogueTextMessage class.
  */
-public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
+public class DecryptedDialogueTextMessageTest extends AndroidTestCase {
     public void testParcelRoundTrip() throws InvalidNumberException {
         Contact contact = new ContactFactory(getContext()).contactFromNumber("1234");
 
         PhoneNumber phoneNumber = (PhoneNumber) contact.getPhoneNumbers(ChannelType.SMS).toArray()[0];
 
-        EncryptedDialogueTextMessage message = new EncryptedDialogueTextMessage(getContext(),
-                contact, ChannelType.SMS, phoneNumber, "test",
+        DialogueMessage message = new DialogueTextMessage(contact, ChannelType.SMS, phoneNumber, "test",
                 DialogueMessage.MessageDirection.OUTGOING);
 
         Parcel parcel = Parcel.obtain();
@@ -28,7 +26,7 @@ public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
 
         parcel.setDataPosition(0); // reset parcel for reading
 
-        DialogueMessage messageFromParcel = EncryptedDialogueTextMessage.CREATOR.createFromParcel(parcel);
+        DialogueMessage messageFromParcel = DecryptedDialogueTextMessage.CREATOR.createFromParcel(parcel);
 
         parcel.recycle();
 
@@ -43,8 +41,7 @@ public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
 
         PhoneNumber phoneNumber = (PhoneNumber) contact.getPhoneNumbers(ChannelType.SMS).toArray()[0];
 
-        EncryptedDialogueTextMessage message = new EncryptedDialogueTextMessage(getContext(),
-                contact, ChannelType.SMS, phoneNumber, "test",
+        DialogueMessage message = new DecryptedDialogueTextMessage(contact, ChannelType.SMS, phoneNumber, "test",
                 DialogueMessage.MessageDirection.OUTGOING);
 
         assertTrue(message.isEncrypted());
