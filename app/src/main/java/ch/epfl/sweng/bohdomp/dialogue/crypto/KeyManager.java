@@ -178,16 +178,12 @@ public class KeyManager {
     }
 
     /**
-     * Publish this account's public key ring to a keyserver
+     * Publish a public key ring in the keychain to a keyserver
      */
-    private synchronized void publishOwnKeyRing() throws IOException, PGPException, HkpServerException,
+    public synchronized void publishKeyRing(String fingerprint) throws IOException, PGPException, HkpServerException,
         KeyNotFoundException {
 
-        if (!hasOwnFingerprint()) {
-            throw new KeyNotFoundException("No own key is set");
-        }
-
-        PublicKeyRing ring = getPublicKeyRing(getOwnFingerprint());
+        PublicKeyRing ring = getPublicKeyRing(fingerprint);
 
         mHkpClient.submitKeyRing(ring);
     }
