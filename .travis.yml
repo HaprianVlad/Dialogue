@@ -20,5 +20,8 @@ before_script:
     - adb shell input keyevent 82 &
 
 script:
-    - ./gradlew build connectedCheck
+    # Travis has a 10 minute response limit after which tasks are terminated.
+    # Since tests take longer than the limit something needs to written to stdout,
+    # therefore gradle is run with -i
+    - ./gradlew -i build connectedCheck
   
