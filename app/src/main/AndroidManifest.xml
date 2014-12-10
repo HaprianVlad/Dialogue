@@ -62,6 +62,17 @@
             </intent-filter>
         </receiver>
 
+        <!-- BroadcastReceiver that listens for incoming MMS messages -->
+        <receiver
+            android:name=".channels.mms.MmsBroadcastReceiver"
+            android:permission="android.permission.BROADCAST_WAP_PUSH" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+
+                <data android:mimeType="application/vnd.wap.mms-message" />
+            </intent-filter>
+        </receiver>
+
         <!-- Service that sends messages during phone call using this app -->
         <service
             android:name=".channels.sms.HeadlessSmsSendService"
