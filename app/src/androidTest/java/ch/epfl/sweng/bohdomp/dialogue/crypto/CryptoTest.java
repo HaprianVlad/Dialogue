@@ -15,6 +15,12 @@ public final class CryptoTest extends AndroidTestCase {
         mMessage = "test message";
     }
 
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        TestKeyData.setKeys(getContext());
+    }
+
     public void testEncryption() throws Exception {
         //this should succeed, the specific cryptographic functionality is tested in PrimitiveTest
         Crypto.encrypt(getContext(), mMessage, TestKeyData.FINGERPRINT);

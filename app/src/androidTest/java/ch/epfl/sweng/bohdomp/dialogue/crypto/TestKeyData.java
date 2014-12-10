@@ -1,5 +1,14 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChain;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChainBuilder;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyChain;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyChainBuilder;
+
 /**
  * Example OpenPGP key. Generated with GnuPg v1.4.18. All data is in ascii format
  * (armored where relevant).
@@ -9,6 +18,8 @@ public class TestKeyData {
     public final static String REAL_NAME = "John White";
 
     public final static String EMAIL = "john.white@example.com";
+
+    public final static String ID = REAL_NAME + " <" + EMAIL + ">";
 
     public final static String PASSPHRASE = "demo";
 
@@ -107,4 +118,32 @@ public class TestKeyData {
             + "gyeO107kKspF61FkD3bLZQ8DJTw=\n"
             + "=4Swq\n"
             + "-----END PGP PRIVATE KEY BLOCK-----\n";
+
+    private final static String PUBLIC_KEY_CHAIN_PATH = "pubchain.asc";
+
+    private final static String SECRET_KEY_CHAIN_PATH = "secchain.asc";
+
+    /**
+     * Import the dummy keys into a context to allow testing
+     */
+    public static void setKeys(Context context) throws Exception {
+        clearKeys(context);
+        KeyManager manager = new KeyManager(context);
+        SecretKeyChain secretChain = new SecretKeyChainBuilder().fromString(TestKeyData.SECRET_KEY_RING);
+        PublicKeyChain publicChain = new PublicKeyChainBuilder().fromString(TestKeyData.PUBLIC_KEY_RING);
+        manager.importKeyPair(
+                secretChain.getKeyRing(TestKeyData.FINGERPRINT),
+                publicChain.getKeyRing(TestKeyData.FINGERPRINT));
+        manager.setOwn(TestKeyData.FINGERPRINT, TestKeyData.PASSPHRASE);
+    }
+
+    /**
+     * Clear the dummy keys from a context to allow testing
+     */
+    public static void clearKeys(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().clear().apply();
+        context.deleteFile(PUBLIC_KEY_CHAIN_PATH);
+        context.deleteFile(SECRET_KEY_CHAIN_PATH);
+    }
 }

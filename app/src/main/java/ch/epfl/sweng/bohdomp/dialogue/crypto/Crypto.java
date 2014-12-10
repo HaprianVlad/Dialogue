@@ -6,7 +6,6 @@ import org.bouncycastle.openpgp.PGPException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.hkp.HkpServerException;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
@@ -21,24 +20,24 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 public class Crypto {
 
     private static PublicKey getEncryptionKey(Context context, String fingerprint) throws IOException, PGPException,
-        NoSuchElementException, HkpServerException, KeyNotFoundException {
+        HkpServerException, KeyNotFoundException {
 
         KeyManager manager = new KeyManager(context);
         PublicKeyRing ring = manager.getPublicKeyRing(fingerprint);
 
         List<PublicKey> encryptionKeys = ring.getEncryptionKeys();
         if (encryptionKeys.size() == 0) {
-            throw new NoSuchElementException("No public keys of fingerprint \"" + fingerprint
+            throw new KeyNotFoundException("No public keys of fingerprint \"" + fingerprint
                     + "\" support encryption.");
         }
         return encryptionKeys.get(0); //the first (default) encryption key is used
     }
 
     private static String decryptUnsafe(Context context, String message) throws IOException, PGPException,
-            IncorrectPassphraseException, KeyNotFoundException {
+        IncorrectPassphraseException, KeyNotFoundException {
 
         KeyManager manager = new KeyManager(context);
-        String passphrase = KeyManager.PASSPHRASE; //TODO retrieve passphrase from account management
+        String passphrase = manager.getOwnPassphrase();
         return manager.getSecretKeyChain().decrypt(message, passphrase);
     }
 
@@ -53,8 +52,6 @@ public class Crypto {
         } catch (IOException ex) {
             throw new CryptoException("Cannot encrypt message", ex);
         } catch (PGPException ex) {
-            throw new CryptoException("Cannot encrypt message", ex);
-        } catch (NoSuchElementException ex) {
             throw new CryptoException("Cannot encrypt message", ex);
         } catch (HkpServerException ex) {
             throw new CryptoException("Cannot encrypt message", ex);
@@ -79,12 +76,10 @@ public class Crypto {
             throw new CryptoException("Cannot decrypt message", ex);
         } catch (PGPException ex) {
             throw new CryptoException("Cannot decrypt message", ex);
-        } catch (NoSuchElementException ex) {
-            throw new CryptoException("Cannot decrypt message", ex);
         } catch (IncorrectPassphraseException ex) {
             throw new CryptoException("Cannot decrypt message, wrong password", ex);
         } catch (KeyNotFoundException ex) {
-            throw new CryptoException("Cannot decrypt message, it was not encrypted to you", ex);
+            throw new CryptoException("Cannot decrypt message, you do not have a matching secret key", ex);
         }
     }
 
