@@ -22,7 +22,7 @@ public class DecryptedDialogueTextMessage extends DialogueMessage {
 
     @Override
     public MessageBody newBody(String body) {
-        return null;
+        return new TextMessageBody(body);
     }
 
     @Override
