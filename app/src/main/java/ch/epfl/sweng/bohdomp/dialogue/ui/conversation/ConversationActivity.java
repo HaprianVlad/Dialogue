@@ -3,6 +3,7 @@ package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -69,6 +70,10 @@ public class ConversationActivity extends Activity implements ConversationListen
             throw new IllegalArgumentException(e);
         }
 
+        NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter != null) {
+            mNfcAdapter.setNdefPushMessage(null, this);
+        }
     }
 
     private void setupActionBar() {

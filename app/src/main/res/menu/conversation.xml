@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity" >
 
-    <!--  Items should appear in the dropdown menu  -->
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"

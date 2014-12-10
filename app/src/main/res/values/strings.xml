@@ -27,6 +27,7 @@
     <string name="wasteBin">Waste Bin</string>
     <string name="title_activity_conversation_settings_activity">Select Channel</string>
     <string name="selectButton">select</string>
+
     <string-array name="days_of_week">
         <item>Monday</item>
         <item>Tuesday</item>
@@ -36,5 +37,10 @@
         <item>Saturday</item>
         <item>Sunday</item>
     </string-array>
+
+    <string name="title_activity_finger_print_exchange">FingerPrintExchange</string>
+    <string name="bringPhone">Please bring your phone together</string>
+    <string name="cancel">Cancel</string>
+    <string name="fingerprint">fingerprint</string>
 
 </resources>
