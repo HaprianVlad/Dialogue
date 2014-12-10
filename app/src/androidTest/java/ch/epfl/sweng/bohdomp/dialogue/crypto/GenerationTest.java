@@ -4,6 +4,8 @@ import android.test.AndroidTestCase;
 
 import junit.framework.Assert;
 
+import java.security.SecureRandom;
+
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.SecretKeyRing;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.generation.KeyRingPair;
@@ -24,8 +26,9 @@ public class GenerationTest extends AndroidTestCase {
     private final static int KEY_CERTAINTY = 1;
     private final static int KEY_S2K_COUNT = 0x20;
 
-    private RsaKeyRingGenerator getGenerator() {
-        return new RsaKeyRingGenerator(KEY_LENGTH, KEY_EXPONENT, KEY_CERTAINTY, KEY_S2K_COUNT);
+    private RsaKeyRingGenerator getGenerator() throws Exception {
+        SecureRandom nonBlocking = SecureRandom.getInstance("SHA1PRNG");
+        return new RsaKeyRingGenerator(KEY_LENGTH, KEY_EXPONENT, KEY_CERTAINTY, KEY_S2K_COUNT, nonBlocking);
     }
 
     public void testGeneration() throws Exception {

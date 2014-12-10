@@ -63,16 +63,19 @@ public class RsaKeyRingGenerator {
     private final static int DEFAULT_S2K_COUNT = 0xc0;
 
     public static RsaKeyRingGenerator getDefault() {
-        return new RsaKeyRingGenerator(DEFAULT_KEY_LENGTH, DEFAULT_EXPONENT, DEFAULT_CERTAINTY, DEFAULT_S2K_COUNT);
+        return new RsaKeyRingGenerator(DEFAULT_KEY_LENGTH, DEFAULT_EXPONENT, DEFAULT_CERTAINTY, DEFAULT_S2K_COUNT,
+                new SecureRandom());
     }
 
     private final RSAKeyGenerationParameters mRsaParameters;
     private final int mS2kCount;
 
-    public RsaKeyRingGenerator(int keyLength, int exponent, int certainty, int s2kCount) {
+    public RsaKeyRingGenerator(int keyLength, int exponent, int certainty, int s2kCount, SecureRandom random) {
+        Contract.throwIfArgNull(random, "random");
+
         this.mRsaParameters = new RSAKeyGenerationParameters(
                 BigInteger.valueOf(exponent),
-                new SecureRandom(),
+                random,
                 keyLength,
                 certainty);
         this.mS2kCount = s2kCount;
