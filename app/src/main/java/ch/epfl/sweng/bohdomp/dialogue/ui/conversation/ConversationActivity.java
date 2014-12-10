@@ -160,7 +160,7 @@ public class ConversationActivity extends Activity implements ConversationListen
                     DialogueMessage message = new DialogueTextMessage(contact, channel, number,
                             draftText, DialogueMessage.MessageDirection.OUTGOING);
 
-                    DialogueOutgoingDispatcher.sendMessage(view.getContext(), message, mConversation.needEncryption());
+                    DialogueOutgoingDispatcher.sendMessage(view.getContext(), message, true);
                 }
 
                 mNewMessageText.setText("");

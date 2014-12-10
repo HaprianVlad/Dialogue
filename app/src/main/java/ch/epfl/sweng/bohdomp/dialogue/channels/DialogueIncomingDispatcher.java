@@ -9,11 +9,10 @@ import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.CryptoException;
-
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
+import ch.epfl.sweng.bohdomp.dialogue.messaging.DecryptedDialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.TextMessageBody;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -65,7 +64,7 @@ public final class DialogueIncomingDispatcher extends IntentService {
                     TextMessageBody decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
                             message.getBody().getMessageBody()));
 
-                    DialogueMessage decryptedMessage = new DialogueTextMessage(message.getContact(),
+                    DialogueMessage decryptedMessage = new DecryptedDialogueTextMessage(message.getContact(),
                             message.getChannel(), message.getPhoneNumber(), decryptedBody.getMessageBody(),
                             message.getDirection());
 

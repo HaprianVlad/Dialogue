@@ -153,7 +153,14 @@ public class MessagesAdapter extends BaseAdapter {
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
 
-            viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80DEEA"), PorterDuff.Mode.MULTIPLY);
+            if (msg.isEncrypted()) {
+                viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80EA9D"),
+                        PorterDuff.Mode.MULTIPLY);
+            } else {
+                viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80DEEA"),
+                        PorterDuff.Mode.MULTIPLY);
+            }
+
             viewHolder.wrapper.setGravity(Gravity.RIGHT);
 
             switch(msg.getStatus()) {
@@ -178,10 +185,15 @@ public class MessagesAdapter extends BaseAdapter {
             viewHolder.wrapper.clearAnimation();
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
 
-            viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DD0E1"),
-                    PorterDuff.Mode.MULTIPLY);
-            viewHolder.wrapper.setGravity(Gravity.LEFT);
+            if (msg.isEncrypted()) {
+                viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DE16D"),
+                        PorterDuff.Mode.MULTIPLY);
+            } else {
+                viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DD0E1"),
+                        PorterDuff.Mode.MULTIPLY);
+            }
 
+            viewHolder.wrapper.setGravity(Gravity.LEFT);
         }
     }
 

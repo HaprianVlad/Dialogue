@@ -63,6 +63,11 @@ public class EncryptedDialogueTextMessage extends DialogueMessage {
     }
 
     @Override
+    public boolean isEncrypted() {
+        return true;
+    }
+
+    @Override
     public MessageBody newBody(String body) {
         return new TextMessageBody(body);
     }

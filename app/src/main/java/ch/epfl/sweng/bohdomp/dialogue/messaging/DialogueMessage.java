@@ -206,6 +206,10 @@ public abstract class DialogueMessage implements Parcelable {
         return mIsDataMessage;
     }
 
+    public boolean isEncrypted() {
+        return false;
+    }
+
     /**
      * Sets the message status.
      * @param status to be set to.
