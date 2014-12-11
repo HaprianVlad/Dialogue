@@ -214,7 +214,7 @@ public class ContactFactory {
         Cursor rawIdCursor = context.getContentResolver().query(
                 ContactsContract.RawContacts.CONTENT_URI,
                 new String[] {ContactsContract.RawContacts._ID},
-                ContactsContract.RawContacts._ID + " = ?",
+                ContactsContract.RawContacts.CONTACT_ID + " = ?",
                 new String[] {id},
                 null);
 
@@ -401,11 +401,17 @@ public class ContactFactory {
                 throw new ContactLookupException("got an invalid id");
             }
 
+            final Set<String> rawIds = rawContactIdsFromId(contactId, context);
+
+            Contract.assertTrue(rawIds.iterator().hasNext(), "contact must have raw ids associated!");
+
+            final String rawId = rawIds.iterator().next();
+
             Cursor fingerprintCursor = context.getContentResolver().query(
                     ContactsContract.Data.CONTENT_URI,
                     new String[] {ContactsContract.Data.DATA1},
-                    ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
-                    new String[] {contactId, FINGERPRINT_MIMETYPE},
+                    ContactsContract.Data.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?",
+                    new String[] {rawId, FINGERPRINT_MIMETYPE},
                     null);
 
             if (fingerprintCursor == null) {
