@@ -48,8 +48,8 @@ public class MessagesAdapter extends BaseAdapter {
         protected LinearLayout wrapperParent;
         protected LinearLayout wrapper;
 
+        protected TextView header;
         protected TextView body;
-        protected TextView timeStamp;
 
         protected boolean anim = false;
     }
@@ -130,8 +130,8 @@ public class MessagesAdapter extends BaseAdapter {
         viewHolder.wrapperParent = (LinearLayout) convertView.findViewById(R.id.wrapperParent);
         viewHolder.wrapper = (LinearLayout) convertView.findViewById(R.id.wrapper);
 
+        viewHolder.header = (TextView) convertView.findViewById(R.id.header);
         viewHolder.body = (TextView) convertView.findViewById(R.id.body);
-        viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.timeStamp);
 
         return viewHolder;
     }
@@ -147,16 +147,22 @@ public class MessagesAdapter extends BaseAdapter {
 
         String body = msg.getPlainTextBody().getMessageBody();
         viewHolder.body.setText(body);
-        viewHolder.timeStamp.setText(msg.prettyTimeStamp(mContext));
+        viewHolder.header.setText(msg.prettyTimeStamp(mContext));
         viewHolder.wrapper.clearAnimation();
 
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
 
             if (msg.isEncrypted()) {
+                viewHolder.header.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_padlock, //right
+                        0, //top
+                        0, //left
+                        0); //bottom
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80EA9D"),
                         PorterDuff.Mode.MULTIPLY);
             } else {
+                viewHolder.header.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#80DEEA"),
                         PorterDuff.Mode.MULTIPLY);
             }
