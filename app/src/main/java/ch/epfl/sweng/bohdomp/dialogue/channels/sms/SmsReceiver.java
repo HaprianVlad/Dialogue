@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.channels.sms;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Telephony;
@@ -31,6 +32,8 @@ public final class SmsReceiver extends BroadcastReceiver {
 
         SmsMessage[] smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
         String messageBody = makeMessageBody(smsMessages);
+
+        writeToSmsProvider(context, smsMessages[0].getOriginatingAddress(), messageBody);
 
         sendToIncomingDispatcher(context, messageBody, smsMessages[0].getOriginatingAddress());
     }
@@ -70,5 +73,17 @@ public final class SmsReceiver extends BroadcastReceiver {
         Contact contact = mContactFactory.contactFromNumber(phoneNumber);
 
         return new DialogueTextMessage(contact, null, null, messageBody, DialogueMessage.MessageDirection.INCOMING);
+    }
+
+    private void writeToSmsProvider(Context context, String address, String body) {
+        Contract.assertNotNull(address, "address");
+        Contract.assertNotNull(body, "body");
+
+        ContentValues values = new ContentValues();
+
+        values.put("address", address);
+        values.put("body", body);
+
+        context.getContentResolver().insert(Telephony.Sms.Inbox.CONTENT_URI, values);
     }
 }
