@@ -7,6 +7,7 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -178,13 +179,20 @@ public class ConversationActivity extends Activity implements ConversationListen
             intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
             startActivity(intent);
         }
-        
+
         super.onResume();
     }
+
+
+    @Override
+    protected void onPause() {
+        mStorageManager.saveData();
+        super.onPause();
+    }
+
     @Override
     protected void onStop() {
         mConversation.removeListener(this);
-        mStorageManager.saveData();
         super.onStop();
     }
 

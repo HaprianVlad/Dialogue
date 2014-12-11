@@ -2,7 +2,6 @@ package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.telephony.SmsMessage;
 
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -11,7 +10,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  *  Class representing the mBody of a text message
  */
 public final class TextMessageBody implements MessageBody{
-    public final static int MAX_MESSAGE_SIZE = SmsMessage.MAX_USER_DATA_BYTES;
     private final String mBody;
 
     public TextMessageBody(String body) {
