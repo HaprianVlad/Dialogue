@@ -8,7 +8,8 @@
     <string name="title_activity_conversation">New Conversation</string>
     <string name="defaultSMSAppWarning">Warning: Dialogue is not set as default SMS application</string>
     <string name="contactName">Alois Bonjour</string>
-    <string name="contactChannels">SMS / Telegramme</string>
+    <string name="allContactChannels">SMS / Encrypted SMS</string>
+    <string name="noEncryptionChannel">SMS</string>
     <string name="lastMessageDate">45m</string>
     <string name="defaultAppButton">Change</string>
     <string name="contactPictureHint">contactPicture</string>

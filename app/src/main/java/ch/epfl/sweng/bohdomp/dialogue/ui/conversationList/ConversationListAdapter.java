@@ -150,9 +150,16 @@ public class ConversationListAdapter extends BaseAdapter{
     private void setupView(Conversation c, ContactListViewHolder viewHolder) {
 
         String name = c.getName();
+        Boolean canEncrypt = c.getContacts().get(0).hasFingerprint();
         Boolean unread = c.hasUnread();
 
         viewHolder.contactName.setText(name);
+
+        if (canEncrypt) {
+            viewHolder.contactChannels.setText(mContext.getString(R.string.allContactChannels));
+        } else {
+            viewHolder.contactChannels.setText(mContext.getString(R.string.noEncryptionChannel));
+        }
 
         if (unread) {
             viewHolder.unRead.setVisibility(View.VISIBLE);

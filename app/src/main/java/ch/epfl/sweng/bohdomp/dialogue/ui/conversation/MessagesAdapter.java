@@ -184,6 +184,7 @@ public class MessagesAdapter extends BaseAdapter {
         } else if (msg.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
             viewHolder.wrapper.clearAnimation();
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
+            viewHolder.anim = false;
 
             if (msg.isEncrypted()) {
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DE16D"),

@@ -520,6 +520,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         try {
 
             if (mPhoneNumber != null) {
+                mContactFactory.insertFingerprintForPhoneNumber(mPhoneNumber, mFingerPrint);
 
             } else if (mLookUpKey != null) {
                 mContactFactory.insertFingerprintForLookupKey(mLookUpKey, mFingerPrint);
