@@ -1,8 +1,11 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
 import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 
@@ -42,4 +45,25 @@ public class TestContactUtils {
         context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
     }
 
+    /* inspired by
+     * http://stackoverflow.com/questions/9625308/android-find-a-contact-by-display-name
+     */
+    public static void removeContactByDisplayName(Context context, final String displayName) {
+        ContentResolver resolver = context.getContentResolver();
+
+        Cursor lookUpKeyCursor = resolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                new String[] {ContactsContract.PhoneLookup.LOOKUP_KEY},
+                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME + " = ?",
+                new String[] {displayName},
+                null);
+
+        if (lookUpKeyCursor.moveToFirst()) {
+            String lookUpKey = lookUpKeyCursor.getString(
+                    lookUpKeyCursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+
+            Uri deletionUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookUpKey);
+            resolver.delete(deletionUri, null, null);
+        }
+    }
 }
