@@ -4,7 +4,7 @@ package ch.epfl.sweng.bohdomp.dialogue.channels;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
 import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
@@ -60,6 +60,7 @@ public final class DialogueIncomingDispatcher extends IntentService {
             DialogueMessage message = DialogueMessage.extractMessage(intent);
 
             if (Crypto.isEncrypted(message.getBody().getMessageBody())) {
+
                 try {
                     TextMessageBody decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
                             message.getBody().getMessageBody()));
@@ -70,7 +71,7 @@ public final class DialogueIncomingDispatcher extends IntentService {
 
                     DefaultDialogData.getInstance().addMessageToConversation(decryptedMessage);
                 } catch (CryptoException e) {
-                    Log.e("DECRYPTION", "decryption failed", e);
+                    
                     Toast.makeText(getApplicationContext(),
                             "Could not decrypt message from" + message.getContact().getDisplayName(),
                             Toast.LENGTH_SHORT).show();
