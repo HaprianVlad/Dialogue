@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.data;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.List;
@@ -84,6 +85,8 @@ public interface DialogueData {
      * @param savedData the save state of the application
      */
     void restoreFromBundle(final Bundle savedData);
+
+    void updateAllContacts(Context context);
 
     /**
      * Method that creates a bundle containing the state of the application

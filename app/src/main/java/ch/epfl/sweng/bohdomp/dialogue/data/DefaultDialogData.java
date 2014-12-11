@@ -1,5 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.data;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -239,5 +240,17 @@ public final class DefaultDialogData implements DialogueData {
         }
 
         return conversation;
+    }
+
+    public void updateAllContacts(Context context) {
+        Contract.throwIfArgNull(context, "context");
+
+        for(Conversation conversation : getConversations()) {
+            List<Contact> contacts =  conversation.getContacts();
+
+            for(int i = 0; i < contacts.size(); i ++) {
+                contacts.set(i, contacts.get(i).updateInfo(context));
+            }
+        }
     }
 }
