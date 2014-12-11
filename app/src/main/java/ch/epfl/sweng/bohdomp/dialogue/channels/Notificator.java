@@ -53,7 +53,7 @@ public class Notificator {
         Contract.assertNotNull(intent, "intent");
 
         return new Notification.Builder(mContext)
-                .setContentTitle("Message from:" + message.getContact().getDisplayName())
+                .setContentTitle(message.getContact().getDisplayName())
                 .setContentText(message.getPlainTextBody().getMessageBody())
                 .setAutoCancel(true)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
