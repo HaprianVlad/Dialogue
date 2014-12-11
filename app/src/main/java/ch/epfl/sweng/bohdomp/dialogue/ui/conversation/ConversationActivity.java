@@ -58,6 +58,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         Intent intent = getIntent();
 
+
         try {
             ConversationId conversationID;
             conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
@@ -94,8 +95,6 @@ public class ConversationActivity extends Activity implements ConversationListen
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
         Contract.assertNotNull(mConversation, "mConversation");
-
-
         mConversation.addListener(this);
 
         mMessages = mConversation.getMessages();
@@ -178,7 +177,7 @@ public class ConversationActivity extends Activity implements ConversationListen
             intent.putExtra(DialogueConversation.CONVERSATION_ID, mConversation.getId());
             startActivity(intent);
         }
-
+        mConversation.addListener(this);
         super.onResume();
     }
 
@@ -186,6 +185,11 @@ public class ConversationActivity extends Activity implements ConversationListen
     @Override
     protected void onPause() {
         mStorageManager.saveData();
+
+        if (mMessages.size() > 0) {
+            mConversation.setAllMessagesAsRead();
+        }
+
         super.onPause();
     }
 
