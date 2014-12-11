@@ -245,10 +245,10 @@ public final class DefaultDialogData implements DialogueData {
     public void updateAllContacts(Context context) {
         Contract.throwIfArgNull(context, "context");
 
-        for(Conversation conversation : getConversations()) {
+        for (Conversation conversation : getConversations()) {
             List<Contact> contacts =  conversation.getContacts();
 
-            for(int i = 0; i < contacts.size(); i ++) {
+            for (int i = 0; i < contacts.size(); i++) {
                 contacts.set(i, contacts.get(i).updateInfo(context));
             }
         }

@@ -526,6 +526,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
                 mContactFactory.insertFingerprintForLookupKey(mLookUpKey, mFingerPrint);
             }
 
+            mData.updateAllContacts(getApplicationContext());
+
             Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
 
         } catch (FingerprintInsertionException e) {
