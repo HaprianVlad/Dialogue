@@ -1,6 +1,8 @@
 package ch.epfl.sweng.bohdomp.dialogue.messaging;
 
+import android.content.OperationApplicationException;
 import android.os.Parcel;
+import android.os.RemoteException;
 import android.test.AndroidTestCase;
 
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
@@ -19,8 +21,17 @@ public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
 
     private static final String PHONE_NUMBER = "1234";
 
-    public void testParcelRoundTrip() throws Exception {
+    @Override
+    public void setUp() throws RemoteException, OperationApplicationException {
         TestContactUtils.addContact(getContext(), TestKeyData.REAL_NAME, PHONE_NUMBER);
+    }
+
+    @Override
+    public void tearDown() {
+        TestContactUtils.removeContactByDisplayName(getContext(), TestKeyData.REAL_NAME);
+    }
+
+    public void testParcelRoundTrip() throws Exception {
 
         ContactFactory contactFactory = new ContactFactory(getContext());
         contactFactory.insertFingerprintForPhoneNumber(PHONE_NUMBER, TestKeyData.FINGERPRINT);

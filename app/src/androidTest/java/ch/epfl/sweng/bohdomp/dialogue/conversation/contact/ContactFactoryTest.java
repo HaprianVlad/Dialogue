@@ -1,8 +1,6 @@
 package ch.epfl.sweng.bohdomp.dialogue.conversation.contact;
 
 import android.app.Application;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
@@ -12,7 +10,6 @@ import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.test.ApplicationTestCase;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,9 +58,9 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         super.setUp();
         Context context = getContext();
 
-        addContact(context, DISPLAY_NAME_1, PHONE_1);
-        addContact(context, DISPLAY_NAME_2, PHONE_2);
-        addContact(context, DISPLAY_NAME_3, PHONE_3);
+        TestContactUtils.addContact(context, DISPLAY_NAME_1, PHONE_1);
+        TestContactUtils.addContact(context, DISPLAY_NAME_2, PHONE_2);
+        TestContactUtils.addContact(context, DISPLAY_NAME_3, PHONE_3);
 
         this.mContactFactory = new ContactFactory(context);
     }
@@ -72,7 +69,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     public void tearDown() throws Exception {
         super.tearDown();
         for (final String name : ALL_NAMES) {
-            removeContactByDisplayName(getContext(), name);
+            TestContactUtils.removeContactByDisplayName(getContext(), name);
         }
     }
 
@@ -192,7 +189,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         Contact firstContact = contactFactory.contactFromNumber(phoneNumber);
 
         try {
-            addContact(context, displayName, phoneNumber);
+            TestContactUtils.addContact(context, displayName, phoneNumber);
 
             // contact should be known now since it was just added
             Contact secondContact = contactFactory.contactFromNumber(phoneNumber);
@@ -207,7 +204,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         } catch (OperationApplicationException e) {
             fail();
         } finally {
-            removeContactByDisplayName(context, displayName);
+            TestContactUtils.removeContactByDisplayName(context, displayName);
         }
     }
 
@@ -410,57 +407,6 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
     private static void contactNonEqualityCheck(final Contact c1, final Contact c2) {
         assertFalse(c1.equals(c2));
         assertFalse(c2.equals(c1));
-    }
-
-    private static void addContact(Context context, final String displayName, final String phoneNumber)
-        throws RemoteException, OperationApplicationException {
-
-        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-        // add new raw contact
-        operations.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-                .build());
-
-        operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.MIMETYPE,
-                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName)
-                .build());
-
-        operations.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phoneNumber)
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-                .build());
-
-        context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operations);
-    }
-
-    /* inspired by
-     * http://stackoverflow.com/questions/9625308/android-find-a-contact-by-display-name
-     */
-    private static void removeContactByDisplayName(Context context, final String displayName) {
-        ContentResolver resolver = context.getContentResolver();
-
-        Cursor lookUpKeyCursor = resolver.query(
-                ContactsContract.Data.CONTENT_URI,
-                new String[] {ContactsContract.PhoneLookup.LOOKUP_KEY},
-                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME + " = ?",
-                new String[] {displayName},
-                null);
-
-        if (lookUpKeyCursor.moveToFirst()) {
-            String lookUpKey = lookUpKeyCursor.getString(
-                    lookUpKeyCursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
-
-            Uri deletionUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookUpKey);
-            resolver.delete(deletionUri, null, null);
-        }
     }
 
     /*
