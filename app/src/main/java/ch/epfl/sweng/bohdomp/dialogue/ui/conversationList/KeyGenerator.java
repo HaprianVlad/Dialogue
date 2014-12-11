@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.KeyManager;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.hkp.HkpServerException;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.KeyNotFoundException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Either;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Left;
@@ -52,14 +53,17 @@ public class KeyGenerator extends AsyncTask<Void, Void, Either<Void, String>> {
             String pass = "pass"; //get password from user or generate random
             String id = "john carpenter"; //get id from user or generate random
             String fingerprint = mKeyManager.createKeyPair(id, pass);
+            mKeyManager.publishKeyRing(fingerprint);
             mKeyManager.setOwn(fingerprint, pass);
             return new Left<Void, String>(null);
         } catch (IOException ex) {
             return failure("Error occurred while saving keys", ex);
         } catch (PGPException ex) {
-            return failure("PGP exception occured", ex);
+            return failure("PGP exception occurred", ex);
         } catch (HkpServerException ex) {
             return failure("Error contacting key server, try again later", ex);
+        } catch (KeyNotFoundException ex) {
+            return failure("Could not publish key, it was not saved", ex);
         }
     }
 
