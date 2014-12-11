@@ -34,6 +34,7 @@ import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.KeyManager;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueDataListener;
@@ -57,6 +58,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private Button mChangeDefaultAppButton;
     private AlertDialog mDialogDeleteAll;
     private AlertDialog mDialogNoNfc;
+    private AlertDialog mDialogGenerateKey;
 
     private String myPackageName;
 
@@ -190,6 +192,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         setDialogDeleteAll();
         setDialogNoNfc();
+        setDialogGenerateKey();
     }
 
     private void setDialogDeleteAll() {
@@ -243,6 +246,43 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         mDialogNoNfc = builder.create();
     }
+
+    private void setDialogGenerateKey() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        dialog.cancel();
+                        KeyGenerator.showDialog(ConversationListActivity.this);
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.cancel();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        builder.setTitle("Warning");
+        builder.setMessage("You don't have a private key!");
+        builder.setPositiveButton("Generate Now", dialogClickListener);
+        builder.setNegativeButton("Cancel", dialogClickListener);
+
+        mDialogGenerateKey = builder.create();
+    }
+
+    /** Check if this application has a fingerprint associated, if not ask the user to create one */
+    private void checkFingerprint() {
+        if (!KeyManager.getInstance(getApplicationContext()).hasOwnFingerprint()) {
+            mDialogGenerateKey.show();
+        }
+    }
+
     /**
      * Check if Dialogue is the default sms app, given the result it display or not a warning
      */
@@ -284,6 +324,15 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        checkFingerprint();
+
     }
 
     @Override
@@ -348,12 +397,17 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         NfcManager manager = (NfcManager) getApplicationContext().getSystemService(Context.NFC_SERVICE);
         NfcAdapter adapter = manager.getDefaultAdapter();
 
-        if (adapter != null && adapter.isEnabled()) {
-            Intent intent = new Intent(this, FingerPrintExchangeActivity.class);
-            startActivity(intent);
+        if (KeyManager.getInstance(getApplicationContext()).hasOwnFingerprint()) {
+            if (adapter != null && adapter.isEnabled()) {
+                Intent intent = new Intent(this, FingerPrintExchangeActivity.class);
+                startActivity(intent);
+            } else {
+                mDialogNoNfc.show();
+            }
         } else {
-            mDialogNoNfc.show();
+            checkFingerprint();
         }
+
     }
 
     @Override

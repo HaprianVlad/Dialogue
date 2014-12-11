@@ -28,10 +28,15 @@ public class PublicKeyRing implements KeyRing<PublicKey> {
         return mUnderlying;
     }
 
-    PublicKeyRing(PGPPublicKeyRing underlyingKeyRing) {
+    public PublicKeyRing(PGPPublicKeyRing underlyingKeyRing) {
         Contract.throwIfArgNull(underlyingKeyRing, "underlyingKeyRing");
 
         this.mUnderlying = underlyingKeyRing;
+    }
+
+    /** Return the fingerprint of this key ring's master key */
+    public String getFingerprint() {
+        return FingerprintUtils.fromBytes(mUnderlying.getPublicKey().getFingerprint());
     }
 
     /** Returns a list of any public keys contained in this keyring. */

@@ -7,6 +7,8 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.TestContactUtils;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.TestKeyData;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 
 
@@ -14,8 +16,15 @@ import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
  * Tests the EncryptedDialogueTextMessage class.
  */
 public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
-    public void testParcelRoundTrip() throws InvalidNumberException {
-        Contact contact = new ContactFactory(getContext()).contactFromNumber("1234");
+
+    private static final String PHONE_NUMBER = "1234";
+
+    public void testParcelRoundTrip() throws Exception {
+        TestContactUtils.addContact(getContext(), TestKeyData.REAL_NAME, PHONE_NUMBER);
+
+        ContactFactory contactFactory = new ContactFactory(getContext());
+        contactFactory.insertFingerprintForPhoneNumber(PHONE_NUMBER, TestKeyData.FINGERPRINT);
+        Contact contact = contactFactory.contactFromNumber(PHONE_NUMBER);
 
         PhoneNumber phoneNumber = (PhoneNumber) contact.getPhoneNumbers(ChannelType.SMS).toArray()[0];
 
@@ -49,4 +58,5 @@ public class EncryptedDialogueTextMessageTest extends AndroidTestCase {
 
         assertTrue(message.isEncrypted());
     }
+
 }

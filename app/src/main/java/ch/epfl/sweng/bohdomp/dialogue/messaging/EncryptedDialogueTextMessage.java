@@ -10,8 +10,8 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.CryptoException;
-import ch.epfl.sweng.bohdomp.dialogue.crypto.KeyManager;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NoFingerprintException;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -108,7 +108,10 @@ public class EncryptedDialogueTextMessage extends DialogueMessage {
     private void encryptBody() {
         try {
             mEncryptedBody = new TextMessageBody(Crypto.encrypt(mContext, mMessageBody,
-                    KeyManager.FINGERPRINT));
+                    getContact().getFingerprint()));
+        } catch (NoFingerprintException e) {
+            Log.e("ENCRYPTION", "cannot encrypt to contact without fingerprint", e);
+            DefaultDialogData.getInstance().setMessageStatus(this, MessageStatus.ENCRYPTION_FAILED);
         } catch (CryptoException e) {
             Log.e("ENCRYPTION", "encryption failed", e);
             DefaultDialogData.getInstance().setMessageStatus(this, MessageStatus.ENCRYPTION_FAILED);

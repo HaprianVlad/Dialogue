@@ -61,7 +61,8 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
         TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber = tMgr.getLine1Number();
 
-        String stringOut = KeyManager.FINGERPRINT + SPLIT_NFC + phoneNumber;
+        String stringOut = KeyManager.getInstance(getApplicationContext()).getOwnFingerprint()
+                + SPLIT_NFC + phoneNumber;
 
         byte[] bytesOut = stringOut.getBytes();
 
