@@ -61,8 +61,7 @@ public class ConversationActivity extends Activity implements ConversationListen
 
 
         try {
-            ConversationId conversationID;
-            conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
+            ConversationId conversationID = intent.getParcelableExtra(DialogueConversation.CONVERSATION_ID);
 
             initData(conversationID);
             setViewElement();
@@ -211,6 +210,7 @@ public class ConversationActivity extends Activity implements ConversationListen
             @Override
             public void run() {
                 mMessageItemListAdapter.updateData(mConversation.getMessages());
+                Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(mConversation);
             }
         });
     }

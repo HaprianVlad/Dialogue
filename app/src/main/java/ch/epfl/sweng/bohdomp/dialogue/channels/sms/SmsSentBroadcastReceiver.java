@@ -17,7 +17,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * by the sms manager when sending a sms message.
  */
 public final class SmsSentBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "SmsSentBroadcastReceiver";
 
     public static final String ACTION_SMS_SENT = "SMS_SENT";
 

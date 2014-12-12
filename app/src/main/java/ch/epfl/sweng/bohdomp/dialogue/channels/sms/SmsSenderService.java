@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
@@ -121,16 +120,12 @@ public class SmsSenderService extends IntentService {
     private PendingIntent getSentPendingIntent(DialogueMessage message) {
         Contract.assertNotNull(message, "message");
 
-        Bundle bundle = new Bundle();
-
         Intent intent = new Intent(getApplicationContext(), SmsSentBroadcastReceiver.class);
         intent.setAction(SmsSentBroadcastReceiver.ACTION_SMS_SENT);
         intent.putExtra(DialogueMessage.MESSAGE, message);
 
-        PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+        return PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
-        return sentPendingIntent;
     }
 
     private PendingIntent getDeliveryPendingIntent(DialogueMessage message) {
@@ -140,10 +135,8 @@ public class SmsSenderService extends IntentService {
         intent.setAction(SmsDeliveryBroadcastReceiver.ACTION_SMS_DELIVERED);
         intent.putExtra(DialogueMessage.MESSAGE, message);
 
-        PendingIntent deliveryPendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+        return PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
-        return deliveryPendingIntent;
     }
 
     /*

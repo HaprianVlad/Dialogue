@@ -103,8 +103,8 @@ public class NewConversationActivity extends Activity {
                     goToConversation(contact);
                 } catch (InvalidNumberException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "This is not valid phone number, "
-                            + "please retry!", Toast.LENGTH_LONG).show();
+                    String msg = getString(R.string.This_Is_Not_Valid_Phone_Number_Please_Retry);
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                     mSendButton.setEnabled(false);
                 }
             }
@@ -135,8 +135,8 @@ public class NewConversationActivity extends Activity {
                 try {
                     Contact contact = mContactFactory.contactFromLookupKey(key);
                     if (contact.getPhoneNumbers().isEmpty()) {
-                        Toast.makeText(getApplicationContext(),
-                                "This contact has no phone number!", Toast.LENGTH_LONG).show();
+                        String msg = getString(R.string.This_Contact_Has_No_Phone_Number);
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                         startActivityForResult(intent, PICK_CONTACT);
 
@@ -145,8 +145,9 @@ public class NewConversationActivity extends Activity {
                     }
                 } catch (ContactLookupException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "This is not a valid contact, "
-                            + "please retry!", Toast.LENGTH_LONG).show();
+
+                    String msg = getString(R.string.This_Is_Not_A_Valid_Contact_Please_Retry);
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                     mSendButton.setEnabled(false);
                 }
             }

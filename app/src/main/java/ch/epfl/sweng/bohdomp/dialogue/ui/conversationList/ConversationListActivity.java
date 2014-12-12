@@ -251,9 +251,9 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             }
         };
 
-        builder.setTitle("Warning");
-        builder.setMessage("NFC is not available or not enable!");
-        builder.setPositiveButton("OK", dialogClickListener);
+        builder.setTitle(getString(R.string.Warning));
+        builder.setMessage(getString(R.string.NFC_Is_Not_Available_Or_Not_Enabled));
+        builder.setPositiveButton(getString(R.string.OK), dialogClickListener);
 
         mDialogNoNfc = builder.create();
     }
@@ -279,10 +279,10 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             }
         };
 
-        builder.setTitle("Warning");
-        builder.setMessage("You don't have a private key!");
-        builder.setPositiveButton("Generate Now", dialogClickListener);
-        builder.setNegativeButton("Cancel", dialogClickListener);
+        builder.setTitle(getString(R.string.Warning));
+        builder.setMessage(getString(R.string.You_Dont_Have_A_Private_Key));
+        builder.setPositiveButton(getString(R.string.Generate_Now), dialogClickListener);
+        builder.setNegativeButton(getString(R.string.Cancel), dialogClickListener);
 
         mDialogGenerateKey = builder.create();
     }
@@ -466,7 +466,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             }
 
         } else {
-            Toast.makeText(getApplicationContext(), "Bad Transmission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.Bad_Transmission), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -484,7 +484,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
                 mLookUpKey = s.getString(index);
                 acceptFingerPrintDialog();
             } else {
-                Toast.makeText(this, "Failed to retrieve contact", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.Failed_To_Retrieve_Contact), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -528,11 +528,13 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             }
         };
 
-        builder.setTitle("FingerPrint Validation");
-        builder.setMessage("Do you want to accept the finger print for " + contact.getDisplayName());
-        builder.setNegativeButton("Cancel", dialogClickListener);
-        builder.setNeutralButton("Yes", dialogClickListener);
-        builder.setPositiveButton("Yes and send mine", dialogClickListener);
+        builder.setTitle(getString(R.string.FingerPrint_Validation));
+        String msg = String.format(getString(R.string.Do_You_Want_To_Accept_The_finger_print),
+                contact.getDisplayName());
+        builder.setMessage(msg);
+        builder.setNegativeButton(getString(R.string.Cancel), dialogClickListener);
+        builder.setNeutralButton(getString(R.string.Yes), dialogClickListener);
+        builder.setPositiveButton(getString(R.string.Yes_And_Send_Mine), dialogClickListener);
 
         builder.create().show();
     }
@@ -549,10 +551,10 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
             mData.updateAllContacts(getApplicationContext());
 
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.Success), Toast.LENGTH_SHORT).show();
 
         } catch (FingerprintInsertionException e) {
-            Toast.makeText(this, "Failed to update Finger Print", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.Failed_To_Update_Finger_Print), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

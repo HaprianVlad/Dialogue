@@ -29,7 +29,7 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finger_print_exchange);
 
-        setTitle(getString(R.string.fingerPrintActivityTitle));
+        setTitle(getString(R.string.title_activity_finger_print_exchange));
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
@@ -73,9 +73,7 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
                 new byte[] {},
                 bytesOut);
 
-        NdefMessage nDefMessageOut = new NdefMessage(nDefRecordOut);
-
-        return nDefMessageOut;
+        return new NdefMessage(nDefRecordOut);
     }
 
     @Override

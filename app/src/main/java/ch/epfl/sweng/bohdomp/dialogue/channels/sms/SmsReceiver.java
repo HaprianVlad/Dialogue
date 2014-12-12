@@ -10,6 +10,7 @@ import android.widget.Toast;
 import java.util.Locale;
 import java.util.Set;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
@@ -64,8 +65,9 @@ public final class SmsReceiver extends BroadcastReceiver {
             DialogueMessage dialogueMessage = convertFromSmsMessage(messageBody, phoneNumber);
             DialogueIncomingDispatcher.receiveMessage(context, dialogueMessage);
         } catch (InvalidNumberException e) {
-            Toast.makeText(context, "Incoming message from strange address: "
-                    + phoneNumber, Toast.LENGTH_LONG).show();
+            String format = context.getString(R.string.Incoming_message_from_strange_address);
+            String msg = String.format(format, phoneNumber);
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         }
     }
 

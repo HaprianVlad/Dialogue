@@ -27,7 +27,7 @@
     <string name="deleteAllDialog_question">Are you sure?</string>
     <string name="wasteBin">Waste Bin</string>
     <string name="title_activity_conversation_settings_activity">Select Channel</string>
-    <string name="selectButton">select</string>
+    <string name="selectButton">Select</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>
@@ -39,10 +39,29 @@
         <item>Sunday</item>
     </string-array>
 
-    <string name="title_activity_finger_print_exchange">FingerPrintExchange</string>
-    <string name="bringPhone">Please bring your phone together</string>
+    <string name="title_activity_finger_print_exchange">Send fingerprint</string>
+    <string name="bringPhone">Please bring your phones together</string>
     <string name="cancel">Cancel</string>
     <string name="fingerprint">fingerprint</string>
-    <string name="fingerPrintActivityTitle">Send Fingerprint</string>
-
+    <string name="MMS_Detected">MMS Detected.</string>
+    <string name="Incoming_message_from_strange_address">Incoming message from a strange address: %s</string>
+    <string name="Could_Not_Decrypt_Message_From">Could not decrypt message from %s</string>
+    <string name="Ecrypt_This_Conversation">Encrypt this conversation</string>
+    <string name="Warning">Warning</string>
+    <string name="NFC_Is_Not_Available_Or_Not_Enabled">NFC is not available or not enabled !</string>
+    <string name="OK">Ok</string>
+    <string name="You_Dont_Have_A_Private_Key">You don\'t have a private key!</string>
+    <string name="Generate_Now">Generate Now</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Bad_Transmission">Bad Transmission</string>
+    <string name="Failed_To_Retrieve_Contact">Failed to retrieve contact</string>
+    <string name="FingerPrint_Validation">Fingerprint Validation</string>
+    <string name="Do_You_Want_To_Accept_The_finger_print">Do you want to accept the finger print from %s ?</string>
+    <string name="Yes">Yes</string>
+    <string name="Yes_And_Send_Mine">Yes and send mine</string>
+    <string name="Success">Success</string>
+    <string name="Failed_To_Update_Finger_Print">Failed to update finger print</string>
+    <string name="This_Is_Not_Valid_Phone_Number_Please_Retry">This is not valid phone number, please retry !</string>
+    <string name="This_Contact_Has_No_Phone_Number">This contact has no phone number !</string>
+    <string name="This_Is_Not_A_Valid_Contact_Please_Retry">This is not a valid contact, please retry !</string>
 </resources>

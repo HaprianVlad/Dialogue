@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dialogue</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="action_deleteAll">Alles uitwissen</string>
+    <string name="action_addConversation">Niew gesprek</string>
+    <string name="title_activity_conversation">Niew gesprek</string>
+    <string name="defaultSMSAppWarning">Waarschuwing: Dialogue is niet uw standaard applicatie voor SMS.</string>
+    <string name="contactName">Alois Goejedag</string>
+    <string name="allContactChannels">SMS / Gecijferede SMS</string>
+    <string name="noEncryptionChannel">SMS</string>
+    <string name="lastMessageDate">45m</string>
+    <string name="defaultAppButton">Veranderen</string>
+    <string name="contactPictureHint">photo</string>
+    <string name="type_message">Bericht intijpen</string>
+    <string name="send_message_button">Zenden</string>
+    <string name="title_activity_new_conversation">newConversationActivity</string>
+    <string name="to_hint">Voor</string>
+    <string name="create_conversation_button">Niewe</string>
+    <string name="now">Nu</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="two_days_ago">Eergisteren</string>
+    <string name="newConversationActivityTitle">Niew gesprek</string>
+    <string name="conversationListTitle">Alkle gesprekken</string>
+    <string name="deleteAllDialog_title">Alles uitwissen</string>
+    <string name="deleteAllDialog_question">Bent u zeker ?</string>
+    <string name="wasteBin">Trash</string>
+    <string name="title_activity_conversation_settings_activity">Channel kiezen.</string>
+    <string name="selectButton">Kiezen</string>
+
+    <string-array name="days_of_week">
+        <item>Maandag</item>
+        <item>Diensdag</item>
+        <item>Woensdag</item>
+        <item>Donderdag</item>
+        <item>Vrijdag</item>
+        <item>Zaterdag</item>
+        <item>Zondag</item>
+    </string-array>
+
+    <string name="title_activity_finger_print_exchange">Finger prints uitwisselen</string>
+    <string name="bringPhone">Breng julie smartphones samen.</string>
+    <string name="cancel">Anneleren</string>
+    <string name="fingerprint">Finger print</string>
+    <string name="MMS_Detected">MMS ontdekt.</string>
+    <string name="Incoming_message_from_strange_address">Bericht komende van een onbekende afzender: %s</string>
+    <string name="Could_Not_Decrypt_Message_From">Oncijfering van een bericht komende van %s was onmogelijk</string>
+    <string name="Ecrypt_This_Conversation">Gesprek cijferen</string>
+    <string name="Warning">Waarschuwing</string>
+    <string name="NFC_Is_Not_Available_Or_Not_Enabled">NFC niet beschikbaar!</string>
+    <string name="OK">Ok</string>
+    <string name="You_Dont_Have_A_Private_Key">Geen private-key gevonden !</string>
+    <string name="Generate_Now">Private-key aanmaken</string>
+    <string name="Cancel">Annuleren</string>
+    <string name="Bad_Transmission">Uitzending was onmogelijk</string>
+    <string name="Failed_To_Retrieve_Contact">Contact werd niet gevonden.</string>
+    <string name="FingerPrint_Validation">Fingerprint validatie.</string>
+    <string name="Do_You_Want_To_Accept_The_finger_print">Fingerprint van %s aanvaarden ?</string>
+    <string name="Yes">Ja</string>
+    <string name="Yes_And_Send_Mine">Ja en de meine uitzenden</string>
+    <string name="Success">Succes</string>
+    <string name="Failed_To_Update_Finger_Print">Fingerprint update is niet geslaagd</string>
+    <string name="This_Is_Not_Valid_Phone_Number_Please_Retry">Voer a.u.b. een telephoon nummer in !</string>
+    <string name="This_Contact_Has_No_Phone_Number">Geen telephoon number gevonden voor dit contact !</string>
+    <string name="This_Is_Not_A_Valid_Contact_Please_Retry">Error 404</string>
+</resources>

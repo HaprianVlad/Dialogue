@@ -37,6 +37,7 @@ public class Client {
 
     public Client(String keyServer) {
         Contract.throwIfArgNull(keyServer, "keyServer");
+
         this.mLookupUrl = "http://" + keyServer + "/pks/lookup";
         this.mSubmitUrl = "http://" + keyServer + "/pks/add";
     }

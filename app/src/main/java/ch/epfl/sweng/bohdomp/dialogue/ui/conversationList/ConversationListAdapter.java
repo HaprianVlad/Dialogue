@@ -25,7 +25,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * - {@link java.lang.NullPointerException} if one of the conversation inside the array is null
  */
 public class ConversationListAdapter extends BaseAdapter{
-    private static final String LOG_TAG = "ConversationListAdapter";
 
     private final Context mContext;
     private List<Conversation> mConversations;
