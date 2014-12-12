@@ -7,9 +7,13 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
+import java.util.Locale;
+import java.util.Set;
+
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueIncomingDispatcher;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueTextMessage;
@@ -72,7 +76,18 @@ public final class SmsReceiver extends BroadcastReceiver {
 
         Contact contact = mContactFactory.contactFromNumber(phoneNumber);
 
-        return new DialogueTextMessage(contact, null, null, messageBody, DialogueMessage.MessageDirection.INCOMING);
+        Set<PhoneNumber> set = contact.getPhoneNumbers();
+        PhoneNumber number = null;
+        for (PhoneNumber n : set) {
+            String contactNumber = n.getNumber().toLowerCase(Locale.getDefault()).replaceAll("\\s+", "");
+            String messageNumber = phoneNumber.toLowerCase(Locale.getDefault()).replaceAll("\\s+", "");
+
+            if (contactNumber.equals(messageNumber)) {
+                number = n;
+            }
+        }
+
+        return new DialogueTextMessage(contact, null, number, messageBody, DialogueMessage.MessageDirection.INCOMING);
     }
 
     private void writeToSmsProvider(Context context, String address, String body) {

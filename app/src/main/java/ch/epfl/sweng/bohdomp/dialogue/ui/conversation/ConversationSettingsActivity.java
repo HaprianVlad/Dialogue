@@ -20,6 +20,7 @@ import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.PhoneNumber;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
+import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
 import ch.epfl.sweng.bohdomp.dialogue.ids.ConversationId;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
@@ -31,6 +32,8 @@ public class ConversationSettingsActivity extends Activity {
     private RadioGroup mGroup;
     private CheckBox mEncryptBox;
 
+    private StorageManager mStorageManager;
+
     private Conversation mConversation;
     private List<Contact> mContact;
 
@@ -40,6 +43,8 @@ public class ConversationSettingsActivity extends Activity {
         setContentView(R.layout.activity_conversation_settings);
 
         Intent intent = getIntent();
+
+        mStorageManager = new StorageManager(getApplicationContext());
 
         try {
             ConversationId conversationID;
@@ -145,6 +150,11 @@ public class ConversationSettingsActivity extends Activity {
                 finish();
             }
         });
+    }
 
+    @Override
+    protected void onPause() {
+        mStorageManager.saveData();
+        super.onPause();
     }
 }
