@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dialogue</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_deleteAll">Tout effacer</string>
+    <string name="action_addConversation">Nouvelle conversation</string>
+    <string name="title_activity_conversation">Nouvelle conversation</string>
+    <string name="defaultSMSAppWarning">Avertissement: Dialogue n\'est pas votre application SMS par défaut.</string>
+    <string name="contactName">Alois Bonjour</string>
+    <string name="allContactChannels">SMS / SMS Chiffré</string>
+    <string name="noEncryptionChannel">SMS</string>
+    <string name="lastMessageDate">45m</string>
+    <string name="defaultAppButton">Changer</string>
+    <string name="contactPictureHint">PP</string>
+    <string name="type_message">Entrez votre message</string>
+    <string name="send_message_button">Envoyer</string>
+    <string name="title_activity_new_conversation">newConversationActivity</string>
+    <string name="to_hint">À</string>
+    <string name="create_conversation_button">Créer</string>
+    <string name="now">Maintenant</string>
+    <string name="yesterday">Hier</string>
+    <string name="two_days_ago">Il y a 2 jours</string>
+    <string name="newConversationActivityTitle">Nouvelle conversation</string>
+    <string name="conversationListTitle">Toutes les conversations</string>
+    <string name="deleteAllDialog_title">Effacer toutes les conversations</string>
+    <string name="deleteAllDialog_question">Êtes-vous sûr ?</string>
+    <string name="wasteBin">Poubelle</string>
+    <string name="title_activity_conversation_settings_activity">Sélectiuonner le canal.</string>
+    <string name="selectButton">Sélectionner</string>
+
+    <string-array name="days_of_week">
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+        <item>Vendredi</item>
+        <item>Samedi</item>
+        <item>Dimanche</item>
+    </string-array>
+
+    <string name="title_activity_finger_print_exchange">Échanger d\'empreintes cryptographiques</string>
+    <string name="bringPhone">Veuillez mettre vos téléphones l\'un contre l\'autre.</string>
+    <string name="cancel">Annuler</string>
+    <string name="fingerprint">empreinte cryptographique</string>
+    <string name="MMS_Detected">MMS Détecté.</string>
+    <string name="Incoming_message_from_strange_address">Message venant d\'une addresse inconnue: %s</string>
+    <string name="Could_Not_Decrypt_Message_From">Impossible de déchifrer un message venant de %s</string>
+    <string name="Ecrypt_This_Conversation">Chiffrer cette conversation</string>
+    <string name="Warning">Avertissement</string>
+    <string name="NFC_Is_Not_Available_Or_Not_Enabled">NFC non-disponible !</string>
+    <string name="OK">Ok</string>
+    <string name="You_Dont_Have_A_Private_Key">Vous n\'avez pas de clé privée !</string>
+    <string name="Generate_Now">Générer la clé privée</string>
+    <string name="Cancel">Annuler</string>
+    <string name="Bad_Transmission">Mauvaise transmission</string>
+    <string name="Failed_To_Retrieve_Contact">Impossible de trouver le contact.</string>
+    <string name="FingerPrint_Validation">Validation d\'empreinte cryptographique.</string>
+    <string name="Do_You_Want_To_Accept_The_finger_print">Voulez-vous accepter l\'empreinte de %s ?</string>
+    <string name="Yes">Oui</string>
+    <string name="Yes_And_Send_Mine">Oui et envoyer la mienne</string>
+    <string name="Success">Réussite</string>
+    <string name="Failed_To_Update_Finger_Print">Impossible de mettre à jour l\'empreinte cryptographique</string>
+    <string name="This_Is_Not_Valid_Phone_Number_Please_Retry">Veuillez entrer un numéro de téléphone !</string>
+    <string name="This_Contact_Has_No_Phone_Number">Ce contact n\'as pas de numéro de téléphone !</string>
+    <string name="This_Is_Not_A_Valid_Contact_Please_Retry">Il ne sagit pas d\'un contact valide, veuillez réessayer !</string>
+
+</resources>

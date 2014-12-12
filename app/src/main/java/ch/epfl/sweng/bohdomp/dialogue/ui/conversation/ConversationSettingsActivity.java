@@ -111,10 +111,11 @@ public class ConversationSettingsActivity extends Activity {
         mEncryptBox.setChecked(mConversation.needEncryption());
 
         if (contact.hasFingerprint()) {
-            mEncryptBox.setText("Encrypt this conversation");
+            mEncryptBox.setText(getString(R.string.Ecrypt_This_Conversation));
             mEncryptBox.setEnabled(true);
         } else {
-            mEncryptBox.setText("Encryption not available for " + contact.getDisplayName());
+            String msg = String.format("Encryption not available for %s", contact.getDisplayName());
+            mEncryptBox.setText(msg);
             mEncryptBox.setEnabled(false);
         }
     }

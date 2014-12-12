@@ -32,7 +32,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  * - {@link java.lang.NullPointerException} if one of the message inside the array is null
  */
 public class MessagesAdapter extends BaseAdapter {
-    private static final String LOG_TAG = "MessagesAdapter";
     public static final float NOT_COMPLETELY_INVISIBLE_NOR_VISIBLE = 0.3f;
     public static final float VISIBLE = 1.0f;
 

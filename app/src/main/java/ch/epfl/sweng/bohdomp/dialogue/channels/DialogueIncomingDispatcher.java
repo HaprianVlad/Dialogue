@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.CryptoException;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
@@ -20,8 +21,6 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public final class DialogueIncomingDispatcher extends IntentService {
     public static final String ACTION_RECEIVE_MESSAGE = "ACTION_RECEIVE_MESSAGE";
-
-    private static boolean sIsRunning;
 
     public DialogueIncomingDispatcher() {
         super("DialogueIncomingDispatcher");
@@ -46,10 +45,6 @@ public final class DialogueIncomingDispatcher extends IntentService {
         context.startService(intent);
     }
 
-    public static boolean isRunning() {
-        return sIsRunning;
-    }
-
     @Override
     public void onHandleIntent(Intent intent) {
         Contract.throwIfArgNull(intent, "intent");
@@ -65,8 +60,6 @@ public final class DialogueIncomingDispatcher extends IntentService {
             storageManager.saveData();
         }
         //ignore when receiving other commands
-
-        sIsRunning = true;
     }
 
     private void  addMessageToDialogueData(DialogueMessage message) {
@@ -90,12 +83,11 @@ public final class DialogueIncomingDispatcher extends IntentService {
 
             DefaultDialogData.getInstance().addMessageToConversation(decryptedMessage);
         } catch (CryptoException e) {
+            String format = getString(R.string.Could_Not_Decrypt_Message_From);
+            String msg = String.format(format, message.getContact().getDisplayName());
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getApplicationContext(),
-                    "Could not decrypt message from" + message.getContact().getDisplayName(),
-                    Toast.LENGTH_SHORT).show();
-
-                    /* Add encrypted message so that we don't lose it. */
+            /* Add encrypted message so that we don't lose it. */
             DefaultDialogData.getInstance().addMessageToConversation(message);
         }
     }
@@ -103,6 +95,5 @@ public final class DialogueIncomingDispatcher extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sIsRunning = false;
     }
 }
