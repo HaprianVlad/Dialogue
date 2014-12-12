@@ -35,8 +35,6 @@ public class Notificator {
         Conversation conversation = DefaultDialogData.getInstance().
                 createOrGetConversation(message.getContact());
 
-
-
         PendingIntent resultPendingIntent =
                 makeStackBuilder(conversation).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager =
