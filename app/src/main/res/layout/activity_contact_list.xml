@@ -5,32 +5,36 @@
     tools:context="ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity"
     android:animateLayoutChanges="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/notDefaultWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/red"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         >
 
         <TextView
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_vertical"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:text="@string/defaultSMSAppWarning"
             android:textSize="12sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            />
 
         <Button
+            android:layout_alignParentRight="true"
             android:id="@+id/setDefaultAppButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="@string/defaultAppButton" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <de.timroes.android.listview.EnhancedListView
         android:layout_width="wrap_content"

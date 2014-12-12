@@ -80,6 +80,5 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
         finish();
-        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
     }
 }
