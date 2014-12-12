@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -489,7 +488,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         Contact contact = null;
         try {
-            contact = mPhoneNumber != null ? mContactFactory.contactFromNumber(mPhoneNumber) : mContactFactory.contactFromLookupKey(mLookUpKey);
+            contact = mPhoneNumber != null ? mContactFactory.contactFromNumber(mPhoneNumber)
+                    : mContactFactory.contactFromLookupKey(mLookUpKey);
         } catch (InvalidNumberException e) {
             e.printStackTrace();
         } catch (ContactLookupException e) {
