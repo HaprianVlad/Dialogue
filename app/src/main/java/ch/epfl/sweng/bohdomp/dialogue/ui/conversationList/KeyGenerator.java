@@ -43,6 +43,7 @@ public class KeyGenerator extends AsyncTask<Void, Void, Either<Void, String>> {
 
     @Override
     public void onPreExecute() {
+        mProgress.setCancelable(false);
         mProgress.show();
     }
 
