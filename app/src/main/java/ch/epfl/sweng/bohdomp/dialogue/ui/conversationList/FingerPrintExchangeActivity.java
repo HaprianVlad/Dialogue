@@ -29,6 +29,8 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finger_print_exchange);
 
+        setTitle(getString(R.string.fingerPrintActivityTitle));
+
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
