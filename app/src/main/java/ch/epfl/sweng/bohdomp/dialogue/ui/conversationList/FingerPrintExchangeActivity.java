@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.KeyManager;
@@ -80,6 +79,5 @@ public class FingerPrintExchangeActivity extends Activity implements NfcAdapter.
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
         finish();
-        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
     }
 }

@@ -22,8 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -33,13 +33,16 @@ import java.util.List;
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.Contact;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.KeyManager;
 import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueData;
 import ch.epfl.sweng.bohdomp.dialogue.data.DialogueDataListener;
 import ch.epfl.sweng.bohdomp.dialogue.data.StorageManager;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.FingerprintInsertionException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.InvalidNumberException;
 import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.ui.newConversation.NewConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
@@ -52,9 +55,10 @@ import de.timroes.android.listview.EnhancedListView;
 public class ConversationListActivity extends Activity implements DialogueDataListener {
 
     private static final int PICK_CONTACT = 3;
+    private static final int UNDO_TIMEOUT = 2500;
 
     private EnhancedListView mContactListView;
-    private LinearLayout mDefaultAppWarningLayout;
+    private RelativeLayout mDefaultAppWarningLayout;
     private Button mChangeDefaultAppButton;
     private AlertDialog mDialogDeleteAll;
     private AlertDialog mDialogNoNfc;
@@ -155,7 +159,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
      */
     private void setViewElements() {
         this.setTitle(getString(R.string.conversationListTitle));
-        mDefaultAppWarningLayout = (LinearLayout) findViewById(R.id.notDefaultWarning);
+        mDefaultAppWarningLayout = (RelativeLayout) findViewById(R.id.notDefaultWarning);
         checkDefaultApp();
 
         mChangeDefaultAppButton = (Button) findViewById(R.id.setDefaultAppButton);
@@ -185,6 +189,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         });
 
         mContactListView.enableSwipeToDismiss();
+        mContactListView.setUndoHideDelay(UNDO_TIMEOUT);
+        mContactListView.setRequireTouchBeforeDismiss(false);
         mContactListView.setSwipeDirection(EnhancedListView.SwipeDirection.START);
         mContactListView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
 
@@ -398,6 +404,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         if (KeyManager.getInstance(getApplicationContext()).hasOwnFingerprint()) {
             if (adapter != null && adapter.isEnabled()) {
+                adapter.disableForegroundDispatch(this);
                 Intent intent = new Intent(this, FingerPrintExchangeActivity.class);
                 startActivity(intent);
             } else {
@@ -483,6 +490,16 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        Contact contact = null;
+        try {
+            contact = mPhoneNumber != null ? mContactFactory.contactFromNumber(mPhoneNumber)
+                    : mContactFactory.contactFromLookupKey(mLookUpKey);
+        } catch (InvalidNumberException e) {
+            e.printStackTrace();
+        } catch (ContactLookupException e) {
+            e.printStackTrace();
+        }
+
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -507,7 +524,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         };
 
         builder.setTitle("FingerPrint Validation");
-        builder.setMessage("Do you want to accept the finger print");
+        builder.setMessage("Do you want to accept the finger print for " + contact.getDisplayName());
         builder.setNegativeButton("Cancel", dialogClickListener);
         builder.setNeutralButton("Yes", dialogClickListener);
         builder.setPositiveButton("Yes and send mine", dialogClickListener);

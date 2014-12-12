@@ -211,6 +211,11 @@ public final class DialogueConversation implements Conversation {
         mMessages.add(message);
         mMessageCount += 1;
 
+        if (mMessageCount == 1 && mMessages.get(0).getDirection() == DialogueMessage.MessageDirection.INCOMING) {
+            mChannel = ChannelType.SMS;
+            mPhoneNumber = message.getPhoneNumber();
+        }
+
         mLastActivityTime = new DateTime();
 
         notifyListeners();

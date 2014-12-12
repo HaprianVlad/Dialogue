@@ -4,7 +4,6 @@ package ch.epfl.sweng.bohdomp.dialogue.channels;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-
 import android.widget.Toast;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.Crypto;
@@ -58,6 +57,7 @@ public final class DialogueIncomingDispatcher extends IntentService {
         if (intent.getAction().equals(ACTION_RECEIVE_MESSAGE)) {
 
             DialogueMessage message = DialogueMessage.extractMessage(intent);
+            
             addMessageToDialogueData(message);
 
             Notificator.getInstance(getApplicationContext()).notifyIncomming(message);
