@@ -248,9 +248,8 @@ public final class DialogueConversation implements Conversation {
     @Override
     public void setAllMessagesAsRead() {
         mHasUnread = false;
-        if (mMessages != null && mMessages.size() > 0) {
-            notifyListeners();
-        }
+        
+        notifyListeners();
     }
 
     //Method that notifies listeners when a change in conversation occurs
