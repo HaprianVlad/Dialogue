@@ -21,16 +21,16 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
  */
 public final class Notificator {
 
-    private static Notificator sNotificator;
+    private static Notificator msNotificator;
 
     public static Notificator getInstance(Context context) {
         Contract.throwIfArgNull(context, "context");
 
-        if (sNotificator == null) {
-            sNotificator = new Notificator(context);
+        if (msNotificator == null) {
+            msNotificator = new Notificator(context);
         }
 
-        return sNotificator;
+        return msNotificator;
     }
 
     private Context mContext;
@@ -59,6 +59,10 @@ public final class Notificator {
 
     public void cancelNotificationsForConversation(Conversation conversation) {
         mNotificationManager.cancel(conversation.getName(), (int) conversation.getId().getLong());
+    }
+
+    public void cancelAllNotifications() {
+        mNotificationManager.cancelAll();
     }
 
     private TaskStackBuilder makeStackBuilder(Conversation conversation) {

@@ -31,6 +31,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.channels.Notificator;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.contact.ContactFactory;
@@ -177,6 +178,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
                     @Override
                     public void discard() {
+
+                        Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(deletedConversation);
                         mData.removeConversation(deletedConversation.getId());
                     }
 
@@ -203,6 +206,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
+                        Notificator.getInstance(getApplicationContext()).cancelAllNotifications();
                         mData.removeAllConversations();
                         dialog.cancel();
                         break;
