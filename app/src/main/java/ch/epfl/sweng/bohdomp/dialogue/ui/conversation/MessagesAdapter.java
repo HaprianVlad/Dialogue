@@ -224,9 +224,15 @@ public class MessagesAdapter extends BaseAdapter {
             viewHolder.wrapper.setLayoutParams(margin);
 
             if (msg.isEncrypted()) {
+                viewHolder.header.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_padlock, //right
+                        0, //top
+                        0, //left
+                        0); //bottom
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DE16D"),
                         PorterDuff.Mode.MULTIPLY);
             } else {
+                viewHolder.header.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DD0E1"),
                         PorterDuff.Mode.MULTIPLY);
             }

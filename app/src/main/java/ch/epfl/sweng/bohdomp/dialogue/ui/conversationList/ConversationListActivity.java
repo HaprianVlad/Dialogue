@@ -179,7 +179,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
                     @Override
                     public void discard() {
 
-                        Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(deletedConversation);
+                        Notificator.getInstance(getApplicationContext())
+                                .cancelNotificationsForConversation(deletedConversation);
                         mData.removeConversation(deletedConversation.getId());
                     }
 
