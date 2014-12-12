@@ -19,6 +19,7 @@ import java.util.List;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
 import ch.epfl.sweng.bohdomp.dialogue.channels.DialogueOutgoingDispatcher;
+import ch.epfl.sweng.bohdomp.dialogue.channels.Notificator;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ChannelType;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
 import ch.epfl.sweng.bohdomp.dialogue.conversation.ConversationListener;
@@ -93,6 +94,8 @@ public class ConversationActivity extends Activity implements ConversationListen
 
         mStorageManager = new StorageManager(getApplicationContext());
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
+
+        Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(conversationId);
 
         Contract.assertNotNull(mConversation, "mConversation");
         mConversation.addListener(this);

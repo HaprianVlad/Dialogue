@@ -19,17 +19,31 @@ import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 /**
  * Class representing a notification creator when receiving messages
  */
-public class Notificator {
+public final class Notificator {
 
-    private Context mContext;
+    private static Notificator sNotificator;
 
-    public Notificator(Context context) {
+    public static Notificator getInstance(Context context) {
         Contract.throwIfArgNull(context, "context");
 
-        this.mContext = context;
+        if (sNotificator == null) {
+            sNotificator = new Notificator(context);
+        }
+
+        return sNotificator;
     }
 
-    public void update(DialogueMessage message) {
+    private Context mContext;
+    private NotificationManager mNotificationManager;
+
+    private Notificator(Context context) {
+        Contract.assertNotNull(context, "context");
+
+        this.mContext = context;
+        this.mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    public void notifyIncomming(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
         Conversation conversation = DefaultDialogData.getInstance().
@@ -37,12 +51,14 @@ public class Notificator {
 
         PendingIntent resultPendingIntent =
                 makeStackBuilder(conversation).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationManager notificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        final int id = 1;
-        notificationManager.notify(id, makeNotification(message, resultPendingIntent));
+        String tag = conversation.getName();
+        int id = (int) conversation.getId().getLong();
+        mNotificationManager.notify(tag, id, makeNotification(message, resultPendingIntent));
+    }
 
+    public void cancelNotificationsForConversation(Conversation conversation) {
+        mNotificationManager.cancel(conversation.getName(), (int) conversation.getId().getLong());
     }
 
     private TaskStackBuilder makeStackBuilder(Conversation conversation) {
