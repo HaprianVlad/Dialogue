@@ -55,6 +55,7 @@ import de.timroes.android.listview.EnhancedListView;
 public class ConversationListActivity extends Activity implements DialogueDataListener {
 
     private static final int PICK_CONTACT = 3;
+    private static final int UNDO_TIMEOUT = 2500;
 
     private EnhancedListView mContactListView;
     private RelativeLayout mDefaultAppWarningLayout;
@@ -188,6 +189,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         });
 
         mContactListView.enableSwipeToDismiss();
+        mContactListView.setUndoHideDelay(UNDO_TIMEOUT);
+        mContactListView.setRequireTouchBeforeDismiss(false);
         mContactListView.setSwipeDirection(EnhancedListView.SwipeDirection.START);
         mContactListView.setUndoStyle(EnhancedListView.UndoStyle.COLLAPSED_POPUP);
 
@@ -401,6 +404,7 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
 
         if (KeyManager.getInstance(getApplicationContext()).hasOwnFingerprint()) {
             if (adapter != null && adapter.isEnabled()) {
+                adapter.disableForegroundDispatch(this);
                 Intent intent = new Intent(this, FingerPrintExchangeActivity.class);
                 startActivity(intent);
             } else {
