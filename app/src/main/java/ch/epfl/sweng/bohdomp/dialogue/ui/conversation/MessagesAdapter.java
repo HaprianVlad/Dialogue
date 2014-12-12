@@ -1,8 +1,10 @@
 package ch.epfl.sweng.bohdomp.dialogue.ui.conversation;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,11 @@ public class MessagesAdapter extends BaseAdapter {
     private static final int ANIMATION_DURATION = 700;
     private static final int ANIMATION_OFFSET = 700;
 
+    private static final int MARGIN_DP_NONE = 0;
+    private static final int MARGIN_DP = 30;
+    private int mMarginPx;
+    private int mMarginPxNone;
+
     private final Context mContext;
     private List<DialogueMessage> mMessagesList;
 
@@ -66,6 +73,20 @@ public class MessagesAdapter extends BaseAdapter {
         Contract.throwIfArgNull(items, "items");
 
         this.mContext = context;
+
+        Resources r = mContext.getResources();
+        mMarginPxNone = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                MARGIN_DP_NONE,
+                r.getDisplayMetrics()
+        );
+
+        mMarginPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                MARGIN_DP,
+                r.getDisplayMetrics()
+        );
+
         updateData(items);
     }
 
@@ -153,6 +174,11 @@ public class MessagesAdapter extends BaseAdapter {
         if (msg.getDirection() == DialogueMessage.MessageDirection.OUTGOING) {
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
 
+            ViewGroup.MarginLayoutParams margin = (ViewGroup.MarginLayoutParams) viewHolder.wrapper.getLayoutParams();
+            margin.leftMargin = mMarginPx; margin.rightMargin = mMarginPxNone;
+
+            viewHolder.wrapper.setLayoutParams(margin);
+
             if (msg.isEncrypted()) {
                 viewHolder.header.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_padlock, //right
@@ -191,6 +217,11 @@ public class MessagesAdapter extends BaseAdapter {
             viewHolder.wrapper.clearAnimation();
             viewHolder.wrapperParent.setGravity(Gravity.LEFT);
             viewHolder.anim = false;
+
+            ViewGroup.MarginLayoutParams margin = (ViewGroup.MarginLayoutParams) viewHolder.wrapper.getLayoutParams();
+            margin.leftMargin = mMarginPxNone; margin.rightMargin = mMarginPx;
+
+            viewHolder.wrapper.setLayoutParams(margin);
 
             if (msg.isEncrypted()) {
                 viewHolder.wrapper.getBackground().setColorFilter(Color.parseColor("#4DE16D"),
