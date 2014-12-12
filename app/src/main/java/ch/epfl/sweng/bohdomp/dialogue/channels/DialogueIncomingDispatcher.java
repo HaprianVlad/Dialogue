@@ -58,38 +58,46 @@ public final class DialogueIncomingDispatcher extends IntentService {
         if (intent.getAction().equals(ACTION_RECEIVE_MESSAGE)) {
 
             DialogueMessage message = DialogueMessage.extractMessage(intent);
+            addMessageToDialogueData(message);
 
-            if (Crypto.isEncrypted(message.getBody().getMessageBody())) {
-
-                try {
-                    TextMessageBody decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
-                            message.getBody().getMessageBody()));
-
-                    DialogueMessage decryptedMessage = new DecryptedDialogueTextMessage(message.getContact(),
-                            message.getChannel(), message.getPhoneNumber(), decryptedBody.getMessageBody(),
-                            message.getDirection());
-
-                    DefaultDialogData.getInstance().addMessageToConversation(decryptedMessage);
-                } catch (CryptoException e) {
-                    
-                    Toast.makeText(getApplicationContext(),
-                            "Could not decrypt message from" + message.getContact().getDisplayName(),
-                            Toast.LENGTH_SHORT).show();
-
-                    /* Add encrypted message so that we don't lose it. */
-                    DefaultDialogData.getInstance().addMessageToConversation(message);
-                }
-            } else {
-                DefaultDialogData.getInstance().addMessageToConversation(message);
-            }
-            Notificator notificator = new Notificator(getApplicationContext());
-            notificator.update(message);
+            Notificator.getInstance(getApplicationContext()).notifyIncomming(message);
             StorageManager storageManager = new StorageManager(getApplicationContext());
             storageManager.saveData();
         }
         //ignore when receiving other commands
 
         sIsRunning = true;
+    }
+
+    private void  addMessageToDialogueData(DialogueMessage message) {
+
+        if (Crypto.isEncrypted(message.getBody().getMessageBody())) {
+            addEncryptedMessageToDialogueData(message);
+        } else {
+            DefaultDialogData.getInstance().addMessageToConversation(message);
+        }
+    }
+
+    private void addEncryptedMessageToDialogueData(DialogueMessage message) {
+
+        try {
+            TextMessageBody decryptedBody = new TextMessageBody(Crypto.decrypt(getApplicationContext(),
+                    message.getBody().getMessageBody()));
+
+            DialogueMessage decryptedMessage = new DecryptedDialogueTextMessage(message.getContact(),
+                    message.getChannel(), message.getPhoneNumber(), decryptedBody.getMessageBody(),
+                    message.getDirection());
+
+            DefaultDialogData.getInstance().addMessageToConversation(decryptedMessage);
+        } catch (CryptoException e) {
+
+            Toast.makeText(getApplicationContext(),
+                    "Could not decrypt message from" + message.getContact().getDisplayName(),
+                    Toast.LENGTH_SHORT).show();
+
+                    /* Add encrypted message so that we don't lose it. */
+            DefaultDialogData.getInstance().addMessageToConversation(message);
+        }
     }
 
     @Override
