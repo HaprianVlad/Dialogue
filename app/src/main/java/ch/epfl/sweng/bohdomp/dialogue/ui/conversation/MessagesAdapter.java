@@ -44,9 +44,6 @@ public class MessagesAdapter extends BaseAdapter {
     private int mMarginPx;
     private int mMarginPxNone;
 
-
-
-
     private final Context mContext;
     private List<DialogueMessage> mMessagesList;
 
@@ -74,8 +71,6 @@ public class MessagesAdapter extends BaseAdapter {
 
         Contract.throwIfArgNull(context, "context");
         Contract.throwIfArgNull(items, "items");
-
-
 
         this.mContext = context;
 
