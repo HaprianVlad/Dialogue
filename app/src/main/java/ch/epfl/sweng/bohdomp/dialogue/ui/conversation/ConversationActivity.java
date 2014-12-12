@@ -95,7 +95,7 @@ public class ConversationActivity extends Activity implements ConversationListen
         mStorageManager = new StorageManager(getApplicationContext());
         mConversation = DefaultDialogData.getInstance().getConversation(conversationId);
 
-        Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(conversationId);
+        Notificator.getInstance(getApplicationContext()).cancelNotificationsForConversation(mConversation);
 
         Contract.assertNotNull(mConversation, "mConversation");
         mConversation.addListener(this);
