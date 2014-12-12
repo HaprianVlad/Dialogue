@@ -248,6 +248,7 @@ public final class DialogueConversation implements Conversation {
     @Override
     public void setAllMessagesAsRead() {
         mHasUnread = false;
+        
         notifyListeners();
     }
 

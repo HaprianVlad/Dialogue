@@ -88,6 +88,7 @@ public final class DefaultDialogData implements DialogueData {
         // Default case, conversation not found.
         if (conversation == null) {
             conversation = createConversationAndAddFromContacts(contact);
+
         }
 
         return conversation;
@@ -152,7 +153,9 @@ public final class DefaultDialogData implements DialogueData {
         Conversation c = this.createOrGetConversation(message.getContact());
         c.addMessage(message);
 
-        //Listeners are notified by the listener of the conversation
+        if (message.getDirection() == DialogueMessage.MessageDirection.INCOMING) {
+            notifyListeners();
+        }
     }
 
     @Override

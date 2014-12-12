@@ -131,12 +131,12 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     private void initData() {
         myPackageName = getPackageName();
         mData = DefaultDialogData.getInstance();
-        mData.addListener(this);
         mContactFactory = new ContactFactory(getApplicationContext());
         mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
         mStorageManager = new StorageManager(getApplicationContext());
         mStorageManager.retreiveData();
+        mData.addListener(this);
     }
 
     @Override
@@ -329,10 +329,9 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
     @Override
     protected void onStart() {
         super.onStart();
-
+        mData.addListener(this);
 
         checkFingerprint();
-
     }
 
     @Override

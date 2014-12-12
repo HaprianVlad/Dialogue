@@ -9,8 +9,11 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import ch.epfl.sweng.bohdomp.dialogue.R;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.Conversation;
+import ch.epfl.sweng.bohdomp.dialogue.conversation.DialogueConversation;
+import ch.epfl.sweng.bohdomp.dialogue.data.DefaultDialogData;
 import ch.epfl.sweng.bohdomp.dialogue.messaging.DialogueMessage;
-import ch.epfl.sweng.bohdomp.dialogue.ui.conversationList.ConversationListActivity;
+import ch.epfl.sweng.bohdomp.dialogue.ui.conversation.ConversationActivity;
 import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
 
 /**
@@ -29,20 +32,25 @@ public class Notificator {
     public void update(DialogueMessage message) {
         Contract.throwIfArgNull(message, "message");
 
+        Conversation conversation = DefaultDialogData.getInstance().
+                createOrGetConversation(message.getContact());
+
         PendingIntent resultPendingIntent =
-                makeStackBuilder().getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                makeStackBuilder(conversation).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         final int id = 1;
         notificationManager.notify(id, makeNotification(message, resultPendingIntent));
+
     }
 
-    private TaskStackBuilder makeStackBuilder() {
-        Intent resultIntent = new Intent(mContext, ConversationListActivity.class);
+    private TaskStackBuilder makeStackBuilder(Conversation conversation) {
+        Intent resultIntent = new Intent(mContext, ConversationActivity.class);
+        resultIntent.putExtra(DialogueConversation.CONVERSATION_ID, conversation.getId());
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-        stackBuilder.addParentStack(ConversationListActivity.class);
+        stackBuilder.addParentStack(ConversationActivity.class);
         stackBuilder.addNextIntent(resultIntent);
 
         return stackBuilder;

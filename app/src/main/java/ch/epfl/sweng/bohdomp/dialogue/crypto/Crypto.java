@@ -63,7 +63,7 @@ public class Crypto {
     public static boolean isEncrypted(String message) {
         Contract.throwIfArgNull(message, "message");
 
-        return message.startsWith("-----BEGIN PGP MESSAGE-----\n") && message.endsWith("-----END PGP MESSAGE-----");
+        return message.startsWith("-----BEGIN PGP MESSAGE-----") && message.contains("-----END PGP MESSAGE-----");
     }
 
     public static String decrypt(Context context, String message) throws CryptoException {
