@@ -163,6 +163,8 @@ public class ConversationListAdapter extends BaseAdapter{
 
         if (unread) {
             viewHolder.unRead.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.unRead.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.lastMessage.setText(c.getLastConversationActivityString(mContext));
