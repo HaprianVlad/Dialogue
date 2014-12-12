@@ -42,7 +42,7 @@ public class MessagesAdapter extends BaseAdapter {
     private static final int MARGIN_DP_NONE = 0;
     private static final int MARGIN_DP = 30;
     private int mMarginPx;
-    private int mMarignPx_None;
+    private int mMarginPxNone;
 
 
 
@@ -80,7 +80,7 @@ public class MessagesAdapter extends BaseAdapter {
         this.mContext = context;
 
         Resources r = mContext.getResources();
-        mMarignPx_None = (int) TypedValue.applyDimension(
+        mMarginPxNone = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 MARGIN_DP_NONE,
                 r.getDisplayMetrics()
@@ -180,7 +180,7 @@ public class MessagesAdapter extends BaseAdapter {
             viewHolder.wrapperParent.setGravity(Gravity.RIGHT);
 
             ViewGroup.MarginLayoutParams margin = (ViewGroup.MarginLayoutParams) viewHolder.wrapper.getLayoutParams();
-            margin.leftMargin = mMarginPx; margin.rightMargin = mMarignPx_None;
+            margin.leftMargin = mMarginPx; margin.rightMargin = mMarginPxNone;
 
             viewHolder.wrapper.setLayoutParams(margin);
 
@@ -224,7 +224,7 @@ public class MessagesAdapter extends BaseAdapter {
             viewHolder.anim = false;
 
             ViewGroup.MarginLayoutParams margin = (ViewGroup.MarginLayoutParams) viewHolder.wrapper.getLayoutParams();
-            margin.leftMargin = mMarignPx_None; margin.rightMargin = mMarginPx;
+            margin.leftMargin = mMarginPxNone; margin.rightMargin = mMarginPx;
 
             viewHolder.wrapper.setLayoutParams(margin);
 
