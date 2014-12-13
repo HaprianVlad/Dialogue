@@ -151,6 +151,8 @@ public class NewConversationActivity extends Activity {
                     mSendButton.setEnabled(false);
                 }
             }
+
+            s.close();
         }
     }
 

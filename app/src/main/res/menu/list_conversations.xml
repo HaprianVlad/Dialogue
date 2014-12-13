@@ -17,6 +17,5 @@
         android:icon="@drawable/ic_action_new"
         android:title="@string/action_addConversation"
         android:showAsAction="ifRoom"
-        android:onClick="newConversationClicked"
         android:enabled="true"/>
 </menu>
