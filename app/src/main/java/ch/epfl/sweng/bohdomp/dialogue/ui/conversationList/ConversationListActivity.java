@@ -369,15 +369,6 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         super.onStop();
     }
 
-    /**
-    * Method called when the new conversation is clicked
-    * Start the "new message activity"
-    */
-    public void newConversationClicked(MenuItem item) {
-        Intent intent = new Intent(this, NewConversationActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present
@@ -392,6 +383,9 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         // as you specify a parent activity in AndroidManifest.xml.
 
         switch (item.getItemId()) {
+            case R.id.action_addConversation:
+                newConversationClicked();
+                return true;
             case R.id.action_deleteAll:
                 mDialogDeleteAll.show();
                 return true;
@@ -401,6 +395,15 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Method called when the new conversation is clicked
+     * Start the "new message activity"
+     */
+    public void newConversationClicked() {
+        Intent intent = new Intent(this, NewConversationActivity.class);
+        startActivity(intent);
     }
 
     private void selectFingerPrint() {
@@ -486,6 +489,8 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
             } else {
                 Toast.makeText(this, getString(R.string.Failed_To_Retrieve_Contact), Toast.LENGTH_SHORT).show();
             }
+
+            s.close();
         }
     }
 

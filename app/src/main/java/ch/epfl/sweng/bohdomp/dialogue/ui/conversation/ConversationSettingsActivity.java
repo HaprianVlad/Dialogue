@@ -57,12 +57,6 @@ public class ConversationSettingsActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-
     private void initData(ConversationId conversationId) {
         Contract.throwIfArgNull(conversationId, "conversationId");
 

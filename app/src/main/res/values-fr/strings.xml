@@ -49,7 +49,7 @@
     <string name="Ecrypt_This_Conversation">Chiffrer cette conversation</string>
     <string name="Warning">Avertissement</string>
     <string name="NFC_Is_Not_Available_Or_Not_Enabled">NFC non-disponible !</string>
-    <string name="OK">Ok</string>
+    <string name="OK">OK</string>
     <string name="You_Dont_Have_A_Private_Key">Vous n\'avez pas de clé privée !</string>
     <string name="Generate_Now">Générer la clé privée</string>
     <string name="Cancel">Annuler</string>
