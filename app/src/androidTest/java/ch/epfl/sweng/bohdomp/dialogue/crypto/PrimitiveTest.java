@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.bouncycastle.openpgp.PGPException;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.KeyNotFoundExceptionTest;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.KeyNotFoundException;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKey;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChain;
 import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.PublicKeyChainBuilder;
@@ -117,7 +117,7 @@ public class PrimitiveTest extends AndroidTestCase {
         try {
             secretKeyRing.decrypt(PrimitiveTest.ENCRYPTED_TO_OTHER, TestKeyData.PASSPHRASE);
             Assert.fail("Expecting PGPException but none was thrown.");
-        } catch (KeyNotFoundExceptionTest ex) {
+        } catch (KeyNotFoundException ex) {
             Assert.assertTrue(ex.getMessage().contains("secret key"));
         }
     }

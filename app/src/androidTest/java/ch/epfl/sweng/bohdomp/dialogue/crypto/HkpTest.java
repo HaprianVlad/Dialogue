@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import java.io.IOException;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.hkp.Client;
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.KeyNotFoundExceptionTest;
+import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.KeyNotFoundException;
 
 /**
  * Tests hkp key exchange functionality
@@ -30,7 +30,7 @@ public class HkpTest extends AndroidTestCase {
         try {
             mClient.lookupKeyRing("0000 0000 0000 0000 0000 0000 0000 0000 0000 0000");
             Assert.fail("KeyNotFoundException expected");
-        } catch (KeyNotFoundExceptionTest ex) {
+        } catch (KeyNotFoundException ex) {
             //ok
         }
     }
