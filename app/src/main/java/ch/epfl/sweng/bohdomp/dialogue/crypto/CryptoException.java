@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Thrown when a high-level cryptographic function fails.
  */
@@ -12,15 +14,14 @@ public class CryptoException extends Exception {
     }
 
     public CryptoException(String message) {
-        super(message);
+        super(Contract.throwIfArgNull(message, "message"));
     }
 
-    public CryptoException(String message, Throwable cause) {
-        super(message, cause);
+    public CryptoException(Throwable throwable) {
+        super(Contract.throwIfArgNull(throwable, "throwable"));
     }
 
-    public CryptoException(Throwable cause) {
-        super(cause);
+    public CryptoException(String message, Throwable throwable) {
+        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
-
 }

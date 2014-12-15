@@ -1,5 +1,7 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto.hkp;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Thrown when a keyserver did something unexpected, not conforming to the HKP protocol
  */
@@ -12,15 +14,14 @@ public class HkpServerException extends Exception {
     }
 
     public HkpServerException(String message) {
-        super(message);
+        super(Contract.throwIfArgNull(message, "message"));
     }
 
-    public HkpServerException(String message, Throwable cause) {
-        super(message, cause);
+    public HkpServerException(Throwable throwable) {
+        super(Contract.throwIfArgNull(throwable, "throwable"));
     }
 
-    public HkpServerException(Throwable cause) {
-        super(cause);
+    public HkpServerException(String message, Throwable throwable) {
+        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
-
 }
