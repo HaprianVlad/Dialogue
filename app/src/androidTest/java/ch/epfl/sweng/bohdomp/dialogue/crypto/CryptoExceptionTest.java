@@ -2,7 +2,6 @@ package ch.epfl.sweng.bohdomp.dialogue.crypto;
 
 import android.test.AndroidTestCase;
 
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**

@@ -3,7 +3,6 @@ package ch.epfl.sweng.bohdomp.dialogue.crypto.hpk;
 import android.test.AndroidTestCase;
 
 import ch.epfl.sweng.bohdomp.dialogue.crypto.hkp.HkpServerException;
-import ch.epfl.sweng.bohdomp.dialogue.exceptions.ContactLookupException;
 import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
