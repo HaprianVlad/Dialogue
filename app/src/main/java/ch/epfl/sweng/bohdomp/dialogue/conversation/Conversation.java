@@ -86,18 +86,6 @@ public interface Conversation extends Parcelable {
     boolean hasUnread();
 
     /**
-     * Getter for the list of listeners
-     * @return the list of listeners of the conversation
-     */
-    List<ConversationListener> getListeners();
-
-    /**
-     * Getter for the hasUnread parameter of the conversation
-     * @return he hasUnread parameter of the conversation
-     */
-    boolean getHasUnread();
-
-    /**
      * Sets the message status.
      * @param message to be set.
      * @param status of the message.

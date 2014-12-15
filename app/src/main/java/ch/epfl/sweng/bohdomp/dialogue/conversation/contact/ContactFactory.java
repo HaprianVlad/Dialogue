@@ -294,7 +294,7 @@ public class ContactFactory {
         }
 
         @Override
-        public Set<ChannelType> availableChannels() {
+        public Set<ChannelType> getAvailableChannels() {
             return mPhoneNumberMap.keySet();
         }
 
@@ -645,7 +645,7 @@ public class ContactFactory {
         }
 
         @Override
-        public Set<ChannelType> availableChannels() {
+        public Set<ChannelType> getAvailableChannels() {
             Set<ChannelType> result = new HashSet<ChannelType>();
             result.add(ChannelType.SMS);
             return result;
