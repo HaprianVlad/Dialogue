@@ -7,19 +7,19 @@ public class CryptoException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    CryptoException() {
+    public CryptoException() {
         super();
     }
 
-    CryptoException(String message) {
+    public CryptoException(String message) {
         super(message);
     }
 
-    CryptoException(String message, Throwable cause) {
+    public CryptoException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    CryptoException(Throwable cause) {
+    public CryptoException(Throwable cause) {
         super(cause);
     }
 

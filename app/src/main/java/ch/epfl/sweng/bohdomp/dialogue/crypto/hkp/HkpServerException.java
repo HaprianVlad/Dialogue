@@ -7,19 +7,19 @@ public class HkpServerException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    HkpServerException() {
+    public HkpServerException() {
         super();
     }
 
-    HkpServerException(String message) {
+    public HkpServerException(String message) {
         super(message);
     }
 
-    HkpServerException(String message, Throwable cause) {
+    public HkpServerException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    HkpServerException(Throwable cause) {
+    public HkpServerException(Throwable cause) {
         super(cause);
     }
 
