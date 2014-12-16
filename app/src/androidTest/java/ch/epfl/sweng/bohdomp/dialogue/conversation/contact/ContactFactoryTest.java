@@ -99,7 +99,7 @@ public class ContactFactoryTest extends ApplicationTestCase<Application> {
         assertTrue(phoneNumberStrings.contains(validPhoneNumber));
 
         // we assume that contact is reachable via SMS when there is a phone number
-        Set<ChannelType> contactAvailableChannels = contact.availableChannels();
+        Set<ChannelType> contactAvailableChannels = contact.getAvailableChannels();
         assertEquals(1, contactAvailableChannels.size());
         assertTrue(contactAvailableChannels.contains(ChannelType.SMS));
     }

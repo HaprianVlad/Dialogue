@@ -78,7 +78,7 @@ public class ConversationSettingsActivity extends Activity {
 
         Contact contact = mContact.get(0);
 
-        Set<ChannelType> channels = contact.availableChannels();
+        Set<ChannelType> channels = contact.getAvailableChannels();
 
         ChannelType convChannel = mConversation.getChannel();
         PhoneNumber convNumber = mConversation.getPhoneNumber();

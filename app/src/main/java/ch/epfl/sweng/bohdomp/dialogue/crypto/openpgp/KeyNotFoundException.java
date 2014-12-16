@@ -1,10 +1,11 @@
 package ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp;
 
+import ch.epfl.sweng.bohdomp.dialogue.utils.Contract;
+
 /**
  * Thrown when a key cannot be found.
  */
 public class KeyNotFoundException extends Exception {
-
     private static final long serialVersionUID = 1L;
 
     public KeyNotFoundException() {
@@ -12,15 +13,14 @@ public class KeyNotFoundException extends Exception {
     }
 
     public KeyNotFoundException(String message) {
-        super(message);
+        super(Contract.throwIfArgNull(message, "message"));
     }
 
-    public KeyNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+    public KeyNotFoundException(Throwable throwable) {
+        super(Contract.throwIfArgNull(throwable, "throwable"));
     }
 
-    public KeyNotFoundException(Throwable cause) {
-        super(cause);
+    public KeyNotFoundException(String message, Throwable throwable) {
+        super(Contract.throwIfArgNull(message, "message"), Contract.throwIfArgNull(throwable, "throwable"));
     }
-
 }

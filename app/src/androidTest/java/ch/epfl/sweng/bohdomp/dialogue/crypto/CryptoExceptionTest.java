@@ -1,17 +1,17 @@
-package ch.epfl.sweng.bohdomp.dialogue.exceptions;
+package ch.epfl.sweng.bohdomp.dialogue.crypto;
 
 import android.test.AndroidTestCase;
 
-import ch.epfl.sweng.bohdomp.dialogue.crypto.openpgp.IncorrectPassphraseException;
+import ch.epfl.sweng.bohdomp.dialogue.exceptions.NullArgumentException;
 
 /**
  * tests for FingerprintInsertionExceptions
  */
-public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
+public class CryptoExceptionTest extends AndroidTestCase {
 
     public void testConstrNullString() {
         try {
-            new IncorrectPassphraseException((String) null);
+            new CryptoException((String) null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -20,7 +20,7 @@ public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
 
     public void testConstrNullThrowable() {
         try {
-            new IncorrectPassphraseException((Throwable) null);
+            new CryptoException((Throwable) null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -29,7 +29,7 @@ public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
 
     public void testConstrNullStringValidThrowable() {
         try {
-            new IncorrectPassphraseException(null, new Throwable());
+            new CryptoException(null, new Throwable());
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -38,7 +38,7 @@ public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
 
     public void testConstrValidStringNullThrowable() {
         try {
-            new IncorrectPassphraseException("message", null);
+            new CryptoException("message", null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -47,7 +47,7 @@ public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
 
     public void testConstrNullStringNullThrowable() {
         try {
-            new IncorrectPassphraseException(null, null);
+            new CryptoException(null, null);
             fail("Exception should have been thrown");
         } catch (NullArgumentException e) {
             //Everything is ok
@@ -55,20 +55,20 @@ public class IncorrectPassphraseExceptionTest extends AndroidTestCase {
     }
 
     public void testValidConstr() {
-        new IncorrectPassphraseException();
+        new CryptoException();
     }
 
     public void testValidConstrString() {
-        new IncorrectPassphraseException("message");
+        new CryptoException("message");
     }
 
 
     public void testValidConstrThrowable() {
-        new IncorrectPassphraseException(new Throwable());
+        new CryptoException(new Throwable());
     }
 
 
     public void testValidConstrStringThrowable() {
-        new IncorrectPassphraseException("message", new Throwable());
+        new CryptoException("message", new Throwable());
     }
 }

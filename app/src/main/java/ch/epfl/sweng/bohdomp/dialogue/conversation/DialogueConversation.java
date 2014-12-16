@@ -241,16 +241,6 @@ public final class DialogueConversation implements Conversation {
     }
 
     @Override
-    public List<ConversationListener> getListeners() {
-        return new ArrayList<ConversationListener>(mListeners);
-    }
-
-    @Override
-    public boolean getHasUnread() {
-        return mHasUnread;
-    }
-
-    @Override
     public void setAllMessagesAsRead() {
         mHasUnread = false;
         

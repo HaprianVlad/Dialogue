@@ -85,13 +85,6 @@ public final class DialogueOutgoingDispatcher extends IntentService {
         intent.putExtra(DialogueMessage.MESSAGE, message);
         getApplicationContext().startService(intent);
     }
-
-    private void sendMms(DialogueMessage message) {
-        Contract.assertNotNull(message, "message");
-
-        /* Create intent */
-        /* Send intent to service */
-    }
 }
 
 
