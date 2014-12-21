@@ -135,13 +135,14 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
      */
     private void initData() {
         myPackageName = getPackageName();
+        mData.addListener(this);
         mData = DefaultDialogData.getInstance();
         mContactFactory = new ContactFactory(getApplicationContext());
         mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
         mStorageManager = new StorageManager(getApplicationContext());
         mStorageManager.retreiveData();
-        mData.addListener(this);
+
     }
 
     @Override
