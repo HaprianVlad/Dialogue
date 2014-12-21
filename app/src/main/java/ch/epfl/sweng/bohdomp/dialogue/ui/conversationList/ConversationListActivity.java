@@ -139,9 +139,10 @@ public class ConversationListActivity extends Activity implements DialogueDataLi
         mContactFactory = new ContactFactory(getApplicationContext());
         mConversationList = mData.getConversations();
         mConversationItemListAdapter = new ConversationListAdapter(this, mConversationList);
+        mData.addListener(this);
         mStorageManager = new StorageManager(getApplicationContext());
         mStorageManager.retreiveData();
-        mData.addListener(this);
+
     }
 
     @Override
